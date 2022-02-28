@@ -1,5 +1,13 @@
-import Button from "@mui/material/Button"
-import { styled } from "@mui/system"
+import Button from "@mui/material/Button";
+import { styled } from "@mui/system";
+
+interface Params {
+  cor: string;
+  variant: "text" | "outlined" | "contained";
+  children: any;
+  type: "button" | "submit" | "reset";
+  size: "small" | "medium" | "large";
+}
 
 export default function ButtonCustom({
   cor,
@@ -8,23 +16,27 @@ export default function ButtonCustom({
   type,
   size,
   ...rest
-}) {
+}: Params) {
   const CustomButton = styled(Button)({
     color: cor,
+    background: "white",
     "&:hover": {
-      color: cor
+      color: cor,
+      background: "white",
     },
     "&:active": {
-      color: cor
+      color: cor,
+      background: "white",
     },
     "&:focus": {
-      color: cor
-    }
-  })
+      color: cor,
+      background: "white",
+    },
+  });
 
   return (
     <CustomButton variant={variant} type={type} size={size} {...rest}>
       {children}
     </CustomButton>
-  )
+  );
 }

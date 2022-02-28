@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/components/defaultPage/Slider/index.jsx"  ],
   "exclude": [
     "node_modules"
   ]
