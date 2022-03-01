@@ -1,12 +1,15 @@
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Paper } from "@mui/material";
 import NextHead from "../components/defaultPage/NextHead";
 import Button from "../components/Button";
 import { useEffect, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import Slider from "../components/defaultPage/Slider";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ExitToApp from "@mui/icons-material/ExitToApp";
+import AccountBalance from "@mui/icons-material/AccountBalance";
 
 export default function Home({}) {
   const { data: session } = useSession();
@@ -22,11 +25,12 @@ export default function Home({}) {
   return (
     <>
       <NextHead title="Piarq | Home" />
+
       <Button
         variant="contained"
         onClick={() => setOpen(!open)}
         cor="#ffba08"
-        sx={{
+        style={{
           position: "absolute",
           left: "7px",
           top: "7px",
@@ -36,25 +40,90 @@ export default function Home({}) {
       >
         <MenuIcon fontSize="medium" />
       </Button>
-      <Slider
-        open={open}
-        trogle={() => setOpen(!open)}
-        username={session?.user?.name}
-        photo={session?.user?.image}
-      />
-      {/* <Button
-        variant="text"
+      <Button
+        variant="contained"
         onClick={() => setOpen(!open)}
         cor="#ffba08"
-        sx={{
+        style={{
           position: "absolute",
           right: "7px",
           top: "7px",
           padding: "20px",
+          borderRadius: "10px",
         }}
       >
         <ExitToAppIcon fontSize="medium" />
-      </Button> */}
+      </Button>
+
+      {open ? (
+        <Paper
+          elevation={2}
+          style={{
+            display: "flex",
+            position: "absolute",
+            left: "7px",
+            top: "150px",
+            width: "65px",
+            borderRadius: "10px",
+            flexDirection: "column",
+          }}
+        >
+          <Button
+            variant="text"
+            onClick={() => setOpen(!open)}
+            cor="#ffba08"
+            style={{
+              padding: "20px",
+              borderTop: "5px",
+              borderBottom: "5px",
+              borderRadius: "10px",
+            }}
+          >
+            <DashboardIcon fontSize="medium" />
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => setOpen(!open)}
+            cor="#ffba08"
+            style={{
+              padding: "20px",
+              borderTop: "5px",
+              borderBottom: "5px",
+              borderRadius: "10px",
+            }}
+          >
+            <AccountBalance fontSize="medium" />
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => setOpen(!open)}
+            cor="#ffba08"
+            style={{
+              padding: "20px",
+              borderTop: "5px",
+              borderBottom: "5px",
+              borderRadius: "10px",
+            }}
+          >
+            <SettingsIcon fontSize="medium" />
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => setOpen(!open)}
+            cor="#ffba08"
+            style={{
+              padding: "20px",
+              borderTop: "5px",
+              borderBottom: "5px",
+              borderRadius: "10px",
+            }}
+          >
+            <ExitToAppIcon fontSize="medium" />
+          </Button>
+        </Paper>
+      ) : (
+        <></>
+      )}
 
       <Grid
         container
