@@ -6,6 +6,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AccountBalance from "@mui/icons-material/AccountBalance";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { toast, ToastContainer } from "react-toastify";
@@ -63,6 +64,7 @@ export default function Menu({ image }: Params) {
               borderBottom: "5px",
               borderRadius: "10px",
             }}
+            onClick={() => router.push("/perfil")}
           >
             <Avatar src={image} sx={{ width: 30, height: 30 }} />
           </Button>
@@ -78,6 +80,19 @@ export default function Menu({ image }: Params) {
             }}
           >
             <DashboardIcon fontSize="medium" />
+          </Button>
+          <Button
+            variant="text"
+            cor="#ffba08"
+            onClick={() => router.push("/clientes")}
+            style={{
+              padding: "20px",
+              borderTop: "5px",
+              borderBottom: "5px",
+              borderRadius: "10px",
+            }}
+          >
+            <PersonOutlineIcon fontSize="medium" />
           </Button>
           <Button
             variant="text"

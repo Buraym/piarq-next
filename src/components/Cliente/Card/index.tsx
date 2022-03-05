@@ -1,6 +1,5 @@
 import {
   Card,
-  CardHeader,
   CardMedia,
   CardContent,
   CardActions,
@@ -13,13 +12,10 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
 
-interface Params {
-  data: any;
-}
-export default function CardObra({ data }: Params) {
+export default function CardCliente({ data }) {
   const router = useRouter();
 
-  function HandleDeleteObra(id) {
+  function HandleDeleteCliente(id) {
     console.log(id);
   }
 
@@ -28,7 +24,7 @@ export default function CardObra({ data }: Params) {
       style={{
         display: "flex",
         width: "300px",
-        height: "360px",
+        height: "300px",
         justifyContent: "center",
         flexDirection: "column",
         margin: "30px",
@@ -37,10 +33,10 @@ export default function CardObra({ data }: Params) {
       <CardActionArea
         style={{
           width: "300px",
-          height: "180px",
+          height: "200px",
         }}
       >
-        <CardMedia component="img" image={data.image} height={180}></CardMedia>
+        <CardMedia component="img" image={data.image} height={200}></CardMedia>
       </CardActionArea>
       <CardContent
         style={{
@@ -64,11 +60,10 @@ export default function CardObra({ data }: Params) {
           style={{ width: "47.5%", marginLeft: "2.5%" }}
         >
           <Typography fontSize={12} fontWeight="bold">
-            {"CLIENTE: "}
-            {data.clientName}
+            {"NOME: "}
+            {data.name}
           </Typography>
         </Grid>
-
         <Grid
           container
           direction="row"
@@ -79,36 +74,19 @@ export default function CardObra({ data }: Params) {
           style={{ width: "47.5%", marginLeft: "2.5%" }}
         >
           <Typography fontSize={12} fontWeight="bold">
-            {"ENTREGA: "}
-            {data.finishDate}
-          </Typography>
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justifyContent="flex-start"
-          wrap="wrap"
-          sx={{
-            height: "70px",
-            marginTop: "10px",
-            scrollbarWidth: "none",
-            overflow: "hidden",
-          }}
-          overflow="-moz-hidden-unscrollable"
-        >
-          <Typography fontSize={12} fontWeight="bold">
-            {data.description}
+            {"CPF/CNPJ: "}
+            {data.document}
           </Typography>
         </Grid>
       </CardContent>
       <CardActions
         style={{
-          width: "280px",
           height: "40px",
-          justifyContent: "flex-start",
+          justifyContent: "space-evenly",
           flexDirection: "row",
           alignContent: "center",
           alignItems: "center",
+          marginBottom: "10px",
         }}
       >
         <Button
@@ -120,7 +98,7 @@ export default function CardObra({ data }: Params) {
         </Button>
         <Button
           variant="text"
-          onClick={() => router.push("/obra/" + data.id)}
+          onClick={() => router.push("/cliente/" + data.id)}
           cor="#ffba08"
         >
           <EditIcon />
