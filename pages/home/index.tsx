@@ -20,7 +20,7 @@ export default function Index({ auth }) {
     return (
         <>
             <NextHead title={"Piarq | Home"} />
-            <Menu image={auth.user.image} />
+            <Menu image={auth?.user?.image} />
 
             <Grid
                 container
