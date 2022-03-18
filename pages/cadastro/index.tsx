@@ -124,10 +124,7 @@ export default function Cadastro({}) {
                             alignContent="center"
                             wrap="wrap"
                         >
-                            <CustomCheckbox
-                                name="termsAgreed"
-                                checked={false}
-                            />
+                            <CustomCheckbox name="termsAgreed" />
                             <Typography
                                 variant="body2"
                                 fontSize={12}

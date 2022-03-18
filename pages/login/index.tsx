@@ -128,10 +128,7 @@ export default function Login({ isAuth }) {
                                     wrap="wrap"
                                     sx={{ width: 125 }}
                                 >
-                                    <CustomCheckbox
-                                        name="continueLogged"
-                                        checked={false}
-                                    />
+                                    <CustomCheckbox name="continueLogged" />
                                     <Typography variant="body2" fontSize={12}>
                                         Lembrar-me ?
                                     </Typography>
