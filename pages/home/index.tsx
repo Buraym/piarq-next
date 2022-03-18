@@ -14,8 +14,8 @@ export default function Index({ auth }) {
     }
 
     useEffect(() => {
-        !auth ? null : router.push("/login");
-    }, [auth]);
+        auth ? null : router.push("/login");
+    }, []);
 
     return (
         <>

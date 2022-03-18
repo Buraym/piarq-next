@@ -9,7 +9,7 @@ export default function Index({ isAuth }) {
 
     useEffect(() => {
         isAuth ? router.push("/home") : router.push("/home");
-    }, [isAuth]);
+    }, []);
 
     return (
         <>
