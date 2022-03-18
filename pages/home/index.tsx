@@ -53,8 +53,7 @@ export default function Index({ auth }) {
                             fontSize={60}
                             fontFamily={"Pacifico"}
                         >
-                            {" "}
-                            Olá, {session?.user?.name}
+                            Olá, {auth?.user?.name}
                         </Typography>
                     </Grid>
                     <Grid
@@ -74,7 +73,7 @@ export default function Index({ auth }) {
 export async function getStaticProps(context) {
     try {
         const session = await getSession(context);
-        var auth = false;
+        var auth;
         session ? (auth = session) : (auth = false);
         return {
             props: { auth },
