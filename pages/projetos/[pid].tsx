@@ -30,7 +30,7 @@ export default function Projeto({}) {
     useEffect(() => {
         const { pid } = router.query;
         GetObra(pid);
-    }, []);
+    }, [pid]);
     return (
         <>
             <NextHead title="Piarq | Projetos" />

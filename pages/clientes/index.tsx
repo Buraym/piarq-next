@@ -67,8 +67,8 @@ export default function Projetos({}) {
                     wrap="wrap"
                     sx={{ width: "90vw", height: "100%" }}
                 >
-                    {listaClientes.map((item) => (
-                        <CardCliente data={item} />
+                    {listaClientes.map((item, index) => (
+                        <CardCliente data={item} key={index} />
                     ))}
                 </Grid>
             </Grid>

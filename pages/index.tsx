@@ -8,8 +8,8 @@ export default function Index({ isAuth }) {
     const router = useRouter();
 
     useEffect(() => {
-        isAuth ? router.push("/home") : router.push("/home");
-    }, []);
+        isAuth ? router.push("/home") : router.push("/login");
+    }, [isAuth]);
 
     return (
         <>

@@ -21,7 +21,7 @@ export default function Login({ isAuth }) {
 
     useEffect(() => {
         isAuth ? router.push("/home") : setLoading(false);
-    }, []);
+    }, [isAuth]);
 
     return (
         <>
@@ -193,7 +193,7 @@ export default function Login({ isAuth }) {
                                     f={() =>
                                         signIn("google", {
                                             callbackUrl:
-                                                process.env.CALLBACK_URL,
+                                                "https://piarq-next.vercel.app/home",
                                         })
                                     }
                                     cor="#ffba08"
@@ -212,8 +212,8 @@ export default function Login({ isAuth }) {
 export async function getStaticProps(context) {
     try {
         const session = await getSession(context);
-        var isAuth = null;
-        session ? (isAuth = session) : (isAuth = false);
+        var isAuth = false;
+        session ? (isAuth = true) : (isAuth = false);
         return {
             props: { isAuth },
         };
