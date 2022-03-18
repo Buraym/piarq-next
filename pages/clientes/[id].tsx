@@ -14,7 +14,7 @@ export default function Projetos({}) {
     async function GetClient(id) {
         try {
         } catch (err) {
-            console.log("ERRO: " + err.message);
+            console.log("ERR: " + err.message);
         }
     }
 
