@@ -1,4 +1,4 @@
-import { useSession, signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Grid, Typography, Divider, Link } from "@mui/material";
 import { Form } from "@unform/web";
@@ -10,8 +10,7 @@ import NextHead from "../../src/components/defaultPage/NextHead/index";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinearLoading from "../../src/components/LinearLoading";
 
-export default function Login() {
-    const { data: session, status: status } = useSession({ required: true });
+export default function Login({ isAuth }) {
     const [loading, setLoading] = useState(true);
     const form = useRef(null);
     const router = useRouter();
@@ -21,11 +20,7 @@ export default function Login() {
     }
 
     useEffect(() => {
-        session === null && status !== "authenticated"
-            ? setLoading(false)
-            : status === "authenticated"
-            ? router.push("/home")
-            : null;
+        isAuth ? router.push("/home") : setLoading(false);
     }, []);
 
     return (
@@ -201,7 +196,7 @@ export default function Login() {
                                     f={() =>
                                         signIn("google", {
                                             callbackUrl:
-                                                process.env.PROD_CALLBACK_URL,
+                                                process.env.NEXTAUTH_URL,
                                         })
                                     }
                                     cor="#ffba08"
@@ -215,4 +210,17 @@ export default function Login() {
             )}
         </>
     );
+}
+
+export async function getStaticProps(context) {
+    try {
+        const session = await getSession(context);
+        var isAuth = false;
+        session ? (isAuth = true) : (isAuth = false);
+        return {
+            props: { isAuth },
+        };
+    } catch (err) {
+        console.error(err);
+    }
 }
