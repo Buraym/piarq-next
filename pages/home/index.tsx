@@ -6,7 +6,7 @@ import NextHead from "../../src/components/defaultPage/NextHead";
 import Menu from "../../src/components/defaultPage/Menu";
 import { ToastContainer } from "react-toastify";
 
-export default function Index({ auth }) {
+export default function Index({ isAuth, Auth }) {
     const router = useRouter();
 
     function HandleSubmit(e) {
@@ -14,13 +14,13 @@ export default function Index({ auth }) {
     }
 
     useEffect(() => {
-        auth ? null : router.push("/login");
-    }, [auth]);
+        isAuth ? null : router.push("/login");
+    }, [isAuth, Auth]);
 
     return (
         <>
             <NextHead title={"Piarq | Home"} />
-            <Menu image={auth?.user?.image} />
+            <Menu image={Auth?.user?.image} />
 
             <Grid
                 container
@@ -53,7 +53,7 @@ export default function Index({ auth }) {
                             fontSize={60}
                             fontFamily={"Pacifico"}
                         >
-                            Olá, {auth?.user?.name}
+                            Olá, {Auth?.user?.name}
                         </Typography>
                     </Grid>
                     <Grid
@@ -72,11 +72,11 @@ export default function Index({ auth }) {
 
 export async function getStaticProps(context) {
     try {
-        const session = await getSession(context);
-        var auth = null;
-        session ? (auth = session) : (auth = false);
+        const Auth = await getSession(context);
+        var isAuth = false;
+        Auth ? (isAuth = false) : (isAuth = false);
         return {
-            props: { auth },
+            props: { isAuth, Auth },
         };
     } catch (err) {
         console.error(err);
