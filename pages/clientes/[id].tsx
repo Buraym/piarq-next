@@ -1,10 +1,10 @@
-import NextHead from "../../components/defaultPage/NextHead";
+import NextHead from "../../src/components/defaultPage/NextHead";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
 import { useRef, useEffect, useState } from "react";
-import Menu from "../../components/defaultPage/Menu";
+import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
-import CardCliente from "../../components/Cliente/CriarCliente";
+import CardCliente from "../../src/components/Cliente/CriarCliente";
 
 export default function Projetos({}) {
     const router = useRouter();
@@ -40,11 +40,7 @@ export default function Projetos({}) {
                     wrap="wrap"
                     sx={{ width: 280, height: 280 }}
                 >
-                    <Typography
-                        variant="title"
-                        fontFamily={"Pacifico"}
-                        fontSize={60}
-                    >
+                    <Typography fontFamily={"Pacifico"} fontSize={60}>
                         {"Cliente "}
                     </Typography>
                 </Grid>
