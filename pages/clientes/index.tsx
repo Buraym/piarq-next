@@ -54,11 +54,7 @@ export default function Projetos({}) {
                     wrap="wrap"
                     sx={{ width: 280, height: 280 }}
                 >
-                    <Typography
-                        variant="title"
-                        fontFamily={"Pacifico"}
-                        fontSize={60}
-                    >
+                    <Typography fontFamily={"Pacifico"} fontSize={60}>
                         Clientes
                     </Typography>
                 </Grid>
