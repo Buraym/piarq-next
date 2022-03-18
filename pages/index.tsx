@@ -1,19 +1,26 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Box, LinearProgress } from "@mui/material/";
 import NextHead from "../src/components/defaultPage/NextHead/index";
+import { useSession } from "next-auth/react";
+import LinearLoading from "../src/components/LinearLoading";
 
 export default function Index() {
-  const { data: session } = useSession();
-  const router = useRouter();
+    const { status: status } = useSession({ required: true });
+    const router = useRouter();
 
-  useEffect(() => {
-    session ? router.push("/home") : router.push("/login");
-  }, [session]);
+    useEffect(() => {
+        status === "loading"
+            ? null
+            : status === "authenticated"
+            ? router.push("/login")
+            : router.push("/home");
+    }, []);
 
-  return (
-    <>
-      <NextHead title={"Carregando..."} />
-    </>
-  );
+    return (
+        <>
+            <NextHead title={"Carregando..."} />
+            <LinearLoading />
+        </>
+    );
 }
