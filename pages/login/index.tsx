@@ -10,8 +10,8 @@ import NextHead from "../../src/components/defaultPage/NextHead/index";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinearLoading from "../../src/components/LinearLoading";
 
-export default function Index() {
-    const { data: session, status } = useSession({ required: true });
+export default function Login() {
+    const { data: session, status: status } = useSession({ required: true });
     const [loading, setLoading] = useState(true);
     const form = useRef(null);
     const router = useRouter();
@@ -21,11 +21,11 @@ export default function Index() {
     }
 
     useEffect(() => {
-        status === "loading"
-            ? null
+        session === null && status !== "authenticated"
+            ? setLoading(false)
             : status === "authenticated"
             ? router.push("/home")
-            : setLoading(false);
+            : null;
     }, []);
 
     return (

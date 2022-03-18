@@ -30,7 +30,7 @@ export default function LinearLoading() {
     }, []);
 
     return (
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", height: "100%" }}>
             <LinearProgress
                 variant="buffer"
                 value={progress}
