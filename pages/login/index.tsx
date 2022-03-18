@@ -196,7 +196,7 @@ export default function Login({ isAuth }) {
                                     f={() =>
                                         signIn("google", {
                                             callbackUrl:
-                                                process.env.NEXTAUTH_URL,
+                                                process.env.CALLBACK_URL,
                                         })
                                     }
                                     cor="#ffba08"
