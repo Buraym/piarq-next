@@ -21,7 +21,7 @@ export default function Login({ isAuth }) {
 
     useEffect(() => {
         isAuth ? router.push("/home") : setLoading(false);
-    }, [isAuth]);
+    }, []);
 
     return (
         <>
