@@ -31,7 +31,7 @@ export default function CardObra({ data }: Params) {
         height: "360px",
         justifyContent: "center",
         flexDirection: "column",
-        margin: "30px",
+        margin: "20px",
       }}
     >
       <CardActionArea
@@ -39,6 +39,14 @@ export default function CardObra({ data }: Params) {
           width: "300px",
           height: "180px",
         }}
+        onClick={() =>
+          console.log(
+            "O Card de " +
+              data.name +
+              " foi clicado eserá levado para a página 'http://localhost:3000/cliente/" +
+              data.id
+          )
+        }
       >
         <CardMedia component="img" image={data.image} height={180}></CardMedia>
       </CardActionArea>

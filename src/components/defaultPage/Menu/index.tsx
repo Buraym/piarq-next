@@ -20,14 +20,15 @@ export default function Menu({ image }: Params) {
   const router = useRouter();
 
   function HandleLogOut() {
-    // signOut({ redirect: false });
-    toast("🦄 Wow so easy!", {
-      closeOnClick: false,
-      toastId: "my_toast",
-      autoClose: 5000,
-      closeButton: false,
-    });
-    console.log("Mostrar torrada !!!");
+    signOut({ redirect: false });
+    router.push("/login");
+    // toast("🦄 Wow so easy!", {
+    //   closeOnClick: false,
+    //   toastId: "my_toast",
+    //   autoClose: 5000,
+    //   closeButton: false,
+    // });
+    // console.log("Mostrar torrada !!!");
   }
 
   return (

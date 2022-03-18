@@ -27,7 +27,7 @@ export default function CardCliente({ data }) {
         height: "300px",
         justifyContent: "center",
         flexDirection: "column",
-        margin: "30px",
+        margin: "20px",
       }}
     >
       <CardActionArea
@@ -35,6 +35,14 @@ export default function CardCliente({ data }) {
           width: "300px",
           height: "200px",
         }}
+        onClick={() =>
+          console.log(
+            "O Card de " +
+              data.name +
+              " foi clicado eserá levado para a página 'http://localhost:3000/cliente/" +
+              data.id
+          )
+        }
       >
         <CardMedia component="img" image={data.image} height={200}></CardMedia>
       </CardActionArea>
