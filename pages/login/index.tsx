@@ -21,7 +21,7 @@ export default function Login({ isAuth }) {
 
     useEffect(() => {
         isAuth ? router.push("/home") : setLoading(false);
-    }, []);
+    }, [isAuth]);
 
     return (
         <>
@@ -212,8 +212,8 @@ export default function Login({ isAuth }) {
 export async function getStaticProps(context) {
     try {
         const session = await getSession(context);
-        var isAuth = false;
-        session ? (isAuth = true) : (isAuth = false);
+        var isAuth = null;
+        session ? (isAuth = session) : (isAuth = false);
         return {
             props: { isAuth },
         };
