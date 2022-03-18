@@ -9,6 +9,7 @@ interface Params {
     size?: "small" | "medium" | "large";
     f?: any;
     fullWidth?: boolean;
+    style?: any;
 }
 
 export default function ButtonCustom({
@@ -19,6 +20,7 @@ export default function ButtonCustom({
     size,
     f,
     fullWidth,
+    style,
     ...rest
 }: Params) {
     const CustomButton = styled(Button)({
@@ -45,7 +47,7 @@ export default function ButtonCustom({
             size={size}
             onClick={f}
             {...rest}
-            style={{ padding: "20px", borderRadius: "10px" }}
+            style={style || { padding: "20px", borderRadius: "20px" }}
             fullWidth={fullWidth || false}
         >
             {children}
