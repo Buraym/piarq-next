@@ -15,7 +15,7 @@ export default function Projetos({}) {
     const [listaObras, setListaObras] = useState(projetos);
 
     useEffect(() => {
-        session ? router.push("/home") : setLoading(false);
+        session ? setLoading(false) : router.push("/home");
     }, [session]);
 
     return (
