@@ -1,84 +1,80 @@
-import { getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Grid, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import NextHead from "../../src/components/defaultPage/NextHead";
 import Menu from "../../src/components/defaultPage/Menu";
 import { ToastContainer } from "react-toastify";
+import LinearLoading from "../../src/components/LinearLoading";
 
-export default function Index({ isAuth, Auth }) {
+export default function Index() {
     const router = useRouter();
-
+    const { data: session } = useSession();
+    const [loading, setLoading] = useState(true);
     function HandleSubmit(e) {
         console.log(e);
     }
 
     useEffect(() => {
-        isAuth ? null : router.push("/login");
-    }, [isAuth, Auth]);
+        session ? setLoading(false) : router.push("/login");
+    }, [session]);
 
     return (
         <>
             <NextHead title={"Piarq | Home"} />
-            <Menu image={Auth?.user?.image} />
 
-            <Grid
-                container
-                spacing={1}
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-                alignContent="center"
-                wrap="wrap"
-            >
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    alignContent="center"
-                    wrap="wrap"
-                >
+            {loading ? (
+                <LinearLoading />
+            ) : (
+                <>
+                    <Menu image={session?.user?.image} />
+
                     <Grid
                         container
-                        direction="column"
+                        spacing={1}
+                        direction="row"
                         justifyContent="center"
                         alignItems="center"
                         alignContent="center"
                         wrap="wrap"
-                        sx={{ height: 280 }}
                     >
-                        <Typography
-                            variant="body2"
-                            fontSize={60}
-                            fontFamily={"Pacifico"}
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
                         >
-                            Olá, {Auth?.user?.name}
-                        </Typography>
+                            <Grid
+                                container
+                                direction="column"
+                                justifyContent="center"
+                                alignItems="center"
+                                alignContent="center"
+                                wrap="wrap"
+                                sx={{ height: 280 }}
+                            >
+                                <Typography
+                                    variant="body2"
+                                    fontSize={60}
+                                    fontFamily={"Pacifico"}
+                                >
+                                    Olá, {session?.user?.name}
+                                </Typography>
+                            </Grid>
+                            <Grid
+                                container
+                                direction="column"
+                                justifyContent="center"
+                                alignItems="center"
+                                alignContent="center"
+                                wrap="wrap"
+                            ></Grid>
+                        </Grid>
                     </Grid>
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        alignContent="center"
-                        wrap="wrap"
-                    ></Grid>
-                </Grid>
-            </Grid>
+                </>
+            )}
         </>
     );
-}
-
-export async function getStaticProps(context) {
-    try {
-        const Auth = await getSession(context);
-        var isAuth = false;
-        Auth ? (isAuth = false) : (isAuth = false);
-        return {
-            props: { isAuth, Auth },
-        };
-    } catch (err) {
-        console.error(err);
-    }
 }

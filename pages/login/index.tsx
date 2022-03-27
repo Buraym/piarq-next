@@ -1,4 +1,4 @@
-import { getSession, signIn } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Grid, Typography, Divider, Link } from "@mui/material";
 import { Form } from "@unform/web";
@@ -10,18 +10,19 @@ import NextHead from "../../src/components/defaultPage/NextHead/index";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinearLoading from "../../src/components/LinearLoading";
 
-export default function Login({ isAuth }) {
+export default function Login() {
     const [loading, setLoading] = useState(true);
     const form = useRef(null);
     const router = useRouter();
+    const { data } = useSession();
 
     function HandleSubmit(e) {
         console.log(e);
     }
 
     useEffect(() => {
-        isAuth ? router.push("/home") : setLoading(false);
-    }, [isAuth]);
+        data ? router.push("/home") : setLoading(false);
+    }, [data]);
 
     return (
         <>
@@ -193,7 +194,7 @@ export default function Login({ isAuth }) {
                                     f={() =>
                                         signIn("google", {
                                             callbackUrl:
-                                                "https://piarq-next.vercel.app/home",
+                                                process.env.NEXTAUTH_URL,
                                         })
                                     }
                                     cor="#ffba08"
@@ -207,17 +208,4 @@ export default function Login({ isAuth }) {
             )}
         </>
     );
-}
-
-export async function getStaticProps(context) {
-    try {
-        const session = await getSession(context);
-        var isAuth = false;
-        session ? (isAuth = true) : (isAuth = false);
-        return {
-            props: { isAuth },
-        };
-    } catch (err) {
-        console.error(err);
-    }
 }
