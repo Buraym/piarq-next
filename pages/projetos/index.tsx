@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import CardObra from "../../src/components/Obra/Card";
 import { projetos } from "../../testdata";
 import LinearLoading from "../../src/components/LinearLoading";
+import CardCriarObra from "../../src/components/Obra/CriarObra";
 
 export default function Projetos({}) {
     const router = useRouter();
@@ -15,7 +16,7 @@ export default function Projetos({}) {
     const [listaObras, setListaObras] = useState(projetos);
 
     useEffect(() => {
-        session ? setLoading(false) : router.push("/home");
+        session ? setLoading(false) : setLoading(false); //router.push("/home");
     }, [session]);
 
     return (
@@ -58,6 +59,7 @@ export default function Projetos({}) {
                             {listaObras.map((item, index) => (
                                 <CardObra data={item} key={index} />
                             ))}
+                            <CardCriarObra userEmail={session?.user?.email} />
                         </Grid>
                     </Grid>
                 </>

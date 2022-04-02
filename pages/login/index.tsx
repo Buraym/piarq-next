@@ -18,6 +18,7 @@ export default function Login() {
 
     function HandleSubmit(e) {
         console.log(e);
+        router.push("/home");
     }
 
     useEffect(() => {
@@ -194,6 +195,7 @@ export default function Login() {
                                     f={() =>
                                         signIn("google", {
                                             callbackUrl:
+                                                // "http://localhost:3000/api/auth/callback/google",
                                                 process.env.NEXTAUTH_URL,
                                         })
                                     }
