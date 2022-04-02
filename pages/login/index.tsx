@@ -195,8 +195,8 @@ export default function Login() {
                                     f={() =>
                                         signIn("google", {
                                             callbackUrl:
-                                                // "http://localhost:3000/api/auth/callback/google",
-                                                process.env.NEXTAUTH_URL,
+                                                "http://localhost:3000",
+                                            // process.env.NEXTAUTH_URL,
                                         })
                                     }
                                     cor="#ffba08"
