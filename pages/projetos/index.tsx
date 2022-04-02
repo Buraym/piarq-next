@@ -10,10 +10,10 @@ import LinearLoading from "../../src/components/LinearLoading";
 import CardCriarObra from "../../src/components/Obra/CriarObra";
 
 export default function Projetos({}) {
-    const router = useRouter();
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
     const [listaObras, setListaObras] = useState(projetos);
+    const router = useRouter();
+    const { data: session } = useSession();
 
     useEffect(() => {
         session ? setLoading(false) : setLoading(false); //router.push("/home");

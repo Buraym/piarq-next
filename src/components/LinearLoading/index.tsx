@@ -35,6 +35,7 @@ export default function LinearLoading() {
                 variant="buffer"
                 value={progress}
                 valueBuffer={buffer}
+                sx={{ color: "#ffb703" }}
             />
         </Box>
     );
