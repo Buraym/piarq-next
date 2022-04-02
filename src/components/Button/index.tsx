@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button";
 import { styled } from "@mui/system";
+import LinearLoading from "../LinearLoading";
 
 interface Params {
     cor: string;
@@ -10,6 +11,7 @@ interface Params {
     f?: any;
     fullWidth?: boolean;
     style?: any;
+    loading?: boolean;
 }
 
 export default function ButtonCustom({
@@ -21,10 +23,11 @@ export default function ButtonCustom({
     f,
     fullWidth,
     style,
+    loading,
     ...rest
 }: Params) {
     const CustomButton = styled(Button)({
-        color: cor,
+        color: "lightgray",
         background: "white",
         "&:hover": {
             color: cor,
@@ -50,7 +53,7 @@ export default function ButtonCustom({
             style={style || { padding: "20px", borderRadius: "20px" }}
             fullWidth={fullWidth || false}
         >
-            {children}
+            {loading ? <LinearLoading /> : children}
         </CustomButton>
     );
 }
