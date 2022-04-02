@@ -1,5 +1,6 @@
 import TextField from "@mui/material/TextField";
-import { DatePicker, LocalizationProvider, AdapterDateFns } from "@mui/lab";
+import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import DateAdapter from "@mui/lab/AdapterDateFns";
 
 interface Params {
     value: any;
@@ -9,7 +10,7 @@ interface Params {
 
 export default function CustomDatePicker({ value, setValue, label }: Params) {
     return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <LocalizationProvider dateAdapter={DateAdapter}>
             <DatePicker
                 label={label}
                 value={value}
