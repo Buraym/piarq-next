@@ -14,7 +14,7 @@ export default function Login() {
     const [loading, setLoading] = useState(true);
     const form = useRef(null);
     const router = useRouter();
-    const { data } = useSession();
+    const { data: session } = useSession();
 
     function HandleSubmit(e) {
         console.log(e);
@@ -22,8 +22,8 @@ export default function Login() {
     }
 
     useEffect(() => {
-        data ? router.push("/home") : setLoading(false);
-    }, [data]);
+        session ? router.push("/home") : setLoading(false);
+    }, [session]);
 
     return (
         <>
@@ -195,8 +195,8 @@ export default function Login() {
                                     f={() =>
                                         signIn("google", {
                                             callbackUrl:
-                                                "http://localhost:3000",
-                                            // process.env.NEXTAUTH_URL,
+                                                // "http://localhost:3000",
+                                                process.env.NEXTAUTH_URL,
                                         })
                                     }
                                     cor="#ffba08"

@@ -12,13 +12,11 @@ export default function Cadastro({}) {
     const { data: session } = useSession();
     const form = useRef(null);
     function HandleSubmit(e) {
-        console.log(e);
         toast.success("Usuario Cadastrado com sucesso !!!");
     }
 
-    useEffect(() => {
-        console.log(session);
-    }, [session]);
+    // useEffect(() => {
+    // }, [session]);
     return (
         <>
             <NextHead title="Piarq | Cadastro" />

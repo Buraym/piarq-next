@@ -52,7 +52,6 @@ export default function CardCriarObra({ userEmail }: Params) {
                     description,
                 };
                 // setLoading(true);
-                console.log(data);
                 // setLoading(false);
             } catch (err) {
                 console.log(err);

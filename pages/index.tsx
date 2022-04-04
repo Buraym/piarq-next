@@ -6,12 +6,12 @@ import LinearLoading from "../src/components/LinearLoading";
 
 export default function Index({ isAuth }) {
     const router = useRouter();
-    const { data } = useSession();
+    const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        data ? router.push("/home") : router.push("/login");
-    }, [data]);
+        session ? router.push("/home") : router.push("/login");
+    }, [session]);
 
     return (
         <>
