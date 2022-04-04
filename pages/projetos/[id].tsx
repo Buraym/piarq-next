@@ -73,8 +73,9 @@ export default function Projeto({ projeto }) {
                             Cliente(s):{" "}
                         </Typography>
                         <Typography>
-                            {projeto.clientes.map((cliente) => (
+                            {projeto.clientes.map((cliente, index) => (
                                 <Chip
+                                    key={index}
                                     label={
                                         <Typography fontWeight="bold">
                                             {cliente.name}
@@ -172,8 +173,9 @@ export default function Projeto({ projeto }) {
                         overflowY: "scroll",
                     }}
                 >
-                    {projeto.docs.map((doc) => (
+                    {projeto.docs.map((doc, index) => (
                         <Grid
+                            key={index}
                             container
                             direction="column"
                             justifyContent="center"
@@ -212,8 +214,9 @@ export default function Projeto({ projeto }) {
                         overflowY: "scroll",
                     }}
                 >
-                    {projeto.subProjects.map((subProject) => (
+                    {projeto.subProjects.map((subProject, index) => (
                         <Grid
+                            key={index}
                             container
                             direction="column"
                             justifyContent="center"

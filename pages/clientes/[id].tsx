@@ -90,8 +90,9 @@ export default function Projetos({ cliente }) {
                         overflowY: "scroll",
                     }}
                 >
-                    {cliente.projects.map((project) => (
+                    {cliente.projects.map((project, index) => (
                         <Grid
+                            key={index}
                             container
                             direction="column"
                             justifyContent="center"
