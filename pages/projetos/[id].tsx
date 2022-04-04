@@ -27,6 +27,8 @@ export default function Projeto({ projeto }) {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
+    const router = useRouter();
+
     const steps = [
         {
             label: "Informação",
@@ -72,7 +74,21 @@ export default function Projeto({ projeto }) {
                         </Typography>
                         <Typography>
                             {projeto.clientes.map((cliente) => (
-                                <Chip label={cliente.name}></Chip>
+                                <Chip
+                                    label={
+                                        <Typography fontWeight="bold">
+                                            {cliente.name}
+                                        </Typography>
+                                    }
+                                    sx={{
+                                        backgroundColor: "lightgray",
+                                        color: "white",
+                                    }}
+                                    size="small"
+                                    onClick={() => {
+                                        router.push(`/clientes/${cliente.id}`);
+                                    }}
+                                ></Chip>
                             ))}
                         </Typography>
                     </Grid>
@@ -222,8 +238,8 @@ export default function Projeto({ projeto }) {
         },
     ];
 
-    const router = useRouter();
     const { data: session } = useSession();
+    console.log(projeto);
 
     // console.log(projeto);
 
@@ -268,28 +284,6 @@ export default function Projeto({ projeto }) {
                                         }}
                                     />
                                 </Typography>
-
-                                {/* <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        width: "80vw",
-                                        height: "200px",
-                                        padding: "10px",
-                                    }}
-                                >
-                                    <SwipeableViews>
-                                        <img
-                                            src={projectImage.src}
-                                            alt={"Imagem do projeto"}
-                                        />
-                                        {projeto.image.map((img) => (
-                                            <img
-                                                src={img.src}
-                                                alt={"Imagem do projeto"}
-                                            />
-                                        ))} 
-                                    </SwipeableViews>
-                                </Paper> */}
                             </Grid>
                             <Grid
                                 container
@@ -319,12 +313,6 @@ export async function getServerSideProps({ query }) {
     const queryId = query.id;
     try {
         const projeto = projetos.find((item) => item.id === queryId);
-        projeto.clientes = [];
-        clientes.forEach((cliente) =>
-            cliente.projects === projeto.id
-                ? projeto.clientes.push(cliente)
-                : null
-        );
         return {
             props: { projeto: projeto },
         };
