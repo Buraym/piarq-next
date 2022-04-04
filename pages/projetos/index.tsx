@@ -16,7 +16,7 @@ export default function Projetos({}) {
     const { data: session } = useSession();
 
     useEffect(() => {
-        session ? setLoading(false) : setLoading(false); //router.push("/home");
+        session ? setLoading(false) : router.push("/login");
     }, [session]);
 
     return (

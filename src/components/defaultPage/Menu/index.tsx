@@ -27,8 +27,7 @@ export default function Menu({ image }: Params) {
         //   toastId: "my_toast",
         //   autoClose: 5000,
         //   closeButton: false,
-        // });
-        // console.log("Mostrar torrada !!!");
+        // });]
     }
 
     return (

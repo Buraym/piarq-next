@@ -15,9 +15,7 @@ import { useRouter } from "next/router";
 export default function CardCliente({ data }) {
     const router = useRouter();
 
-    function HandleDeleteCliente(id) {
-        console.log(id);
-    }
+    function HandleDeleteCliente(id) {}
 
     return (
         <Card
@@ -35,14 +33,7 @@ export default function CardCliente({ data }) {
                     width: "300px",
                     height: "200px",
                 }}
-                onClick={() =>
-                    console.log(
-                        "O Card de " +
-                            data.name +
-                            " foi clicado eserá levado para a página 'http://localhost:3000/cliente/" +
-                            data.id
-                    )
-                }
+                onClick={() => router.push("/clientes/" + data.id)}
             >
                 <CardMedia
                     component="img"
@@ -110,7 +101,7 @@ export default function CardCliente({ data }) {
                 </Button>
                 <Button
                     variant="text"
-                    f={() => router.push("/cliente/" + data.id)}
+                    f={() => router.push("/clientes/" + data.id)}
                     cor="#ffba08"
                 >
                     <EditIcon />

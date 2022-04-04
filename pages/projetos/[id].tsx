@@ -242,9 +242,6 @@ export default function Projeto({ projeto }) {
     ];
 
     const { data: session } = useSession();
-    console.log(projeto);
-
-    // console.log(projeto);
 
     // useEffect(() => {
     //     // const { pid } = router.query;

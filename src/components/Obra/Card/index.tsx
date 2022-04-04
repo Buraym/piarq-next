@@ -19,9 +19,7 @@ interface Params {
 export default function CardObra({ data }: Params) {
     const router = useRouter();
 
-    function HandleDeleteObra(id) {
-        console.log(id);
-    }
+    function HandleDeleteObra(id) {}
 
     return (
         <Card
@@ -39,14 +37,7 @@ export default function CardObra({ data }: Params) {
                     width: "300px",
                     height: "180px",
                 }}
-                onClick={() =>
-                    console.log(
-                        "O Card de " +
-                            data.name +
-                            " foi clicado eserá levado para a página 'http://localhost:3000/cliente/" +
-                            data.id
-                    )
-                }
+                onClick={() => router.push("/projetos/" + data.id)}
             >
                 <CardMedia
                     component="img"

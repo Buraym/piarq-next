@@ -11,9 +11,6 @@ export default function Index() {
     const router = useRouter();
     const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
-    function HandleSubmit(e) {
-        console.log(e);
-    }
 
     useEffect(() => {
         session ? setLoading(false) : router.push("/login");
