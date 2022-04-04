@@ -7,23 +7,21 @@ import {
     Stepper,
     Step,
     StepLabel,
+    Chip,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
 import axios from "axios";
 import LinearLoading from "../../src/components/LinearLoading";
-import { projetos } from "../../testdata";
+import { clientes, projetos } from "../../testdata";
 import Clientes from "../clientes/index";
 import CustomStepper from "../../src/components/Stepper";
-import projectImage from "../../src/assets/0a36c30f8e9a5bbc3c98521cbfd5d105.png";
-import SwipeableViews from "react-swipeable-views";
 import {
     ImageRounded,
     DocumentScannerRounded,
     BackupTable,
 } from "@mui/icons-material";
-import Google from "@mui/icons-material/Google";
 
 export default function Projeto({ projeto }) {
     const [clientes, setClientes] = useState([]);
@@ -69,10 +67,16 @@ export default function Projeto({ projeto }) {
                         alignContent="flex-start"
                         wrap="wrap"
                     >
-                        <Typography fontWeight="bolder">CEP :</Typography>
-                        <Typography>{projeto.cep}</Typography>
+                        <Typography fontWeight="bolder">
+                            Cliente(s):{" "}
+                        </Typography>
+                        <Typography>
+                            {projeto.clientes.map((cliente) => (
+                                <Chip label={cliente.name}></Chip>
+                            ))}
+                        </Typography>
                     </Grid>
-                    {/* <Grid
+                    <Grid
                         container
                         direction="row"
                         justifyContent="flex-start"
@@ -80,11 +84,9 @@ export default function Projeto({ projeto }) {
                         alignContent="flex-start"
                         wrap="wrap"
                     >
-                        <Typography fontWeight="bolder">
-                            Data de Inicio:
-                        </Typography>
-                        <Typography>{projeto.address}</Typography>
-                    </Grid> */}
+                        <Typography fontWeight="bolder">CEP :</Typography>
+                        <Typography>{projeto.cep}</Typography>
+                    </Grid>
                     <Grid
                         container
                         direction="row"
@@ -225,37 +227,6 @@ export default function Projeto({ projeto }) {
 
     // console.log(projeto);
 
-    // async function GetClientes(id) {
-    //     try {
-    //         setLoading(true);
-    //         const response = await axios.get(
-    //             "http://localhost:3000/pages/api/ListaClientesId",
-    //             { params: projetos.clients }
-    //         );
-    //         setClientes(response.data);
-    //         console.log(response.data);
-    //         setLoading(false);
-    //     } catch (err) {
-    //         console.log(err);
-    //         setLoading(false);
-    //     }
-    // }
-
-    // async function GetObra(id) {
-    //     try {
-    //         setLoading(true);
-    //         const response = await axios.get(
-    //             "http://localhost:3000/pages/api/projeto/" + id
-    //         );
-    //         setObra(response.data);
-    //         console.log(response.data);
-    //         setLoading(false);
-    //     } catch (err) {
-    //         console.log(err);
-    //         setLoading(false);
-    //     }
-    // }
-
     // useEffect(() => {
     //     // const { pid } = router.query;
     //     // GetObra(pid);
@@ -348,6 +319,12 @@ export async function getServerSideProps({ query }) {
     const queryId = query.id;
     try {
         const projeto = projetos.find((item) => item.id === queryId);
+        projeto.clientes = [];
+        clientes.forEach((cliente) =>
+            cliente.projects === projeto.id
+                ? projeto.clientes.push(cliente)
+                : null
+        );
         return {
             props: { projeto: projeto },
         };
