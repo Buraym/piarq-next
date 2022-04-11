@@ -15,9 +15,9 @@ export default function Projetos({}) {
     const router = useRouter();
     const { data: session } = useSession();
 
-    useEffect(() => {
-        session ? setLoading(false) : router.push("/login");
-    }, [session]);
+    // useEffect(() => {
+    //     session ? setLoading(false) : router.push("/login");
+    // }, [session]);
 
     return (
         <>

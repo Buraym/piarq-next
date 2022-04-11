@@ -36,9 +36,9 @@ export default function Clientes({}) {
         },
     ]);
 
-    useEffect(() => {
-        session ? setLoading(false) : router.push("/login");
-    }, [session]);
+    // useEffect(() => {
+    //     session ? setLoading(false) : router.push("/login");
+    // }, [session]);
 
     return (
         <>

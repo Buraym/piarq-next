@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
 import { Form } from "@unform/web";
 import { useRef, useEffect } from "react";
@@ -14,9 +14,6 @@ export default function Cadastro({}) {
     function HandleSubmit(e) {
         toast.success("Usuario Cadastrado com sucesso !!!");
     }
-
-    // useEffect(() => {
-    // }, [session]);
     return (
         <>
             <NextHead title="Piarq | Cadastro" />
@@ -35,15 +32,14 @@ export default function Cadastro({}) {
                     alignContent="center"
                     wrap="wrap"
                     sx={{ width: 280, height: 280 }}
-                    style={{ textShadow: "4px 4px #D3D9D3" }}
+                    style={{ textShadow: "4px 4px #ffb703" }}
                 >
                     <Typography
                         fontFamily={"Pacifico"}
                         fontSize={60}
-                        color="#E9ECE9"
+                        color="#fb5607"
                     >
-                        {" "}
-                        Cadastro{" "}
+                        Cadastro
                     </Typography>
                 </Grid>
                 <Grid
@@ -120,7 +116,7 @@ export default function Cadastro({}) {
                             justifyContent="flex-start"
                             alignItems="center"
                             alignContent="center"
-                            wrap="wrap"
+                            wrap="nowrap"
                         >
                             <CustomCheckbox name="termsAgreed" />
                             <Typography
@@ -128,7 +124,7 @@ export default function Cadastro({}) {
                                 fontSize={12}
                                 fontWeight="bold"
                             >
-                                Concordo Com os termos de Privacidade e de Uso
+                                Concordo com os termos de Privacidade e de Uso
                                 do software Piarq
                             </Typography>
                         </Grid>
@@ -147,7 +143,9 @@ export default function Cadastro({}) {
                                 cor="#ffba08"
                                 fullWidth={true}
                             >
-                                Cadastrar Usuario
+                                <Typography fontWeight="bolder" color="#ffba08">
+                                    Cadastrar Usuario
+                                </Typography>
                             </Button>
                         </Grid>
                     </Form>
@@ -155,4 +153,15 @@ export default function Cadastro({}) {
             </Grid>
         </>
     );
+}
+
+export async function getServerSideProps({ context }) {
+    try {
+        const session = await getSession(context);
+        return {
+            props: { session },
+        };
+    } catch (err) {
+        console.error(err);
+    }
 }

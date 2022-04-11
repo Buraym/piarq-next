@@ -9,9 +9,9 @@ export default function Perfil({}) {
     const { data: session } = useSession();
     const router = useRouter();
 
-    useEffect(() => {
-        session ? null : router.push("/login");
-    }, [session]);
+    // useEffect(() => {
+    //     session ? null : router.push("/login");
+    // }, [session]);
 
     return (
         <>
