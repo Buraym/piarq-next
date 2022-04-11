@@ -14,55 +14,55 @@ export default function Projetos({ session }) {
     const [listaObras, setListaObras] = useState(projetos);
     const router = useRouter();
 
-    // useEffect(() => {
-    //     session ? setLoading(false) : router.push("/login");
-    // }, [session]);
+    useEffect(() => {
+        session ? setLoading(false) : setLoading(false);
+    }, [session]);
 
     return (
         <>
             <NextHead title="Piarq | Projetos" />
-            {/* {loading ? (
+            {loading ? (
                 <LinearLoading />
             ) : (
-                <> */}
-            <Menu image={session?.user?.image} />
-            <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                alignContent="center"
-            >
-                <Grid
-                    container
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    alignContent="center"
-                    wrap="wrap"
-                    sx={{ width: 280, height: 280 }}
-                >
-                    <Typography fontFamily={"Pacifico"} fontSize={60}>
-                        Projetos
-                    </Typography>
-                </Grid>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    alignContent="flex-start"
-                    wrap="wrap"
-                    sx={{ width: "90vw", height: "100%" }}
-                >
-                    {listaObras.map((item, index) => (
-                        <CardObra data={item} key={index} />
-                    ))}
-                    <CardCriarObra userEmail={session?.user?.email} />
-                </Grid>
-            </Grid>
-            {/* </>
-            )} */}
+                <>
+                    <Menu image={session?.user?.image} />
+                    <Grid
+                        container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        alignContent="center"
+                    >
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            sx={{ width: 280, height: 280 }}
+                        >
+                            <Typography fontFamily={"Pacifico"} fontSize={60}>
+                                Projetos
+                            </Typography>
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            alignContent="flex-start"
+                            wrap="wrap"
+                            sx={{ width: "90vw", height: "100%" }}
+                        >
+                            {listaObras.map((item, index) => (
+                                <CardObra data={item} key={index} />
+                            ))}
+                            <CardCriarObra userEmail={session?.user?.email} />
+                        </Grid>
+                    </Grid>
+                </>
+            )}
         </>
     );
 }
