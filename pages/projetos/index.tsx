@@ -70,6 +70,7 @@ export default function Projetos({ session }) {
 export async function getServerSideProps({ context }) {
     try {
         const session = await getSession();
+        console.log(session);
         return {
             props: { session },
         };

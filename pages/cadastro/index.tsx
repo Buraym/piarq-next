@@ -6,14 +6,36 @@ import Input from "../../src/components/Unform/Input";
 import CustomCheckbox from "../../src/components/Checkbox/Controlled";
 import Button from "../../src/components/Button";
 import NextHead from "../../src/components/defaultPage/NextHead";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 export default function Cadastro({}) {
     const { data: session } = useSession();
     const form = useRef(null);
-    function HandleSubmit(e) {
-        toast.success("Usuario Cadastrado com sucesso !!!");
+
+    async function HandleSubmit(formData) {
+        if (formData.termsAgreed) {
+            try {
+                const response = await axios.post(
+                    "http://localhost:5000/auth/register",
+                    formData
+                );
+                toast.success(response.data.message, {
+                    toastId: "0283028",
+                });
+            } catch (error) {
+                toast.error("Houve um erro ao tentar realizar o cadastro !!!", {
+                    toastId: "0283028",
+                });
+            }
+        } else {
+            toast.error("Você precisa aceitar os termos de uso !!!", {
+                toastId: "0283028",
+            });
+        }
     }
+
     return (
         <>
             <NextHead title="Piarq | Cadastro" />
@@ -51,6 +73,7 @@ export default function Cadastro({}) {
                     wrap="wrap"
                     sx={{ width: 280, height: 320 }}
                 >
+                    <ToastContainer autoClose={2000} />
                     <Form
                         ref={form}
                         onSubmit={HandleSubmit}
@@ -77,7 +100,8 @@ export default function Cadastro({}) {
                                 label="Nome Completo"
                                 cor="#ffba08"
                                 fullWidth={true}
-                                name="fullName"
+                                name="username"
+                                required
                             />
                         </Grid>
                         <Grid
@@ -93,6 +117,7 @@ export default function Cadastro({}) {
                                 cor="#ffba08"
                                 fullWidth
                                 name="email"
+                                required
                             />
                         </Grid>
                         <Grid
@@ -108,6 +133,7 @@ export default function Cadastro({}) {
                                 cor="#ffba08"
                                 fullWidth
                                 name="password"
+                                required
                             />
                         </Grid>
                         <Grid
@@ -139,7 +165,6 @@ export default function Cadastro({}) {
                             <Button
                                 variant="contained"
                                 type="submit"
-                                f={() => form.current.submitForm()}
                                 cor="#ffba08"
                                 fullWidth={true}
                             >

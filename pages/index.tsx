@@ -9,6 +9,8 @@ import Button from "../src/components/Button";
 import NextHead from "../src/components/defaultPage/NextHead/index";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinearLoading from "../src/components/LinearLoading";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 export default function Login({ session }) {
     const [loading, setLoading] = useState(false);
@@ -16,9 +18,26 @@ export default function Login({ session }) {
     const router = useRouter();
     // const { data: session } = useSession();
 
-    function HandleSubmit(e) {
-        console.log(e);
-        router.push("/home");
+    async function HandleSubmit(formData) {
+        if (formData.termsAgreed) {
+            try {
+                const response = await axios.post(
+                    "http://localhost:5000/auth/register",
+                    formData
+                );
+                toast.success(response.data.message, {
+                    toastId: "0283028",
+                });
+            } catch (error) {
+                toast.error("Houve um erro ao tentar realizar o cadastro !!!", {
+                    toastId: "0283028",
+                });
+            }
+        } else {
+            toast.error("Você precisa aceitar os termos de uso !!!", {
+                toastId: "0283028",
+            });
+        }
     }
 
     useEffect(() => {
@@ -67,6 +86,7 @@ export default function Login({ session }) {
                         wrap="wrap"
                         sx={{ width: 280, height: 320 }}
                     >
+                        <ToastContainer autoClose={2000} />
                         <Form
                             ref={form}
                             onSubmit={HandleSubmit}
