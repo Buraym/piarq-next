@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 interface Params {
     ariaLabel?: string;
     children: any;
-    f: any;
+    f?: any;
 }
 
 export default function CustomIconButton({ ariaLabel, children, f }: Params) {
