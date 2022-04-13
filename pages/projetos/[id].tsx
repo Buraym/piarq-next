@@ -33,7 +33,12 @@ export default function Projeto({ projeto }) {
     const router = useRouter();
     const [openModal, setOpenModal] = useState(false);
     const modalActions = [
-        <Button variant="contained" type="submit" cor="#ffba08">
+        <Button
+            key={"createbutton"}
+            variant="contained"
+            type="submit"
+            cor="#ffba08"
+        >
             Criar
         </Button>,
     ];
