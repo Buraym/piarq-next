@@ -7,6 +7,7 @@ interface Params {
     variant?: "standard" | "filled" | "outlined";
     label?: string;
     fullWidth?: boolean;
+    required?: boolean;
 }
 
 export default function Input({
@@ -15,6 +16,7 @@ export default function Input({
     variant,
     label,
     fullWidth,
+    required,
     ...rest
 }: Params) {
     const CustomInput = styled(TextField)({
@@ -43,6 +45,7 @@ export default function Input({
             variant={variant || "outlined"}
             label={label}
             fullWidth={fullWidth}
+            required={required}
             {...rest}
         />
     );

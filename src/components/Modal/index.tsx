@@ -1,3 +1,9 @@
+import { Box, Typography, Modal, Divider } from "@mui/material/";
+import { Close } from "@mui/icons-material/";
+import Fade from "@mui/material/Fade";
+import Grid from "@mui/material/Grid";
+import Button from "../Button/IconButton";
+
 interface Params {
     title: string;
     stepper?: any;
@@ -6,9 +12,6 @@ interface Params {
     children: any;
     actions: any[];
 }
-
-import { Box, Typography, Modal, Divider } from "@mui/material/";
-import Grid from "@mui/material/Grid";
 
 export default function CustomModal({
     title,
@@ -19,16 +22,17 @@ export default function CustomModal({
     actions,
 }: Params) {
     const style = {
-        position: "absolute" as "absolute",
+        position: "absolute",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
+        minWidth: "320px",
         width: "80vw",
-        height: "500px",
+        maxwidth: "850px",
         bgcolor: "background.paper",
-        borderRadius: "20px",
         boxShadow: 24,
         p: 4,
+        padding: 0,
     };
 
     return (
@@ -37,23 +41,32 @@ export default function CustomModal({
                 <Grid
                     container
                     direction="row"
-                    justifyContent="center"
-                    alignItems="center"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
                     alignContent="center"
                     wrap="wrap"
+                    sx={{
+                        width: "100%",
+                        height: "12%",
+                        padding: "25px",
+                    }}
                 >
-                    <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
-                    >
-                        {title ? title : stepper}
-                    </Typography>
+                    {title ? (
+                        <Typography
+                            id="modal-modal-title"
+                            fontWeight="bold"
+                            fontSize={20}
+                        >
+                            {title}
+                        </Typography>
+                    ) : (
+                        stepper
+                    )}
+                    <Button f={() => handleClose(!open)}>
+                        <Close />
+                    </Button>
                 </Grid>
-                <Divider
-                    variant="fullWidth"
-                    sx={{ marginTop: "10px", marginBottom: "10px" }}
-                />
+                <Divider variant="fullWidth" sx={{ marginBottom: "10px" }} />
                 <Grid
                     container
                     spacing={1}
@@ -62,22 +75,24 @@ export default function CustomModal({
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
+                    sx={{ width: "100%", marginBottom: "50px" }}
                 >
                     {children}
                 </Grid>
-                <Divider
-                    variant="fullWidth"
-                    sx={{ marginTop: "10px", marginBottom: "10px" }}
-                />
+                <Divider variant="fullWidth" sx={{ marginBottom: "10px" }} />
                 <Grid
                     container
                     direction="row"
-                    justifyContent="center"
+                    justifyContent="flex-start"
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
+                    sx={{
+                        width: "100%",
+                        padding: "10px",
+                    }}
                 >
-                    {actions.map((action) => action)}
+                    {actions?.map((action) => action)}
                 </Grid>
             </Box>
         </Modal>

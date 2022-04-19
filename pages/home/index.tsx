@@ -13,7 +13,7 @@ export default function Index() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        session ? setLoading(false) : router.push("/login");
+        session ? setLoading(false) : router.push("/");
     }, [session]);
 
     return (

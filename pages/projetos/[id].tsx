@@ -21,14 +21,27 @@ import {
     ImageRounded,
     DocumentScannerRounded,
     BackupTable,
+    AddCircle,
 } from "@mui/icons-material";
+import CustomModal from "../../src/components/Modal";
+import Button from "../../src/components/Button";
 
 export default function Projeto({ projeto }) {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
     const router = useRouter();
-
+    const [openModal, setOpenModal] = useState(false);
+    const modalActions = [
+        <Button
+            key={"createbutton"}
+            variant="contained"
+            type="submit"
+            cor="#ffba08"
+        >
+            Criar
+        </Button>,
+    ];
     const steps = [
         {
             label: "Informação",
@@ -223,10 +236,10 @@ export default function Projeto({ projeto }) {
                             alignItems="center"
                             alignContent="center"
                             sx={{
-                                width: "250px",
-                                height: "200px",
+                                width: "200px",
+                                height: "160px",
                                 padding: "10px",
-                                margin: "30px",
+                                margin: "20px",
                                 borderRadius: "10px",
                                 border: "1px solid #ffb703",
                             }}
@@ -236,6 +249,36 @@ export default function Projeto({ projeto }) {
                             <Typography>Nome: {subProject.name}</Typography>
                         </Grid>
                     ))}
+                    <Grid
+                        container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        alignContent="center"
+                        sx={{
+                            width: "200px",
+                            height: "160px",
+                            padding: "10px",
+                            margin: "30px",
+                            borderRadius: "10px",
+                            border: "1px solid #ffb703",
+                        }}
+                    >
+                        <AddCircle onClick={() => setOpenModal(!openModal)} />
+                        <Typography> Subprojeto</Typography>
+                    </Grid>
+                    {openModal ? (
+                        <CustomModal
+                            title="Subprojeto"
+                            open={openModal}
+                            handleClose={setOpenModal}
+                            actions={modalActions}
+                        >
+                            <></>
+                        </CustomModal>
+                    ) : (
+                        <></>
+                    )}
                 </Grid>
             ),
         },
@@ -243,10 +286,8 @@ export default function Projeto({ projeto }) {
 
     const { data: session } = useSession();
 
-    // useEffect(() => {
-    //     // const { pid } = router.query;
-    //     // GetObra(pid);
-    // }, []);
+    console.log(openModal);
+
     return (
         <>
             <NextHead title="Piarq | Projetos" />

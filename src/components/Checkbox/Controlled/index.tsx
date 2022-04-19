@@ -1,3 +1,4 @@
+import { orange } from "@mui/material/colors";
 import { Checkbox } from "unform-material-ui";
 
 interface Params {
@@ -12,7 +13,9 @@ export default function CustomCheckbox({ name, checked, f, ...rest }: Params) {
             name={name}
             onClick={f}
             checked={checked}
-            color="default"
+            style={{
+                color: orange[600],
+            }}
             {...rest}
         />
     );

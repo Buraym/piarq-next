@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import Button from "../../Button";
 import { useRouter } from "next/router";
-import Input from "../../Unform/Input";
 import {
     ExpandMoreOutlined,
     PhotoCameraBackTwoTone,
@@ -17,9 +16,8 @@ import {
 import CustomIconButton from "../../Button/IconButton";
 import { useState, useEffect } from "react";
 import CustomAutocomplete from "../../Input/AutoComplete";
-import axios from "axios";
 import CustomUncontrolledInput from "../../Input";
-import { ClassNames } from "@emotion/react";
+import Image from "next/image";
 
 interface Params {
     userEmail: string;
@@ -126,7 +124,12 @@ export default function CardCriarObra({ userEmail }: Params) {
                             wrap="wrap"
                         >
                             {image ? (
-                                <img src={image} />
+                                <Image
+                                    src={image}
+                                    alt="Landscape picture"
+                                    width={500}
+                                    height={500}
+                                />
                             ) : (
                                 <CustomIconButton ariaLabel="Botão de upload de foto">
                                     <PhotoCameraBackTwoTone

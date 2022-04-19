@@ -121,7 +121,9 @@ export default function Projetos({ cliente }) {
         },
     ];
 
-    useEffect(() => {}, []);
+    //useEffect(() => {
+    //     session ? setLoading(false) : router.push("/");
+    // }, [session]);
 
     return (
         <>

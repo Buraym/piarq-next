@@ -1,5 +1,5 @@
 import NextHead from "../../src/components/defaultPage/NextHead";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
@@ -9,14 +9,13 @@ import { projetos } from "../../testdata";
 import LinearLoading from "../../src/components/LinearLoading";
 import CardCriarObra from "../../src/components/Obra/CriarObra";
 
-export default function Projetos({}) {
+export default function Projetos({ session }) {
     const [loading, setLoading] = useState(true);
     const [listaObras, setListaObras] = useState(projetos);
     const router = useRouter();
-    const { data: session } = useSession();
 
     useEffect(() => {
-        session ? setLoading(false) : router.push("/login");
+        session ? setLoading(false) : setLoading(false);
     }, [session]);
 
     return (
@@ -66,4 +65,16 @@ export default function Projetos({}) {
             )}
         </>
     );
+}
+
+export async function getServerSideProps({ context }) {
+    try {
+        const session = await getSession();
+        console.log(session);
+        return {
+            props: { session },
+        };
+    } catch (err) {
+        console.error(err);
+    }
 }

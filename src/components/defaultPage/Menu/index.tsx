@@ -5,11 +5,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AccountBalance from "@mui/icons-material/AccountBalance";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { toast, ToastContainer } from "react-toastify";
 
 interface Params {
     image: string;
@@ -21,13 +20,7 @@ export default function Menu({ image }: Params) {
 
     function HandleLogOut() {
         signOut({ redirect: false });
-        router.push("/login");
-        // toast("🦄 Wow so easy!", {
-        //   closeOnClick: false,
-        //   toastId: "my_toast",
-        //   autoClose: 5000,
-        //   closeButton: false,
-        // });]
+        router.push("/");
     }
 
     return (
@@ -105,7 +98,7 @@ export default function Menu({ image }: Params) {
                             borderRadius: "10px",
                         }}
                     >
-                        <AccountBalance fontSize="medium" />
+                        <HistoryEduIcon fontSize="medium" />
                     </Button>
                     <Button
                         variant="text"
