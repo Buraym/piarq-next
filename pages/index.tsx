@@ -10,6 +10,7 @@ import NextHead from "../src/components/defaultPage/NextHead/index";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinearLoading from "../src/components/LinearLoading";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 export default function Login({ session }) {
@@ -19,22 +20,14 @@ export default function Login({ session }) {
     // const { data: session } = useSession();
 
     async function HandleSubmit(formData) {
-        if (formData.termsAgreed) {
-            try {
-                const response = await axios.post(
-                    "http://localhost:5000/auth/register",
-                    formData
-                );
-                toast.success(response.data.message, {
-                    toastId: "0283028",
-                });
-            } catch (error) {
-                toast.error("Houve um erro ao tentar realizar o cadastro !!!", {
-                    toastId: "0283028",
-                });
-            }
-        } else {
-            toast.error("Você precisa aceitar os termos de uso !!!", {
+        try {
+            const response = await axios.post(
+                "http://localhost:5000/auth/login",
+                formData
+            );
+            router.push("/home");
+        } catch (error) {
+            toast.error("Senha e/ou email errados", {
                 toastId: "0283028",
             });
         }
@@ -47,6 +40,7 @@ export default function Login({ session }) {
     return (
         <>
             <NextHead title={"Piarq | Login"} />
+
             {loading ? (
                 <LinearLoading />
             ) : (
@@ -58,6 +52,7 @@ export default function Login({ session }) {
                     alignContent="center"
                     wrap="wrap"
                 >
+                    <ToastContainer autoClose={2000} position={"top-right"} />
                     <Grid
                         container
                         direction="column"
@@ -86,7 +81,6 @@ export default function Login({ session }) {
                         wrap="wrap"
                         sx={{ width: 280, height: 320 }}
                     >
-                        <ToastContainer autoClose={2000} />
                         <Form
                             ref={form}
                             onSubmit={HandleSubmit}
@@ -113,7 +107,7 @@ export default function Login({ session }) {
                                     label="Login"
                                     cor="#ffba08"
                                     fullWidth={true}
-                                    name="login"
+                                    name="email"
                                 />
                             </Grid>
                             <Grid
@@ -170,7 +164,6 @@ export default function Login({ session }) {
                                     wrap="wrap"
                                     sx={{ width: 135, paddingLeft: "15px" }}
                                 >
-                                    {/* <Typography variant="body2" fontSize={12} fontWeight="bold">Redefinir senha ?</Typography> */}
                                     <Link
                                         href="#"
                                         variant="body2"
@@ -191,7 +184,6 @@ export default function Login({ session }) {
                                     >
                                         Criar conta ?
                                     </Link>
-                                    {/* <Typography variant="body2" fontSize={12} fontWeight="bold" onClick={() => navigate("/cadastro")}>Criar conta ?</Typography> */}
                                 </Grid>
                             </Grid>
                             <Grid
@@ -212,15 +204,7 @@ export default function Login({ session }) {
                                 </Button>
                                 <Button
                                     variant="contained"
-                                    f={
-                                        () => signIn("google")
-                                        // "google"
-                                        // // , {
-                                        // //     callbackUrl:
-                                        // //         // "http://localhost:3000/",
-                                        // //     // process.env.NEXTAUTH_URL,
-                                        // // }
-                                    }
+                                    f={() => signIn("google")}
                                     cor="#ffba08"
                                 >
                                     <GoogleIcon />

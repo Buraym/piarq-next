@@ -122,7 +122,7 @@ export default function Projetos({ cliente }) {
     ];
 
     //useEffect(() => {
-    //     session ? setLoading(false) : router.push("/login");
+    //     session ? setLoading(false) : router.push("/");
     // }, [session]);
 
     return (

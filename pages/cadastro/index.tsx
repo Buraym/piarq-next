@@ -2,6 +2,7 @@ import { useSession, getSession } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
 import { Form } from "@unform/web";
 import { useRef, useEffect } from "react";
+import { useRouter } from "next/router";
 import Input from "../../src/components/Unform/Input";
 import CustomCheckbox from "../../src/components/Checkbox/Controlled";
 import Button from "../../src/components/Button";
@@ -13,6 +14,7 @@ import axios from "axios";
 export default function Cadastro({}) {
     const { data: session } = useSession();
     const form = useRef(null);
+    const router = useRouter();
 
     async function HandleSubmit(formData) {
         if (formData.termsAgreed) {
@@ -24,13 +26,14 @@ export default function Cadastro({}) {
                 toast.success(response.data.message, {
                     toastId: "0283028",
                 });
+                router.push("/");
             } catch (error) {
-                toast.error("Houve um erro ao tentar realizar o cadastro !!!", {
+                toast.error("Houve um erro ao tentar realizar o cadastro", {
                     toastId: "0283028",
                 });
             }
         } else {
-            toast.error("Você precisa aceitar os termos de uso !!!", {
+            toast.error("Você precisa aceitar os termos de uso", {
                 toastId: "0283028",
             });
         }
