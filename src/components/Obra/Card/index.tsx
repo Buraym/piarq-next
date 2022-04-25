@@ -1,9 +1,9 @@
 import {
     Card,
-    CardHeader,
     CardMedia,
     CardContent,
     CardActions,
+    Chip,
     Typography,
     Grid,
     CardActionArea,
@@ -64,11 +64,10 @@ export default function CardObra({ data }: Params) {
                     alignContent="center"
                     wrap="wrap"
                     overflow="hidden"
-                    style={{ width: "47.5%", marginLeft: "2.5%" }}
+                    style={{ width: "62.5%", marginLeft: "2.5%" }}
                 >
                     <Typography fontSize={12} fontWeight="bold">
-                        {"CLIENTE: "}
-                        {data.clientName}
+                        <Chip label={data.clientName} size="small" />
                     </Typography>
                 </Grid>
 
@@ -79,11 +78,10 @@ export default function CardObra({ data }: Params) {
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
-                    style={{ width: "47.5%", marginLeft: "2.5%" }}
+                    style={{ width: "32.5%", marginLeft: "2.5%" }}
                 >
                     <Typography fontSize={12} fontWeight="bold">
-                        {"ENTREGA: "}
-                        {data.finishDate}
+                        <Chip label={data.finishDate} size="small" />
                     </Typography>
                 </Grid>
                 <Grid

@@ -9,6 +9,7 @@ import FotoTeste1 from "../../src/assets/clienteFotoTeste1.jpg";
 import FotoTeste2 from "../../src/assets/clienteFotoTeste2.jpg";
 import FotoTeste3 from "../../src/assets/clienteFotoTeste3.jpg";
 import CardCliente from "../../src/components/Cliente/Card";
+import CardCriarCliente from "../../src/components/Cliente/CriarCliente";
 import LinearLoading from "../../src/components/LinearLoading";
 
 export default function Clientes({}) {
@@ -81,6 +82,7 @@ export default function Clientes({}) {
                             {listaClientes.map((item, index) => (
                                 <CardCliente data={item} key={index} />
                             ))}
+                            <CardCriarCliente />
                         </Grid>
                     </Grid>
                 </>

@@ -265,7 +265,7 @@ export default function CardCriarObra({ userEmail }: Params) {
                     cor="#ffba08"
                 >
                     <MapsHomeWorkTwoTone style={{ color: "#ffba08" }} />
-                    Cadastrar Obra
+                    Cadastrar Projeto
                 </Button>
             </Grid>
         </Card>

@@ -197,7 +197,6 @@ export default function Login({ session }) {
                                 <Button
                                     variant="contained"
                                     type="submit"
-                                    f={() => form.current.submitForm()}
                                     cor="#ffba08"
                                 >
                                     Login
