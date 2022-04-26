@@ -4,21 +4,21 @@ import { Grid, Typography, Paper, Divider, Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
-import { clientes } from "../../testdata";
 import LinearLoading from "../../src/components/LinearLoading";
-import { projetos } from "../../testdata";
 import CustomStepper from "../../src/components/Stepper";
-import {
-    ImageRounded,
-    DocumentScannerRounded,
-    BackupTable,
-} from "@mui/icons-material";
+import { BackupTable } from "@mui/icons-material";
 import fotoTeste from "../../src/assets/clienteFotoTeste1.jpg";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
-export default function Projetos({ cliente }) {
+export default function Projetos() {
+    const [loading, setLoading] = useState(true);
     const [projetos, setProjetos] = useState([]);
+    const [cliente, setCliente] = useState(null);
     const [step, setStep] = useState(0);
     const router = useRouter();
+    const { id } = router.query;
     const { data: session } = useSession();
     const steps = [
         {
@@ -34,7 +34,9 @@ export default function Projetos({ cliente }) {
                         wrap="wrap"
                     >
                         <Typography fontWeight="bolder">Nome:</Typography>
-                        <Typography>{cliente.name}</Typography>
+                        <Typography sx={{ marginLeft: "5px" }}>
+                            {cliente?.name}
+                        </Typography>
                     </Grid>
                     <Grid
                         container
@@ -45,7 +47,9 @@ export default function Projetos({ cliente }) {
                         wrap="wrap"
                     >
                         <Typography fontWeight="bolder">Email:</Typography>
-                        <Typography>{cliente.email + " "}</Typography>
+                        <Typography sx={{ marginLeft: "5px" }}>
+                            {cliente?.email}
+                        </Typography>
                     </Grid>
                     <Grid
                         container
@@ -56,7 +60,11 @@ export default function Projetos({ cliente }) {
                         wrap="wrap"
                     >
                         <Typography fontWeight="bolder">Contato:</Typography>
-                        <Typography>{cliente.contact}</Typography>
+                        <Typography sx={{ marginLeft: "5px" }}>
+                            {cliente?.contact
+                                ? cliente.contact
+                                : "nenhum contato disponível"}
+                        </Typography>
                     </Grid>
                     <Grid
                         container
@@ -67,7 +75,9 @@ export default function Projetos({ cliente }) {
                         wrap="wrap"
                     >
                         <Typography fontWeight="bolder">Endereço:</Typography>
-                        <Typography>{cliente.address}</Typography>
+                        <Typography sx={{ marginLeft: "5px" }}>
+                            {cliente?.address}
+                        </Typography>
                     </Grid>
                 </Paper>
             ),
@@ -90,7 +100,7 @@ export default function Projetos({ cliente }) {
                         overflowY: "scroll",
                     }}
                 >
-                    {cliente.projects.map((project, index) => (
+                    {cliente?.projects.map((project, index) => (
                         <Grid
                             key={index}
                             container
@@ -107,12 +117,12 @@ export default function Projetos({ cliente }) {
                                 border: "1px solid #ffb703",
                             }}
                             onClick={() => {
-                                router.push("/projetos/" + project.id);
+                                router.push("/projetos/" + project?._id);
                             }}
                         >
                             <BackupTable style={{ color: "#ffb703" }} />
                             <Typography fontWeight="bolder">
-                                {project.name}
+                                {project?.name}
                             </Typography>
                         </Grid>
                     ))}
@@ -121,13 +131,33 @@ export default function Projetos({ cliente }) {
         },
     ];
 
-    //useEffect(() => {
-    //     session ? setLoading(false) : router.push("/");
-    // }, [session]);
+    async function GetClient() {
+        try {
+            setLoading(true);
+            const response = await axios.get(
+                "https://piarq.herokuapp.com/clientes/find",
+                {
+                    headers: {
+                        id: String(id),
+                    },
+                }
+            );
+            setCliente(response.data);
+            setLoading(false);
+        } catch (err) {
+            toast.error("Houve um erro ao tentar retornar os clientes !!!");
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        GetClient();
+        session ? setLoading(false) : setLoading(false);
+    }, [session]);
 
     return (
         <>
-            <NextHead title="Piarq | Clientes" />
+            <NextHead title="Piarq | Cliente" />
             <Menu image={session?.user?.image} />
             <Grid
                 container
@@ -145,7 +175,7 @@ export default function Projetos({ cliente }) {
                     sx={{ width: "90vw", height: "180px", marginTop: "20px" }}
                 >
                     <Avatar
-                        src={fotoTeste.src}
+                        src={cliente?.image}
                         sx={{ width: 72, height: 72 }}
                     />
                     <Divider
@@ -154,7 +184,7 @@ export default function Projetos({ cliente }) {
                         sx={{ marginLeft: "10px", marginRight: "10px" }}
                     />
                     <Typography fontFamily={"Pacifico"} fontSize={"25px"}>
-                        {cliente.name}
+                        {cliente?.name}
                     </Typography>
                 </Grid>
                 <Grid
@@ -178,14 +208,22 @@ export default function Projetos({ cliente }) {
     );
 }
 
-export async function getServerSideProps({ query }) {
-    const queryId = query.id;
-    try {
-        const cliente = clientes.find((item) => item.id === queryId);
-        return {
-            props: { cliente: cliente },
-        };
-    } catch (err) {
-        console.error(err);
-    }
-}
+// export async function getServerSideProps({ query }) {
+//     const queryId = query.id;
+//     try {
+//         const response = await axios.get(
+//             "http://localhost:5000/clientes/find",
+//             {
+//                 headers: {
+//                     id: queryId,
+//                 },
+//             }
+//         );
+//         // const cliente = clientes.find((item) => item.id === queryId);
+//         return {
+//             props: { cliente: response.data },
+//         };
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }

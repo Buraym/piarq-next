@@ -6,7 +6,8 @@ interface Params {
     cor: string;
     variant: "standard" | "filled" | "outlined";
     value: any;
-    setValue: any;
+    setValue?: any;
+    onChangeFunction?: any;
     required?: boolean;
     fullwidth?: boolean;
     margin?: "none" | "dense" | "normal";
@@ -20,6 +21,7 @@ export default function CustomUncontrolledInput({
     variant,
     value,
     setValue,
+    onChangeFunction,
     required,
     fullwidth,
     margin,
@@ -46,14 +48,10 @@ export default function CustomUncontrolledInput({
         },
     });
 
-    const handleChange = (event) => {
-        setValue(event.target.value);
-    };
-
     return (
         <CustomInput
             value={value}
-            onChange={handleChange}
+            onChange={() => onChangeFunction()}
             label={label}
             variant={variant}
             required={required}

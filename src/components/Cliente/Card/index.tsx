@@ -2,21 +2,35 @@ import {
     Card,
     CardMedia,
     CardContent,
-    CardActions,
     Typography,
     Grid,
     CardActionArea,
-    CardHeader,
 } from "@mui/material";
 import Button from "../../Button";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
-export default function CardCliente({ data }) {
+export default function CardCliente({ data, refresh }) {
     const router = useRouter();
 
-    function HandleDeleteCliente(id) {}
+    function HandleDeleteCliente(id) {
+        try {
+            axios.delete(`https://piarq.herokuapp.com/clientes/delete`, {
+                headers: {
+                    id: id,
+                },
+            });
+            toast.success("Cliente deletado com sucesso !!!");
+            refresh();
+        } catch (err) {
+            console.log(err);
+            toast.error("Houve um erro ao tentar excluir os cliente !!!");
+        }
+    }
 
     return (
         <Card
@@ -34,7 +48,7 @@ export default function CardCliente({ data }) {
                     width: "300px",
                     height: "220px",
                 }}
-                onClick={() => router.push("/clientes/" + data.id)}
+                onClick={() => router.push("/clientes/" + data._id)}
             >
                 <CardMedia
                     component="img"
@@ -88,7 +102,7 @@ export default function CardCliente({ data }) {
                     </Button>
                     <Button
                         variant="text"
-                        f={() => HandleDeleteCliente(data.id)}
+                        f={() => HandleDeleteCliente(data._id)}
                         cor="#ffba08"
                     >
                         <DeleteForeverIcon />

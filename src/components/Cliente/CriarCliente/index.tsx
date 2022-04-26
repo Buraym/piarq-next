@@ -5,32 +5,30 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    TextField,
 } from "@mui/material";
 import Button from "../../Button";
-import { useRouter } from "next/router";
 import {
     ExpandMoreOutlined,
     PhotoCameraBackTwoTone,
     Person,
 } from "@mui/icons-material";
 import CustomIconButton from "../../Button/IconButton";
-import { useState, useEffect } from "react";
-import CustomUncontrolledInput from "../../Input";
+import { useState } from "react";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
-export default function CardCriarCliente() {
-    const router = useRouter();
-    const [open, setOpen] = useState(false);
+export default function CardCriarCliente({ refresh }) {
     const [loading, setLoading] = useState(true);
     const [name, setName] = useState("");
     const [identity, setIdentity] = useState("");
     const [image, setImage] = useState("");
     const [address, setAddress] = useState("");
-    const [documents, setDocuments] = useState([]);
+    const [documents, setDocuments] = useState("");
     const [email, setEmail] = useState("");
+    const [contact, setContact] = useState("");
 
     async function Handlesubmit() {
         try {
@@ -42,17 +40,24 @@ export default function CardCriarCliente() {
                 documents,
                 address,
                 email,
+                contact,
+                user: "6265d1834e1858c4694a6563",
                 projects: [],
             };
+            console.log(data);
             const response = await axios.post(
-                "http://localhost:5000/cliente/create",
+                "https://piarq.herokuapp.com/clientes/create",
+                // "http://localhost:5000/clientes/create",
                 data
             );
+            console.log(response.data);
             toast.success("Cliente Cadastrado com sucesso !!!", {
                 toastId: "0283028",
             });
+            refresh();
             setLoading(false);
         } catch (err) {
+            console.log(err);
             toast.error("Houve um erro ao tentar realizar o cadastro !!!");
             setLoading(false);
         }
@@ -138,12 +143,12 @@ export default function CardCriarCliente() {
                                 marginBottom: 10,
                             }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
                                 label="Nome do Cliente"
                                 value={name}
-                                setValue={setName}
-                                variant="outlined"
+                                onChange={(event) =>
+                                    setName(event?.target.value)
+                                }
                             />
                         </Grid>
                         <Grid
@@ -155,12 +160,19 @@ export default function CardCriarCliente() {
                             wrap="wrap"
                             style={{ width: "100%", marginBottom: 10 }}
                         >
-                            <CustomUncontrolledInput
+                            {/* <CustomUncontrolledInput
                                 cor="ffba08"
                                 label="Email do Cliente"
                                 value={email}
                                 setValue={setEmail}
                                 variant="outlined"
+                            /> */}
+                            <TextField
+                                label="Email do Cliente"
+                                value={email}
+                                onChange={(event) =>
+                                    setEmail(event?.target.value)
+                                }
                             />
                         </Grid>
                         <Grid
@@ -172,12 +184,12 @@ export default function CardCriarCliente() {
                             wrap="wrap"
                             style={{ width: "100%", marginBottom: 10 }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
                                 label="Endereço do Cliente"
                                 value={address}
-                                setValue={setAddress}
-                                variant="outlined"
+                                onChange={(event) =>
+                                    setAddress(event?.target.value)
+                                }
                             />
                         </Grid>
                         <Grid
@@ -189,12 +201,29 @@ export default function CardCriarCliente() {
                             wrap="wrap"
                             style={{ width: "100%", marginBottom: 10 }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
                                 label="Identidade"
                                 value={identity}
-                                setValue={setIdentity}
-                                variant="outlined"
+                                onChange={(event) =>
+                                    setIdentity(event?.target.value)
+                                }
+                            />
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            style={{ width: "100%", marginBottom: 10 }}
+                        >
+                            <TextField
+                                label="Contato"
+                                value={contact}
+                                onChange={(event) =>
+                                    setContact(event?.target.value)
+                                }
                             />
                         </Grid>
                     </AccordionDetails>
@@ -214,12 +243,12 @@ export default function CardCriarCliente() {
                             wrap="wrap"
                             style={{ width: "100%" }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
                                 label="Documentos"
                                 value={documents}
-                                setValue={setDocuments}
-                                variant="outlined"
+                                onChange={(event) =>
+                                    setDocuments(event?.target?.value)
+                                }
                             />
                         </Grid>
                     </AccordionDetails>
@@ -236,7 +265,6 @@ export default function CardCriarCliente() {
             >
                 <Button
                     variant="contained"
-                    type="submit"
                     f={() => Handlesubmit()}
                     cor="#ffba08"
                 >
