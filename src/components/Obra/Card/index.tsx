@@ -69,7 +69,7 @@ export default function CardObra({ data }: Params) {
                     style={{ width: "62.5%", marginLeft: "2.5%" }}
                 >
                     {data?.clients?.map((item, index) => (
-                        <Chip label={item.name} size="small" />
+                        <Chip key={index} label={item.name} size="small" />
                     ))}
                 </Grid>
 

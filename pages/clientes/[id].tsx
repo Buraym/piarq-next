@@ -44,7 +44,7 @@ export default function Clientes() {
         subprojects: [],
     });
     const actions = [
-        <CustomIconButton f={AddProject}>
+        <CustomIconButton f={AddProject} key={0}>
             <AddBox sx={{ color: "#ffb703" }} />
         </CustomIconButton>,
     ];
