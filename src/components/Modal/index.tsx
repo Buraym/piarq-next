@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import Button from "../Button/IconButton";
 
 interface Params {
-    title: string;
+    title: any;
     stepper?: any;
     open: boolean;
     handleClose: any;

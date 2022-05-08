@@ -21,6 +21,8 @@ export default function CardObra({ data }: Params) {
 
     function HandleDeleteObra(id) {}
 
+    console.log(data);
+
     return (
         <Card
             style={{
@@ -37,11 +39,11 @@ export default function CardObra({ data }: Params) {
                     width: "300px",
                     height: "180px",
                 }}
-                onClick={() => router.push("/projetos/" + data.id)}
+                onClick={() => router.push("/projetos/" + data?.id)}
             >
                 <CardMedia
                     component="img"
-                    image={data.image}
+                    image={data?.image}
                     height={180}
                 ></CardMedia>
             </CardActionArea>
@@ -66,9 +68,9 @@ export default function CardObra({ data }: Params) {
                     overflow="hidden"
                     style={{ width: "62.5%", marginLeft: "2.5%" }}
                 >
-                    <Typography fontSize={12} fontWeight="bold">
-                        <Chip label={data.clientName} size="small" />
-                    </Typography>
+                    {data?.clients?.map((item, index) => (
+                        <Chip label={item.name} size="small" />
+                    ))}
                 </Grid>
 
                 <Grid
@@ -114,14 +116,14 @@ export default function CardObra({ data }: Params) {
             >
                 <Button
                     variant="text"
-                    f={() => HandleDeleteObra(data.id)}
+                    f={() => HandleDeleteObra(data._id)}
                     cor="#ffba08"
                 >
                     <DeleteForeverIcon />
                 </Button>
                 <Button
                     variant="text"
-                    f={() => router.push("/obra/" + data.id)}
+                    f={() => router.push("/obra/" + data._id)}
                     cor="#ffba08"
                 >
                     <EditIcon />

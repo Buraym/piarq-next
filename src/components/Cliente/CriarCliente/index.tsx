@@ -14,13 +14,14 @@ import {
     Person,
 } from "@mui/icons-material";
 import CustomIconButton from "../../Button/IconButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 export default function CardCriarCliente({ refresh }) {
+    const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
     const [name, setName] = useState("");
     const [identity, setIdentity] = useState("");
@@ -41,14 +42,20 @@ export default function CardCriarCliente({ refresh }) {
                 address,
                 email,
                 contact,
-                user: "6265d1834e1858c4694a6563",
+                user: session._id,
                 projects: [],
             };
             console.log(data);
             const response = await axios.post(
-                "https://piarq.herokuapp.com/clientes/create",
-                // "http://localhost:5000/clientes/create",
-                data
+                // "https://piarq.herokuapp.com/clientes/create",
+                "http://localhost:5000/clientes/create",
+                data,
+                {
+                    headers: {
+                        id: session._id,
+                        token: `Bearer ${session?.token}`,
+                    },
+                }
             );
             console.log(response.data);
             toast.success("Cliente Cadastrado com sucesso !!!", {
@@ -59,9 +66,23 @@ export default function CardCriarCliente({ refresh }) {
         } catch (err) {
             console.log(err);
             toast.error("Houve um erro ao tentar realizar o cadastro !!!");
+            refresh();
             setLoading(false);
         }
     }
+
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        if (sessionJSON) {
+            setSession(sessionJSON);
+        } else {
+            setSession(null);
+        }
+    }
+
+    useEffect(() => {
+        getSession();
+    }, []);
 
     return (
         <Card
@@ -140,6 +161,7 @@ export default function CardCriarCliente({ refresh }) {
                             style={{
                                 width: "100%",
                                 marginTop: 20,
+                                paddingTop: 5,
                                 marginBottom: 10,
                             }}
                         >

@@ -1,6 +1,5 @@
-import { useSession, signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Grid, Typography, Divider, Link } from "@mui/material";
+import { Grid, Typography, Divider, Link, IconButton } from "@mui/material";
 import { Form } from "@unform/web";
 import { useRef, useEffect, useState } from "react";
 import Input from "../src/components/Unform/Input";
@@ -12,30 +11,40 @@ import LinearLoading from "../src/components/LinearLoading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { Visibility } from "@mui/icons-material";
 
 export default function Login({ session }) {
     const [loading, setLoading] = useState(false);
+    const [loadingRequest, setLoadingRequest] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const form = useRef(null);
     const router = useRouter();
-    // const { data: session } = useSession();
 
     async function HandleSubmit(formData) {
         try {
+            setLoadingRequest(true);
             const response = await axios.post(
+                // "https://piarq.herokuapp.com/auth/login",
                 "http://localhost:5000/auth/login",
                 formData
             );
+            window.localStorage.setItem(
+                "session",
+                JSON.stringify({
+                    token: response.data.accessToken,
+                    _id: response.data._id,
+                    name: response.data.username,
+                    image: response.data.image,
+                })
+            );
+            setLoadingRequest(false);
             router.push("/home");
         } catch (error) {
-            toast.error("Senha e/ou email errados", {
-                toastId: "0283028",
-            });
+            console.log(error);
+            toast.error("Senha e/ou email errados", {});
+            setLoadingRequest(false);
         }
     }
-
-    useEffect(() => {
-        session ? router.push("/home") : setLoading(false);
-    }, [session]);
 
     return (
         <>
@@ -124,6 +133,19 @@ export default function Login({ session }) {
                                     cor="#ffba08"
                                     fullWidth
                                     name="password"
+                                    type={passwordVisible ? "text" : "password"}
+                                    endAction={
+                                        <IconButton
+                                            onClick={() =>
+                                                setPasswordVisible(
+                                                    !passwordVisible
+                                                )
+                                            }
+                                            style={{ color: "#ffba08" }}
+                                        >
+                                            <Visibility />
+                                        </IconButton>
+                                    }
                                 />
                             </Grid>
                             <Grid
@@ -194,20 +216,25 @@ export default function Login({ session }) {
                                 alignContent="center"
                                 wrap="wrap"
                             >
-                                <Button
-                                    variant="contained"
-                                    type="submit"
-                                    cor="#ffba08"
-                                >
-                                    Login
-                                </Button>
-                                <Button
+                                {loadingRequest ? (
+                                    <LinearLoading />
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        type="submit"
+                                        cor="#ffba08"
+                                    >
+                                        Login
+                                    </Button>
+                                )}
+
+                                {/* <Button
                                     variant="contained"
                                     f={() => signIn("google")}
                                     cor="#ffba08"
                                 >
                                     <GoogleIcon />
-                                </Button>
+                                </Button> */}
                             </Grid>
                         </Form>
                     </Grid>
@@ -217,18 +244,14 @@ export default function Login({ session }) {
     );
 }
 
-export async function getServerSideProps({ context }) {
-    try {
-        const session = await getSession();
-        if (session) {
-            return {
-                props: { session },
-            };
-        }
-        return {
-            props: { session: null },
-        };
-    } catch (err) {
-        console.error(`ERRO DE CONEXÂO: ${err}`);
+export function getServerSideProps({ req, res }) {
+    console.log(req.header);
+    if (req?.cookie?.accessToken && req?.cookie?.accessToken !== "") {
+        res.writeHead(302, {
+            Location: "/home",
+        });
+        res.end();
+    } else {
+        return { props: { session: null } };
     }
 }

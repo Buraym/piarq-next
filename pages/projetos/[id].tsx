@@ -1,21 +1,11 @@
 import NextHead from "../../src/components/defaultPage/NextHead";
-import { useSession } from "next-auth/react";
-import {
-    Grid,
-    Typography,
-    Paper,
-    Stepper,
-    Step,
-    StepLabel,
-    Chip,
-} from "@mui/material";
+import { Grid, Typography, Paper, Chip } from "@mui/material";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
 import axios from "axios";
 import LinearLoading from "../../src/components/LinearLoading";
-import { clientes, projetos } from "../../testdata";
-import Clientes from "../clientes/index";
+import { ToastContainer, toast } from "react-toastify";
 import CustomStepper from "../../src/components/Stepper";
 import {
     ImageRounded,
@@ -26,8 +16,9 @@ import {
 import CustomModal from "../../src/components/Modal";
 import Button from "../../src/components/Button";
 
-export default function Projeto({ projeto }) {
-    const [clientes, setClientes] = useState([]);
+export default function Projeto({ id }) {
+    const [session, setSession] = useState(null);
+    const [projeto, setProjeto] = useState(null);
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
     const router = useRouter();
@@ -42,6 +33,7 @@ export default function Projeto({ projeto }) {
             Criar
         </Button>,
     ];
+
     const steps = [
         {
             label: "Informação",
@@ -56,7 +48,7 @@ export default function Projeto({ projeto }) {
                         wrap="wrap"
                     >
                         <Typography fontWeight="bolder">Nome:</Typography>
-                        <Typography>{projeto.name}</Typography>
+                        <Typography>{projeto?.name}</Typography>
                     </Grid>
                     <Grid
                         container
@@ -68,9 +60,9 @@ export default function Projeto({ projeto }) {
                     >
                         <Typography fontWeight="bolder">Endereço:</Typography>
                         <Typography>
-                            {projeto.address + " "}
-                            {projeto.addresComplement
-                                ? projeto.addresComplement
+                            {projeto?.address + " "}
+                            {projeto?.addresComplement
+                                ? projeto?.addresComplement
                                 : ""}
                         </Typography>
                     </Grid>
@@ -86,12 +78,12 @@ export default function Projeto({ projeto }) {
                             Cliente(s):{" "}
                         </Typography>
                         <Typography>
-                            {projeto.clientes.map((cliente, index) => (
+                            {projeto?.clients?.map((cliente, index) => (
                                 <Chip
                                     key={index}
                                     label={
                                         <Typography fontWeight="bold">
-                                            {cliente.name}
+                                            {cliente?.name}
                                         </Typography>
                                     }
                                     sx={{
@@ -100,7 +92,9 @@ export default function Projeto({ projeto }) {
                                     }}
                                     size="small"
                                     onClick={() => {
-                                        router.push(`/clientes/${cliente.id}`);
+                                        router.push(
+                                            `/clientes/${cliente?._id}`
+                                        );
                                     }}
                                 ></Chip>
                             ))}
@@ -115,7 +109,7 @@ export default function Projeto({ projeto }) {
                         wrap="wrap"
                     >
                         <Typography fontWeight="bolder">CEP :</Typography>
-                        <Typography>{projeto.cep}</Typography>
+                        <Typography>{projeto?.cep}</Typography>
                     </Grid>
                     <Grid
                         container
@@ -128,7 +122,7 @@ export default function Projeto({ projeto }) {
                         <Typography fontWeight="bolder">
                             Data de Entrega:
                         </Typography>
-                        <Typography>{projeto.finishDate}</Typography>
+                        <Typography>{projeto?.finishDate}</Typography>
                     </Grid>
                     <Grid
                         container
@@ -136,10 +130,13 @@ export default function Projeto({ projeto }) {
                         justifyContent="flex-start"
                         alignItems="flex-start"
                         alignContent="flex-start"
-                        wrap="wrap"
                     >
-                        <Typography fontWeight="bolder">Descrição:</Typography>
-                        <Typography>{projeto.description}</Typography>
+                        <Typography align="justify">
+                            <Typography fontWeight="bolder">
+                                Descrição:
+                            </Typography>
+                            {projeto?.description}
+                        </Typography>
                     </Grid>
                 </Paper>
             ),
@@ -186,7 +183,7 @@ export default function Projeto({ projeto }) {
                         overflowY: "scroll",
                     }}
                 >
-                    {projeto.docs.map((doc, index) => (
+                    {projeto?.docs?.map((doc, index) => (
                         <Grid
                             key={index}
                             container
@@ -202,7 +199,7 @@ export default function Projeto({ projeto }) {
                         >
                             <DocumentScannerRounded />
                             <Typography fontWeight="bolder">
-                                {doc.label}
+                                {doc?.label}
                             </Typography>
                         </Grid>
                     ))}
@@ -227,7 +224,7 @@ export default function Projeto({ projeto }) {
                         overflowY: "scroll",
                     }}
                 >
-                    {projeto.subProjects.map((subProject, index) => (
+                    {projeto?.subProjects?.map((subProject, index) => (
                         <Grid
                             key={index}
                             container
@@ -245,8 +242,8 @@ export default function Projeto({ projeto }) {
                             }}
                         >
                             <BackupTable style={{ color: "#fb5607" }} />
-                            <Typography>Tipo: {subProject.type}</Typography>
-                            <Typography>Nome: {subProject.name}</Typography>
+                            <Typography>Tipo: {subProject?.type}</Typography>
+                            <Typography>Nome: {subProject?.name}</Typography>
                         </Grid>
                     ))}
                     <Grid
@@ -284,9 +281,46 @@ export default function Projeto({ projeto }) {
         },
     ];
 
-    const { data: session } = useSession();
+    async function GetProject(session, idProject) {
+        try {
+            setLoading(true);
+            console.log(router.query.id);
+            const response = await axios.get(
+                // "https://piarq.herokuapp.com/clientes/find",
+                "http://localhost:5000/projetos/find",
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        project: idProject,
+                    },
+                }
+            );
+            console.log(response.data);
+            setProjeto(response.data);
+            setLoading(false);
+        } catch (err) {
+            console.log(err);
+            toast.error("Houve um erro ao tentar retornar os clientes !!!");
+            setLoading(false);
+        }
+    }
 
-    console.log(openModal);
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        setSession(sessionJSON);
+        if (sessionJSON) {
+            setLoading(false);
+        } else {
+            router.push("/");
+        }
+        const idProject = router.query.id;
+        await GetProject(sessionJSON, idProject);
+    }
+
+    useEffect(() => {
+        getSession();
+    }, []);
 
     return (
         <>
@@ -317,7 +351,7 @@ export default function Projeto({ projeto }) {
                                     fontFamily={"Pacifico"}
                                     fontSize={40}
                                 >
-                                    {projeto.name + " "}
+                                    {projeto?.name + " "}
                                     <ImageRounded
                                         style={{
                                             color: "#ffb703",
@@ -351,13 +385,8 @@ export default function Projeto({ projeto }) {
 }
 
 export async function getServerSideProps({ query }) {
-    const queryId = query.id;
-    try {
-        const projeto = projetos.find((item) => item.id === queryId);
-        return {
-            props: { projeto: projeto },
-        };
-    } catch (err) {
-        console.error(err);
-    }
+    const queryId = await query.id;
+    return {
+        props: { id: queryId },
+    };
 }

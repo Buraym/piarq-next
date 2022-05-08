@@ -1,5 +1,6 @@
 import { TextField } from "unform-material-ui";
 import { styled } from "@mui/system";
+import { InputAdornment } from "@mui/material";
 
 interface Params {
     name: string;
@@ -8,6 +9,8 @@ interface Params {
     label?: string;
     fullWidth?: boolean;
     required?: boolean;
+    type?: string;
+    endAction?: any;
 }
 
 export default function Input({
@@ -17,6 +20,8 @@ export default function Input({
     label,
     fullWidth,
     required,
+    type,
+    endAction,
     ...rest
 }: Params) {
     const CustomInput = styled(TextField)({
@@ -46,6 +51,14 @@ export default function Input({
             label={label}
             fullWidth={fullWidth}
             required={required}
+            type={type}
+            InputProps={{
+                endAdornment: (
+                    <InputAdornment position="end">
+                        {endAction ? endAction : <></>}
+                    </InputAdornment>
+                ),
+            }}
             {...rest}
         />
     );

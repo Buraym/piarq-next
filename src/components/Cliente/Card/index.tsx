@@ -13,17 +13,34 @@ import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { useState, useEffect } from "react";
 
 export default function CardCliente({ data, refresh }) {
+    const [session, setSession] = useState(null);
     const router = useRouter();
 
-    function HandleDeleteCliente(id) {
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        if (sessionJSON) {
+            setSession(sessionJSON);
+        } else {
+            setSession(null);
+        }
+    }
+
+    async function HandleDeleteCliente(id) {
         try {
-            axios.delete(`https://piarq.herokuapp.com/clientes/delete`, {
-                headers: {
-                    id: id,
-                },
-            });
+            await axios.delete(
+                // `https://piarq.herokuapp.com/clientes/delete`,
+                `http://localhost:5000/clientes/delete`,
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        client: id,
+                    },
+                }
+            );
             toast.success("Cliente deletado com sucesso !!!");
             refresh();
         } catch (err) {
@@ -31,6 +48,10 @@ export default function CardCliente({ data, refresh }) {
             toast.error("Houve um erro ao tentar excluir os cliente !!!");
         }
     }
+
+    useEffect(() => {
+        getSession();
+    }, []);
 
     return (
         <Card
@@ -71,8 +92,8 @@ export default function CardCliente({ data, refresh }) {
                     container
                     direction="column"
                     justifyContent="center"
-                    alignItems="center"
-                    alignContent="center"
+                    alignItems="flex-start"
+                    alignContent="flex-start"
                     wrap="wrap"
                     overflow="hidden"
                     style={{ width: "47.5%", marginLeft: "2.5%" }}
@@ -81,7 +102,7 @@ export default function CardCliente({ data, refresh }) {
                         {data.name}
                     </Typography>
                     <Typography fontSize={12} fontWeight="bold">
-                        {data.document}
+                        {data.identity}
                     </Typography>
                 </Grid>
                 <Grid

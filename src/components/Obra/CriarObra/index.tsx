@@ -18,16 +18,18 @@ import { useState, useEffect } from "react";
 import CustomAutocomplete from "../../Input/AutoComplete";
 import CustomUncontrolledInput from "../../Input";
 import Image from "next/image";
+import axios from "axios";
 
 interface Params {
-    userEmail: string;
+    id: any;
 }
 
-export default function CardCriarObra({ userEmail }: Params) {
+export default function CardCriarObra({ id }: Params) {
     const router = useRouter();
 
     const [image, setImage] = useState(null);
     const [client, setClient] = useState(null);
+    const [clients, setClients] = useState([]);
     const [name, setName] = useState("");
     const [dateStart, setDateStart] = useState("");
     const [dateFinish, setDateFinish] = useState("");
@@ -62,17 +64,17 @@ export default function CardCriarObra({ userEmail }: Params) {
 
     async function getClients() {
         try {
-            // setLoading(true);
-            // const response = await axios.get(
-            //     "dominio da requisição para pegar os clientes",
-            //     {
-            //         params: { user: userEmail },
-            //     }
-            // );
-            // setLoading(false);
-            // setOptions(response.data);
+            setLoading(true);
+            const response = await axios.get(
+                "https://piarq.herokuapp.com/clientes/list",
+                {
+                    headers: { id: id },
+                }
+            );
+            setLoading(false);
+            setOptions(response.data);
         } catch (err) {
-            // setLoading(false);
+            setLoading(false);
             console.log(err);
         }
     }

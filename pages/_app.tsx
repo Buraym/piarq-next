@@ -1,13 +1,8 @@
-import type { AppProps } from "next/app"
-import { SessionProvider } from "next-auth/react"
+import type { AppProps } from "next/app";
 
 export default function MyApp({
     Component,
-    pageProps: { session, ...pageProps }
+    pageProps: { pageProps },
 }: AppProps) {
-    return (
-        <SessionProvider session={session}>
-            <Component {...pageProps} />
-        </SessionProvider>
-    )
+    return <Component {...pageProps} />;
 }

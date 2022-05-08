@@ -1,20 +1,27 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Fade } from "@mui/material";
 import { useEffect, useState } from "react";
 import NextHead from "../../src/components/defaultPage/NextHead";
 import Menu from "../../src/components/defaultPage/Menu";
-import { ToastContainer } from "react-toastify";
 import LinearLoading from "../../src/components/LinearLoading";
 
 export default function Index() {
+    const [session, setSession] = useState(null);
     const router = useRouter();
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        setSession(sessionJSON);
+        if (sessionJSON) {
+            setLoading(false);
+        } else {
+            router.push("/");
+        }
+    }
 
     useEffect(() => {
-        session ? setLoading(false) : router.push("/");
-    }, [session]);
+        getSession();
+    }, []);
 
     return (
         <>
@@ -24,7 +31,7 @@ export default function Index() {
                 <LinearLoading />
             ) : (
                 <>
-                    <Menu image={session?.user?.image} />
+                    <Menu image={null} />
 
                     <Grid
                         container
@@ -52,13 +59,15 @@ export default function Index() {
                                 wrap="wrap"
                                 sx={{ height: 280 }}
                             >
-                                <Typography
-                                    variant="body2"
-                                    fontSize={60}
-                                    fontFamily={"Pacifico"}
-                                >
-                                    Olá, {session?.user?.name}
-                                </Typography>
+                                <Fade in={true} timeout={1500}>
+                                    <Typography
+                                        variant="body2"
+                                        fontSize={60}
+                                        fontFamily={"Pacifico"}
+                                    >
+                                        Olá, {session?.name}
+                                    </Typography>
+                                </Fade>
                             </Grid>
                             <Grid
                                 container
