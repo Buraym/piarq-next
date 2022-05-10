@@ -458,7 +458,7 @@ export default function Clientes() {
             const response = await axios.post(
                 // "https://piarq.herokuapp.com/projetos/create",
                 "http://localhost:5000/projetos/create",
-                form,
+                { ...form, user: session._id },
                 {
                     headers: {
                         token: `Bearer ${session.token}`,
@@ -466,6 +466,21 @@ export default function Clientes() {
                     },
                 }
             );
+            toast.success("Projeto criado com sucesso!");
+            setOpenModal(false);
+            setForm({
+                name: "",
+                image: "",
+                clients: [router.query.id],
+                dateStart: "",
+                dateFinish: "",
+                addressComplement: "",
+                address: "",
+                cep: "",
+                localizationMap: "",
+                description: "",
+                subprojects: [],
+            });
             setLoading(false);
         } catch (err) {
             setLoading(false);
@@ -513,8 +528,6 @@ export default function Clientes() {
     useEffect(() => {
         getSession();
     }, []);
-
-    console.log(form);
 
     return (
         <>

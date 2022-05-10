@@ -75,7 +75,7 @@ export default function CustomModal({
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
-                    sx={{ width: "100%", marginBottom: "50px" }}
+                    sx={{ width: "100%", marginBottom: "10px" }}
                 >
                     {children}
                 </Grid>

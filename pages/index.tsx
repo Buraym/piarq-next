@@ -1,5 +1,13 @@
 import { useRouter } from "next/router";
-import { Grid, Typography, Divider, Link, IconButton } from "@mui/material";
+import {
+    Grid,
+    Typography,
+    Divider,
+    Link,
+    IconButton,
+    TextField,
+    Checkbox,
+} from "@mui/material";
 import { Form } from "@unform/web";
 import { useRef, useEffect, useState } from "react";
 import Input from "../src/components/Unform/Input";
@@ -12,21 +20,26 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { Visibility } from "@mui/icons-material";
+import CustomUncontrolledInput from "../src/components/Input/index";
 
 export default function Login({ session }) {
     const [loading, setLoading] = useState(false);
     const [loadingRequest, setLoadingRequest] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const form = useRef(null);
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
+        remember: false,
+    });
     const router = useRouter();
 
-    async function HandleSubmit(formData) {
+    async function HandleSubmit() {
         try {
             setLoadingRequest(true);
             const response = await axios.post(
                 // "https://piarq.herokuapp.com/auth/login",
                 "http://localhost:5000/auth/login",
-                formData
+                form
             );
             window.localStorage.setItem(
                 "session",
@@ -88,53 +101,79 @@ export default function Login({ session }) {
                         alignItems="center"
                         alignContent="center"
                         wrap="wrap"
-                        sx={{ width: 280, height: 320 }}
+                        sx={{
+                            width: 280,
+                            height: 320,
+                            justifyContent: "space-evenly",
+                            flexDirection: "column",
+                            alignContent: "center",
+                            alignItems: "center",
+                        }}
                     >
-                        <Form
-                            ref={form}
-                            onSubmit={HandleSubmit}
-                            style={{
-                                display: "flex",
-                                width: 280,
-                                height: 320,
-                                justifyContent: "space-evenly",
-                                flexDirection: "column",
-                                alignContent: "center",
-                                alignItems: "center",
-                            }}
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            sx={{ width: 280 }}
                         >
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="center"
-                                alignItems="center"
-                                alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: 280 }}
-                            >
-                                <Input
-                                    label="Login"
-                                    cor="#ffba08"
-                                    fullWidth={true}
-                                    name="email"
-                                />
-                            </Grid>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="center"
-                                alignItems="center"
-                                alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: 280 }}
-                            >
-                                <Input
-                                    label="Senha"
-                                    cor="#ffba08"
-                                    fullWidth
-                                    name="password"
-                                    type={passwordVisible ? "text" : "password"}
-                                    endAction={
+                            <TextField
+                                variant="outlined"
+                                label="Login"
+                                value={form.email}
+                                fullWidth
+                                onChange={(ev) =>
+                                    setForm({
+                                        ...form,
+                                        email: ev?.target?.value,
+                                    })
+                                }
+                                sx={{
+                                    "& label.Mui-focused": {
+                                        color: "#ffba08",
+                                    },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: "#ffba08",
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "& fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                    },
+                                }}
+                            />
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            sx={{ width: 280 }}
+                        >
+                            <TextField
+                                variant="outlined"
+                                label="Senha"
+                                value={form.password}
+                                type={passwordVisible ? "text" : "password"}
+                                onChange={(ev) =>
+                                    setForm({
+                                        ...form,
+                                        password: ev?.target?.value,
+                                    })
+                                }
+                                fullWidth
+                                InputProps={{
+                                    endAdornment: (
                                         <IconButton
                                             onClick={() =>
                                                 setPasswordVisible(
@@ -145,69 +184,38 @@ export default function Login({ session }) {
                                         >
                                             <Visibility />
                                         </IconButton>
-                                    }
-                                />
-                            </Grid>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                                alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: 280 }}
-                            >
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="space-evenly"
-                                    alignItems="center"
-                                    alignContent="center"
-                                    wrap="wrap"
-                                    sx={{ width: 125 }}
-                                >
-                                    <CustomCheckbox name="continueLogged" />
-                                    <Typography variant="body2" fontSize={12}>
-                                        Lembrar-me ?
-                                    </Typography>
-                                </Grid>
-                                <Divider
-                                    orientation="vertical"
-                                    flexItem
-                                    style={{ marginLeft: "15px" }}
-                                    color="#ffba08"
-                                />
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                    alignContent="flex-start"
-                                    wrap="wrap"
-                                    sx={{ width: 135, paddingLeft: "15px" }}
-                                >
-                                    <Link
-                                        href="#"
-                                        variant="body2"
-                                        fontSize={12}
-                                        fontWeight="bold"
-                                        color={"#ffba08"}
-                                        underline="hover"
-                                    >
-                                        Redefinir senha ?
-                                    </Link>
-                                    <Link
-                                        href="/cadastro"
-                                        variant="body2"
-                                        fontSize={12}
-                                        fontWeight="bold"
-                                        color={"#ffba08"}
-                                        underline="hover"
-                                    >
-                                        Criar conta ?
-                                    </Link>
-                                </Grid>
-                            </Grid>
+                                    ),
+                                }}
+                                sx={{
+                                    "& label.Mui-focused": {
+                                        color: "#ffba08",
+                                    },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: "#ffba08",
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "& fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                    },
+                                }}
+                            />
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            sx={{ width: 280 }}
+                        >
                             <Grid
                                 container
                                 direction="row"
@@ -215,28 +223,87 @@ export default function Login({ session }) {
                                 alignItems="center"
                                 alignContent="center"
                                 wrap="wrap"
+                                sx={{ width: 125 }}
                             >
-                                {loadingRequest ? (
-                                    <LinearLoading />
-                                ) : (
-                                    <Button
-                                        variant="contained"
-                                        type="submit"
-                                        cor="#ffba08"
-                                    >
-                                        Login
-                                    </Button>
-                                )}
+                                <Checkbox
+                                    value={form.remember}
+                                    onChange={() =>
+                                        setForm({
+                                            ...form,
+                                            remember: !form.remember,
+                                        })
+                                    }
+                                    style={{ color: "#ffba08" }}
+                                />
+                                <Typography variant="body2" fontSize={12}>
+                                    Lembrar-me ?
+                                </Typography>
+                            </Grid>
+                            <Divider
+                                orientation="vertical"
+                                flexItem
+                                style={{ marginLeft: "15px" }}
+                                color="#ffba08"
+                            />
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                alignContent="flex-start"
+                                wrap="wrap"
+                                sx={{ width: 135, paddingLeft: "15px" }}
+                            >
+                                <Link
+                                    href="#"
+                                    variant="body2"
+                                    fontSize={12}
+                                    fontWeight="bold"
+                                    color={"#ffba08"}
+                                    underline="hover"
+                                >
+                                    Redefinir senha ?
+                                </Link>
+                                <Link
+                                    href="/cadastro"
+                                    variant="body2"
+                                    fontSize={12}
+                                    fontWeight="bold"
+                                    color={"#ffba08"}
+                                    underline="hover"
+                                >
+                                    Criar conta ?
+                                </Link>
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="space-evenly"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                        >
+                            {loadingRequest ? (
+                                <LinearLoading />
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    cor="#ffba08"
+                                    f={() => HandleSubmit()}
+                                >
+                                    Login
+                                </Button>
+                            )}
 
-                                {/* <Button
+                            {/* <Button
                                     variant="contained"
                                     f={() => signIn("google")}
                                     cor="#ffba08"
                                 >
                                     <GoogleIcon />
                                 </Button> */}
-                            </Grid>
-                        </Form>
+                        </Grid>
                     </Grid>
                 </Grid>
             )}

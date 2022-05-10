@@ -367,7 +367,8 @@ export default function Projeto({ id }) {
                                 alignItems="flex-start"
                                 alignContent="flex-start"
                                 wrap="wrap"
-                                sx={{ width: "90vw", height: "900px" }}
+                                overflow="scroll"
+                                sx={{ width: "90vw", height: "100vh" }}
                             >
                                 <CustomStepper
                                     steps={steps}

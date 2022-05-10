@@ -95,7 +95,7 @@ export default function Projetos() {
                             {listaObras.map((item, index) => (
                                 <CardObra data={item} key={index} />
                             ))}
-                            <CardCriarObra id={session?.user?.email} />
+                            <CardCriarObra refresh={getSession} />
                         </Grid>
                     </Grid>
                 </>
