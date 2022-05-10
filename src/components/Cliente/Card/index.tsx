@@ -2,7 +2,6 @@ import {
     Card,
     CardMedia,
     CardContent,
-    CardActions,
     Typography,
     Grid,
     CardActionArea,
@@ -11,11 +10,48 @@ import Button from "../../Button";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-export default function CardCliente({ data }) {
+export default function CardCliente({ data, refresh }) {
+    const [session, setSession] = useState(null);
     const router = useRouter();
 
-    function HandleDeleteCliente(id) {}
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        if (sessionJSON) {
+            setSession(sessionJSON);
+        } else {
+            setSession(null);
+        }
+    }
+
+    async function HandleDeleteCliente(id) {
+        try {
+            await axios.delete(
+                // `https://piarq.herokuapp.com/clientes/delete`,
+                `http://localhost:5000/clientes/delete`,
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        client: id,
+                    },
+                }
+            );
+            toast.success("Cliente deletado com sucesso !!!");
+            refresh();
+        } catch (err) {
+            console.log(err);
+            toast.error("Houve um erro ao tentar excluir os cliente !!!");
+        }
+    }
+
+    useEffect(() => {
+        getSession();
+    }, []);
 
     return (
         <Card
@@ -31,21 +67,21 @@ export default function CardCliente({ data }) {
             <CardActionArea
                 style={{
                     width: "300px",
-                    height: "200px",
+                    height: "220px",
                 }}
-                onClick={() => router.push("/clientes/" + data.id)}
+                onClick={() => router.push("/clientes/" + data._id)}
             >
                 <CardMedia
                     component="img"
                     image={data.image}
-                    height={200}
+                    height={220}
                 ></CardMedia>
             </CardActionArea>
             <CardContent
                 style={{
                     display: "flex",
-                    padding: "10px",
-                    height: "170px",
+                    padding: "5px",
+                    height: "80px",
                     justifyContent: "flex-start",
                     flexDirection: "row",
                     scrollbarWidth: "none",
@@ -54,17 +90,19 @@ export default function CardCliente({ data }) {
             >
                 <Grid
                     container
-                    direction="row"
+                    direction="column"
                     justifyContent="center"
-                    alignItems="center"
-                    alignContent="center"
+                    alignItems="flex-start"
+                    alignContent="flex-start"
                     wrap="wrap"
                     overflow="hidden"
                     style={{ width: "47.5%", marginLeft: "2.5%" }}
                 >
                     <Typography fontSize={12} fontWeight="bold">
-                        {"NOME: "}
                         {data.name}
+                    </Typography>
+                    <Typography fontSize={12} fontWeight="bold">
+                        {data.identity}
                     </Typography>
                 </Grid>
                 <Grid
@@ -76,37 +114,22 @@ export default function CardCliente({ data }) {
                     wrap="wrap"
                     style={{ width: "47.5%", marginLeft: "2.5%" }}
                 >
-                    <Typography fontSize={12} fontWeight="bold">
-                        {"CPF/CNPJ: "}
-                        {data.document}
-                    </Typography>
+                    <Button
+                        variant="text"
+                        f={() => router.push("/clientes/" + data.id)}
+                        cor="#ffba08"
+                    >
+                        <EditIcon />
+                    </Button>
+                    <Button
+                        variant="text"
+                        f={() => HandleDeleteCliente(data._id)}
+                        cor="#ffba08"
+                    >
+                        <DeleteForeverIcon />
+                    </Button>
                 </Grid>
             </CardContent>
-            <CardActions
-                style={{
-                    height: "40px",
-                    justifyContent: "space-evenly",
-                    flexDirection: "row",
-                    alignContent: "center",
-                    alignItems: "center",
-                    marginBottom: "10px",
-                }}
-            >
-                <Button
-                    variant="text"
-                    f={() => HandleDeleteCliente(data.id)}
-                    cor="#ffba08"
-                >
-                    <DeleteForeverIcon />
-                </Button>
-                <Button
-                    variant="text"
-                    f={() => router.push("/clientes/" + data.id)}
-                    cor="#ffba08"
-                >
-                    <EditIcon />
-                </Button>
-            </CardActions>
         </Card>
     );
 }

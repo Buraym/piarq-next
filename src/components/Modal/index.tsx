@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import Button from "../Button/IconButton";
 
 interface Params {
-    title: string;
+    title: any;
     stepper?: any;
     open: boolean;
     handleClose: any;
@@ -75,7 +75,7 @@ export default function CustomModal({
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
-                    sx={{ width: "100%", marginBottom: "50px" }}
+                    sx={{ width: "100%", marginBottom: "10px" }}
                 >
                     {children}
                 </Grid>

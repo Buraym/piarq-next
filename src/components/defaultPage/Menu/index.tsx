@@ -1,5 +1,4 @@
 import { Paper, Avatar } from "@mui/material";
-import { signOut } from "next-auth/react";
 import Button from "../../Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -19,7 +18,7 @@ export default function Menu({ image }: Params) {
     const router = useRouter();
 
     function HandleLogOut() {
-        signOut({ redirect: false });
+        // signOut({ redirect: false });
         router.push("/");
     }
 
@@ -29,6 +28,7 @@ export default function Menu({ image }: Params) {
             style={{
                 display: "flex",
                 position: "absolute",
+                zIndex: 999,
                 flexDirection: "column",
                 left: "7px",
                 top: "7px",

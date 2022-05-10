@@ -1,5 +1,4 @@
 import NextHead from "../../src/components/defaultPage/NextHead";
-import { getSession, useSession } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
@@ -8,15 +7,53 @@ import CardObra from "../../src/components/Obra/Card";
 import { projetos } from "../../testdata";
 import LinearLoading from "../../src/components/LinearLoading";
 import CardCriarObra from "../../src/components/Obra/CriarObra";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-export default function Projetos({ session }) {
+export default function Projetos() {
+    const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [listaObras, setListaObras] = useState(projetos);
+    const [listaObras, setListaObras] = useState([]);
+    const [loadingObras, setLoadingObras] = useState(true);
     const router = useRouter();
 
+    async function GetProjects(session) {
+        try {
+            setLoadingObras(true);
+            const response = await axios.get(
+                // "https://piarq.herokuapp.com/projetos/list",
+                "http://localhost:5000/projetos/list",
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                    },
+                }
+            );
+            console.log(response.data);
+            setListaObras(response.data);
+            setLoadingObras(false);
+        } catch (err) {
+            console.log(err);
+            toast.error("Houve um erro ao tentar retornar os clientes !!!");
+            setLoadingObras(false);
+        }
+    }
+
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        setSession(sessionJSON);
+        if (sessionJSON) {
+            setLoading(false);
+        } else {
+            router.push("/");
+        }
+        await GetProjects(sessionJSON);
+    }
+
     useEffect(() => {
-        session ? setLoading(false) : setLoading(false);
-    }, [session]);
+        getSession();
+    }, []);
 
     return (
         <>
@@ -58,23 +95,11 @@ export default function Projetos({ session }) {
                             {listaObras.map((item, index) => (
                                 <CardObra data={item} key={index} />
                             ))}
-                            <CardCriarObra userEmail={session?.user?.email} />
+                            <CardCriarObra refresh={getSession} />
                         </Grid>
                     </Grid>
                 </>
             )}
         </>
     );
-}
-
-export async function getServerSideProps({ context }) {
-    try {
-        const session = await getSession();
-        console.log(session);
-        return {
-            props: { session },
-        };
-    } catch (err) {
-        console.error(err);
-    }
 }

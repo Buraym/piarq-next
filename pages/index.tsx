@@ -1,6 +1,13 @@
-import { useSession, signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Grid, Typography, Divider, Link } from "@mui/material";
+import {
+    Grid,
+    Typography,
+    Divider,
+    Link,
+    IconButton,
+    TextField,
+    Checkbox,
+} from "@mui/material";
 import { Form } from "@unform/web";
 import { useRef, useEffect, useState } from "react";
 import Input from "../src/components/Unform/Input";
@@ -12,30 +19,45 @@ import LinearLoading from "../src/components/LinearLoading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { Visibility } from "@mui/icons-material";
+import CustomUncontrolledInput from "../src/components/Input/index";
 
 export default function Login({ session }) {
     const [loading, setLoading] = useState(false);
-    const form = useRef(null);
+    const [loadingRequest, setLoadingRequest] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
+        remember: false,
+    });
     const router = useRouter();
-    // const { data: session } = useSession();
 
-    async function HandleSubmit(formData) {
+    async function HandleSubmit() {
         try {
+            setLoadingRequest(true);
             const response = await axios.post(
+                // "https://piarq.herokuapp.com/auth/login",
                 "http://localhost:5000/auth/login",
-                formData
+                form
             );
+            window.localStorage.setItem(
+                "session",
+                JSON.stringify({
+                    token: response.data.accessToken,
+                    _id: response.data._id,
+                    name: response.data.username,
+                    image: response.data.image,
+                })
+            );
+            setLoadingRequest(false);
             router.push("/home");
         } catch (error) {
-            toast.error("Senha e/ou email errados", {
-                toastId: "0283028",
-            });
+            console.log(error);
+            toast.error("Senha e/ou email errados", {});
+            setLoadingRequest(false);
         }
     }
-
-    useEffect(() => {
-        session ? router.push("/home") : setLoading(false);
-    }, [session]);
 
     return (
         <>
@@ -79,113 +101,121 @@ export default function Login({ session }) {
                         alignItems="center"
                         alignContent="center"
                         wrap="wrap"
-                        sx={{ width: 280, height: 320 }}
+                        sx={{
+                            width: 280,
+                            height: 320,
+                            justifyContent: "space-evenly",
+                            flexDirection: "column",
+                            alignContent: "center",
+                            alignItems: "center",
+                        }}
                     >
-                        <Form
-                            ref={form}
-                            onSubmit={HandleSubmit}
-                            style={{
-                                display: "flex",
-                                width: 280,
-                                height: 320,
-                                justifyContent: "space-evenly",
-                                flexDirection: "column",
-                                alignContent: "center",
-                                alignItems: "center",
-                            }}
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            sx={{ width: 280 }}
                         >
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="center"
-                                alignItems="center"
-                                alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: 280 }}
-                            >
-                                <Input
-                                    label="Login"
-                                    cor="#ffba08"
-                                    fullWidth={true}
-                                    name="email"
-                                />
-                            </Grid>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="center"
-                                alignItems="center"
-                                alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: 280 }}
-                            >
-                                <Input
-                                    label="Senha"
-                                    cor="#ffba08"
-                                    fullWidth
-                                    name="password"
-                                />
-                            </Grid>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                                alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: 280 }}
-                            >
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="space-evenly"
-                                    alignItems="center"
-                                    alignContent="center"
-                                    wrap="wrap"
-                                    sx={{ width: 125 }}
-                                >
-                                    <CustomCheckbox name="continueLogged" />
-                                    <Typography variant="body2" fontSize={12}>
-                                        Lembrar-me ?
-                                    </Typography>
-                                </Grid>
-                                <Divider
-                                    orientation="vertical"
-                                    flexItem
-                                    style={{ marginLeft: "15px" }}
-                                    color="#ffba08"
-                                />
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                    alignContent="flex-start"
-                                    wrap="wrap"
-                                    sx={{ width: 135, paddingLeft: "15px" }}
-                                >
-                                    <Link
-                                        href="#"
-                                        variant="body2"
-                                        fontSize={12}
-                                        fontWeight="bold"
-                                        color={"#ffba08"}
-                                        underline="hover"
-                                    >
-                                        Redefinir senha ?
-                                    </Link>
-                                    <Link
-                                        href="/cadastro"
-                                        variant="body2"
-                                        fontSize={12}
-                                        fontWeight="bold"
-                                        color={"#ffba08"}
-                                        underline="hover"
-                                    >
-                                        Criar conta ?
-                                    </Link>
-                                </Grid>
-                            </Grid>
+                            <TextField
+                                variant="outlined"
+                                label="Login"
+                                value={form.email}
+                                fullWidth
+                                onChange={(ev) =>
+                                    setForm({
+                                        ...form,
+                                        email: ev?.target?.value,
+                                    })
+                                }
+                                sx={{
+                                    "& label.Mui-focused": {
+                                        color: "#ffba08",
+                                    },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: "#ffba08",
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "& fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                    },
+                                }}
+                            />
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            sx={{ width: 280 }}
+                        >
+                            <TextField
+                                variant="outlined"
+                                label="Senha"
+                                value={form.password}
+                                type={passwordVisible ? "text" : "password"}
+                                onChange={(ev) =>
+                                    setForm({
+                                        ...form,
+                                        password: ev?.target?.value,
+                                    })
+                                }
+                                fullWidth
+                                InputProps={{
+                                    endAdornment: (
+                                        <IconButton
+                                            onClick={() =>
+                                                setPasswordVisible(
+                                                    !passwordVisible
+                                                )
+                                            }
+                                            style={{ color: "#ffba08" }}
+                                        >
+                                            <Visibility />
+                                        </IconButton>
+                                    ),
+                                }}
+                                sx={{
+                                    "& label.Mui-focused": {
+                                        color: "#ffba08",
+                                    },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: "#ffba08",
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "& fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                    },
+                                }}
+                            />
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            sx={{ width: 280 }}
+                        >
                             <Grid
                                 container
                                 direction="row"
@@ -193,24 +223,87 @@ export default function Login({ session }) {
                                 alignItems="center"
                                 alignContent="center"
                                 wrap="wrap"
+                                sx={{ width: 125 }}
                             >
+                                <Checkbox
+                                    value={form.remember}
+                                    onChange={() =>
+                                        setForm({
+                                            ...form,
+                                            remember: !form.remember,
+                                        })
+                                    }
+                                    style={{ color: "#ffba08" }}
+                                />
+                                <Typography variant="body2" fontSize={12}>
+                                    Lembrar-me ?
+                                </Typography>
+                            </Grid>
+                            <Divider
+                                orientation="vertical"
+                                flexItem
+                                style={{ marginLeft: "15px" }}
+                                color="#ffba08"
+                            />
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                alignContent="flex-start"
+                                wrap="wrap"
+                                sx={{ width: 135, paddingLeft: "15px" }}
+                            >
+                                <Link
+                                    href="#"
+                                    variant="body2"
+                                    fontSize={12}
+                                    fontWeight="bold"
+                                    color={"#ffba08"}
+                                    underline="hover"
+                                >
+                                    Redefinir senha ?
+                                </Link>
+                                <Link
+                                    href="/cadastro"
+                                    variant="body2"
+                                    fontSize={12}
+                                    fontWeight="bold"
+                                    color={"#ffba08"}
+                                    underline="hover"
+                                >
+                                    Criar conta ?
+                                </Link>
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="space-evenly"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                        >
+                            {loadingRequest ? (
+                                <LinearLoading />
+                            ) : (
                                 <Button
                                     variant="contained"
-                                    type="submit"
-                                    f={() => form.current.submitForm()}
                                     cor="#ffba08"
+                                    f={() => HandleSubmit()}
                                 >
                                     Login
                                 </Button>
-                                <Button
+                            )}
+
+                            {/* <Button
                                     variant="contained"
                                     f={() => signIn("google")}
                                     cor="#ffba08"
                                 >
                                     <GoogleIcon />
-                                </Button>
-                            </Grid>
-                        </Form>
+                                </Button> */}
+                        </Grid>
                     </Grid>
                 </Grid>
             )}
@@ -218,18 +311,14 @@ export default function Login({ session }) {
     );
 }
 
-export async function getServerSideProps({ context }) {
-    try {
-        const session = await getSession();
-        if (session) {
-            return {
-                props: { session },
-            };
-        }
-        return {
-            props: { session: null },
-        };
-    } catch (err) {
-        console.error(`ERRO DE CONEXÂO: ${err}`);
+export function getServerSideProps({ req, res }) {
+    console.log(req.header);
+    if (req?.cookie?.accessToken && req?.cookie?.accessToken !== "") {
+        res.writeHead(302, {
+            Location: "/home",
+        });
+        res.end();
+    } else {
+        return { props: { session: null } };
     }
 }

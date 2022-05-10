@@ -5,6 +5,13 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    TextField,
+    MenuItem,
+    Select,
+    Chip,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
 } from "@mui/material";
 import Button from "../../Button";
 import { useRouter } from "next/router";
@@ -15,19 +22,17 @@ import {
 } from "@mui/icons-material";
 import CustomIconButton from "../../Button/IconButton";
 import { useState, useEffect } from "react";
-import CustomAutocomplete from "../../Input/AutoComplete";
-import CustomUncontrolledInput from "../../Input";
 import Image from "next/image";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-interface Params {
-    userEmail: string;
-}
-
-export default function CardCriarObra({ userEmail }: Params) {
+export default function CardCriarObra({ refresh }) {
     const router = useRouter();
+    const [session, setSession] = useState(null);
 
     const [image, setImage] = useState(null);
-    const [client, setClient] = useState(null);
+    const [client, setClient] = useState([]);
+    const [clients, setClients] = useState([]);
     const [name, setName] = useState("");
     const [dateStart, setDateStart] = useState("");
     const [dateFinish, setDateFinish] = useState("");
@@ -37,48 +42,86 @@ export default function CardCriarObra({ userEmail }: Params) {
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    function Handlesubmit() {
-        if (image && client) {
+    function HandleChangeClient(value) {
+        console.log(value);
+        if (client.indexOf(value) === -1) {
+            setClient(value);
+        } else {
+            setClient([client.filter((item) => item !== value)]);
+        }
+    }
+
+    async function Handlesubmit() {
+        if (client) {
             try {
+                setLoading(true);
                 const data = {
                     ...image,
-                    ...client,
+                    client: client.map((item) => item?._id),
                     name,
+                    user: session?._id,
                     dateStart,
                     dateFinish,
                     address,
                     description,
                 };
-                // setLoading(true);
-                // setLoading(false);
+                const response = await axios.post(
+                    // "https://piarq.herokuapp.com/clientes/create",
+                    "http://localhost:5000/projetos/create",
+                    data,
+                    {
+                        headers: {
+                            id: session._id,
+                            token: `Bearer ${session?.token}`,
+                        },
+                    }
+                );
+                toast.success("Projeto criada com sucesso!");
+                refresh();
+                setLoading(false);
             } catch (err) {
                 console.log(err);
-                // setLoading(false);
+                setLoading(false);
             }
-        } else {
-            window.alert("você deve preencher todos os campos !!!");
         }
     }
 
-    async function getClients() {
+    async function getClients(session, id) {
         try {
-            // setLoading(true);
-            // const response = await axios.get(
-            //     "dominio da requisição para pegar os clientes",
-            //     {
-            //         params: { user: userEmail },
-            //     }
-            // );
-            // setLoading(false);
-            // setOptions(response.data);
+            setLoading(true);
+            const response = await axios.get(
+                "https://piarq.herokuapp.com/clientes/list",
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                    },
+                }
+            );
+            console.log(response.data);
+            setClients(response.data);
+            setLoading(false);
+            setOptions(response.data);
         } catch (err) {
-            // setLoading(false);
+            setLoading(false);
             console.log(err);
         }
     }
 
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        setSession(sessionJSON);
+        if (sessionJSON) {
+            setLoading(false);
+        } else {
+            router.push("/");
+        }
+        const idClient = router.query.id;
+        await getClients(sessionJSON, idClient);
+    }
+
     useEffect(() => {
-        getClients();
+        getSession();
     }, []);
 
     return (
@@ -153,13 +196,16 @@ export default function CardCriarObra({ userEmail }: Params) {
                             alignContent="center"
                             wrap="wrap"
                             overflow="hidden"
-                            style={{ width: "100%", marginTop: 20 }}
+                            style={{
+                                width: "100%",
+                                marginTop: 20,
+                                paddingTop: "10px",
+                            }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
                                 label="Nome do projeto"
                                 value={name}
-                                setValue={setName}
+                                onChange={(ev) => setName(ev?.target?.value)}
                                 variant="outlined"
                             />
                         </Grid>
@@ -170,13 +216,12 @@ export default function CardCriarObra({ userEmail }: Params) {
                             alignItems="center"
                             alignContent="center"
                             wrap="wrap"
-                            style={{ width: "100%" }}
+                            style={{ width: "100%", paddingTop: "10px" }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
                                 label="Endereço do projeto"
                                 value={address}
-                                setValue={setAddress}
+                                onChange={(ev) => setAddress(ev?.target.value)}
                                 variant="outlined"
                             />
                         </Grid>
@@ -187,20 +232,14 @@ export default function CardCriarObra({ userEmail }: Params) {
                             alignItems="center"
                             alignContent="center"
                             wrap="wrap"
-                            style={{ width: "100%" }}
+                            style={{ width: "100%", paddingTop: "10px" }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
                                 label="Data de Começo"
                                 value={dateStart}
-                                setValue={setDateStart}
-                                variant="outlined"
-                            />
-                            <CustomUncontrolledInput
-                                cor="ffba08"
-                                label="Data de Entrega"
-                                value={dateFinish}
-                                setValue={setDateFinish}
+                                onChange={(ev) =>
+                                    setDateStart(ev?.target?.value)
+                                }
                                 variant="outlined"
                             />
                         </Grid>
@@ -211,13 +250,33 @@ export default function CardCriarObra({ userEmail }: Params) {
                             alignItems="center"
                             alignContent="center"
                             wrap="wrap"
-                            style={{ width: "100%" }}
+                            style={{ width: "100%", paddingTop: "10px" }}
                         >
-                            <CustomUncontrolledInput
-                                cor="ffba08"
+                            <TextField
+                                label="Data de Entrega"
+                                value={dateFinish}
+                                onChange={(ev) =>
+                                    setDateFinish(ev?.target?.value)
+                                }
+                                variant="outlined"
+                            />
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                            style={{ width: "100%", paddingTop: "10px" }}
+                        >
+                            <TextField
                                 label="Descrição breve do projeto"
                                 value={description}
-                                setValue={setDescription}
+                                fullWidth
+                                onChange={(ev) =>
+                                    setDescription(ev?.target?.value)
+                                }
                                 variant="outlined"
                                 multiline
                             />
@@ -238,13 +297,53 @@ export default function CardCriarObra({ userEmail }: Params) {
                             wrap="wrap"
                             style={{ width: "100%" }}
                         >
-                            <CustomAutocomplete
-                                label="Cliente do Projeto"
-                                value={client}
-                                setValue={setClient}
-                                options={options}
-                                width={250}
-                            />
+                            <FormControl fullWidth>
+                                <InputLabel id="clientes">
+                                    {`Cliente(s)`}
+                                </InputLabel>
+                                <Select
+                                    multiple
+                                    value={client}
+                                    labelId="clientes"
+                                    label={`Cliente(s)`}
+                                    fullWidth
+                                    onChange={(ev) =>
+                                        HandleChangeClient(ev?.target?.value)
+                                    }
+                                    input={<OutlinedInput label="Chip" />}
+                                    renderValue={(selected) => (
+                                        <Grid
+                                            container
+                                            spacing={1}
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                        >
+                                            {selected?.map((value) => (
+                                                <Chip
+                                                    key={value}
+                                                    label={
+                                                        <Typography
+                                                            fontWeight="bold"
+                                                            fontSize={12}
+                                                        >
+                                                            {value?.name}
+                                                        </Typography>
+                                                    }
+                                                />
+                                            ))}
+                                        </Grid>
+                                    )}
+                                >
+                                    {clients?.map((item, index) => (
+                                        <MenuItem key={index} value={item}>
+                                            {item?.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </Grid>
                     </AccordionDetails>
                 </Accordion>
@@ -265,7 +364,7 @@ export default function CardCriarObra({ userEmail }: Params) {
                     cor="#ffba08"
                 >
                     <MapsHomeWorkTwoTone style={{ color: "#ffba08" }} />
-                    Cadastrar Obra
+                    Cadastrar Projeto
                 </Button>
             </Grid>
         </Card>

@@ -1,4 +1,3 @@
-import { useSession, getSession } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
 import { Form } from "@unform/web";
 import { useRef, useEffect } from "react";
@@ -12,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 export default function Cadastro({}) {
-    const { data: session } = useSession();
     const form = useRef(null);
     const router = useRouter();
 
@@ -20,6 +18,7 @@ export default function Cadastro({}) {
         if (formData.termsAgreed) {
             try {
                 const response = await axios.post(
+                    // "/api/register",
                     "http://localhost:5000/auth/register",
                     formData
                 );
@@ -181,15 +180,4 @@ export default function Cadastro({}) {
             </Grid>
         </>
     );
-}
-
-export async function getServerSideProps({ context }) {
-    try {
-        const session = await getSession(context);
-        return {
-            props: { session },
-        };
-    } catch (err) {
-        console.error(err);
-    }
 }

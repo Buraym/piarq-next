@@ -1,44 +1,59 @@
 import NextHead from "../../src/components/defaultPage/NextHead";
-import { useSession, signIn, signOut } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
-import CardObra from "../../src/components/Obra/Card";
-import FotoTeste1 from "../../src/assets/clienteFotoTeste1.jpg";
-import FotoTeste2 from "../../src/assets/clienteFotoTeste2.jpg";
-import FotoTeste3 from "../../src/assets/clienteFotoTeste3.jpg";
 import CardCliente from "../../src/components/Cliente/Card";
+import CardCriarCliente from "../../src/components/Cliente/CriarCliente";
 import LinearLoading from "../../src/components/LinearLoading";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 export default function Clientes({}) {
+    const [session, setSession] = useState(null);
     const router = useRouter();
-    const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
-    const [listaClientes, setListaClientes] = useState([
-        {
-            id: "1283b12b391263c23",
-            name: "Antonieta Vasconcellos",
-            image: FotoTeste1.src,
-            document: "XXX.XXX.XXX-XX",
-        },
-        {
-            id: "89273b8ja0ja0sd9j0a",
-            name: "Paulo Antonio Guedes",
-            image: FotoTeste2.src,
-            document: "XXX.XXX.XXX-XX",
-        },
-        {
-            id: "9574q9dj90a8da088903",
-            name: "Diego Carlos Mendez",
-            image: FotoTeste3.src,
-            document: "XXX.XXX.XXX-XX",
-        },
-    ]);
+    const [loadingClients, setLoadingClients] = useState(false);
+    const [listaClientes, setListaClientes] = useState([]);
+
+    async function GetClients(session) {
+        try {
+            setLoadingClients(true);
+            const response = await axios.get(
+                "https://piarq.herokuapp.com/clientes/list",
+                // "http://localhost:5000/clientes/list",
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                    },
+                }
+            );
+            console.log(response.data);
+            setListaClientes(response.data);
+            setLoadingClients(false);
+        } catch (err) {
+            console.log(err);
+            toast.error("Houve um erro ao tentar retornar os clientes !!!");
+            setLoadingClients(false);
+        }
+    }
+
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        setSession(sessionJSON);
+        if (sessionJSON) {
+            setLoading(false);
+        } else {
+            router.push("/");
+        }
+        await GetClients(sessionJSON);
+    }
 
     useEffect(() => {
-        session ? setLoading(false) : setLoading(false);
-    }, [session]);
+        getSession();
+    }, []);
 
     return (
         <>
@@ -48,7 +63,7 @@ export default function Clientes({}) {
                 <LinearLoading />
             ) : (
                 <>
-                    <Menu image={session?.user?.image} />
+                    <Menu image={session?.image} />
                     <Grid
                         container
                         direction="column"
@@ -78,9 +93,21 @@ export default function Clientes({}) {
                             wrap="wrap"
                             sx={{ width: "90vw", height: "100%" }}
                         >
-                            {listaClientes.map((item, index) => (
-                                <CardCliente data={item} key={index} />
-                            ))}
+                            {loadingClients ? (
+                                <LinearLoading />
+                            ) : (
+                                <>
+                                    {listaClientes.map((item, index) => (
+                                        <CardCliente
+                                            data={item}
+                                            key={index}
+                                            refresh={getSession}
+                                        />
+                                    ))}
+
+                                    <CardCriarCliente refresh={getSession} />
+                                </>
+                            )}
                         </Grid>
                     </Grid>
                 </>

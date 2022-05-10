@@ -1,17 +1,25 @@
 import NextHead from "../../src/components/defaultPage/NextHead/index";
-import { useSession } from "next-auth/react";
 import { Grid, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
 
 export default function Perfil({}) {
-    const { data: session } = useSession();
+    const [session, setSession] = useState(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
-
-    // useEffect(() => {
-    //     session ? null : router.push("/login");
-    // }, [session]);
+    async function getSession() {
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        setSession(sessionJSON);
+        if (sessionJSON) {
+            setLoading(false);
+        } else {
+            router.push("/");
+        }
+    }
+    useEffect(() => {
+        getSession();
+    }, []);
 
     return (
         <>
