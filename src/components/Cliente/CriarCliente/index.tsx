@@ -47,8 +47,8 @@ export default function CardCriarCliente({ refresh }) {
             };
             console.log(data);
             const response = await axios.post(
-                // "https://piarq.herokuapp.com/clientes/create",
-                "http://localhost:5000/clientes/create",
+                "https://piarq.herokuapp.com/clientes/create",
+                // "http://localhost:5000/clientes/create",
                 data,
                 {
                     headers: {

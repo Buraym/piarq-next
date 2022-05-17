@@ -21,8 +21,8 @@ export default function Projetos() {
         try {
             setLoadingObras(true);
             const response = await axios.get(
-                // "https://piarq.herokuapp.com/projetos/list",
-                "http://localhost:5000/projetos/list",
+                "https://piarq.herokuapp.com/projetos/list",
+                // "http://localhost:5000/projetos/list",
                 {
                     headers: {
                         token: `Bearer ${session.token}`,

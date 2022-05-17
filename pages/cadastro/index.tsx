@@ -18,8 +18,8 @@ export default function Cadastro({}) {
         if (formData.termsAgreed) {
             try {
                 const response = await axios.post(
-                    // "/api/register",
-                    "http://localhost:5000/auth/register",
+                    "https://piarq.herokuapp.com/auth/register",
+                    // "http://localhost:5000/auth/register",
                     formData
                 );
                 toast.success(response.data.message, {

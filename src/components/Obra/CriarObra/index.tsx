@@ -66,8 +66,8 @@ export default function CardCriarObra({ refresh }) {
                     description,
                 };
                 const response = await axios.post(
-                    // "https://piarq.herokuapp.com/clientes/create",
-                    "http://localhost:5000/projetos/create",
+                    "https://piarq.herokuapp.com/clientes/create",
+                    // "http://localhost:5000/projetos/create",
                     data,
                     {
                         headers: {
@@ -91,6 +91,7 @@ export default function CardCriarObra({ refresh }) {
             setLoading(true);
             const response = await axios.get(
                 "https://piarq.herokuapp.com/clientes/list",
+                // "http://localhost:5000/clientes/list",
                 {
                     headers: {
                         token: `Bearer ${session.token}`,

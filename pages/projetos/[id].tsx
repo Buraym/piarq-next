@@ -1,5 +1,5 @@
 import NextHead from "../../src/components/defaultPage/NextHead";
-import { Grid, Typography, Paper, Chip } from "@mui/material";
+import { Grid, Typography, Paper, Chip, Skeleton } from "@mui/material";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
@@ -122,7 +122,7 @@ export default function Projeto({ id }) {
                         <Typography fontWeight="bolder">
                             Data de Entrega:
                         </Typography>
-                        <Typography>{projeto?.finishDate}</Typography>
+                        <Typography>{projeto?.dateFinish}</Typography>
                     </Grid>
                     <Grid
                         container
@@ -286,8 +286,8 @@ export default function Projeto({ id }) {
             setLoading(true);
             console.log(router.query.id);
             const response = await axios.get(
-                // "https://piarq.herokuapp.com/clientes/find",
-                "http://localhost:5000/projetos/find",
+                "https://piarq.herokuapp.com/projetos/find",
+                // "http://localhost:5000/projetos/find",
                 {
                     headers: {
                         token: `Bearer ${session.token}`,

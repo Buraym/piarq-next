@@ -31,8 +31,8 @@ export default function CardCliente({ data, refresh }) {
     async function HandleDeleteCliente(id) {
         try {
             await axios.delete(
-                // `https://piarq.herokuapp.com/clientes/delete`,
-                `http://localhost:5000/clientes/delete`,
+                `https://piarq.herokuapp.com/clientes/delete`,
+                // `http://localhost:5000/clientes/delete`,
                 {
                     headers: {
                         token: `Bearer ${session.token}`,

@@ -25,13 +25,17 @@ export default function CardObra({ data }: Params) {
 
     async function HandleDeleteObra(id) {
         try {
-            await axios.delete("http://localhost:5000/projetos/delete", {
-                headers: {
-                    token: `Bearer ${session?.token}`,
-                    id: session?._id,
-                    project: id,
-                },
-            });
+            await axios.delete(
+                "https://piarq.herokuapp.com//projetos/delete",
+                // "http://localhost:5000/projetos/delete",
+                {
+                    headers: {
+                        token: `Bearer ${session?.token}`,
+                        id: session?._id,
+                        project: id,
+                    },
+                }
+            );
         } catch (err) {
             console.log(err);
             toast.error("Houve um erro ao tentar deletar a obra !!!");

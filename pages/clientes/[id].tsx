@@ -456,8 +456,8 @@ export default function Clientes() {
             console.log(router.query.id);
             setLoading(true);
             const response = await axios.post(
-                // "https://piarq.herokuapp.com/projetos/create",
-                "http://localhost:5000/projetos/create",
+                "https://piarq.herokuapp.com/projetos/create",
+                // "http://localhost:5000/projetos/create",
                 { ...form, user: session._id },
                 {
                     headers: {
@@ -493,8 +493,8 @@ export default function Clientes() {
             setLoading(true);
             console.log(router.query.id);
             const response = await axios.get(
-                // "https://piarq.herokuapp.com/clientes/find",
-                "http://localhost:5000/clientes/find",
+                "https://piarq.herokuapp.com/clientes/find",
+                // "http://localhost:5000/clientes/find",
                 {
                     headers: {
                         token: `Bearer ${session.token}`,
