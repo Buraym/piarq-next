@@ -93,7 +93,11 @@ export default function Projetos() {
                             sx={{ width: "90vw", height: "100%" }}
                         >
                             {listaObras.map((item, index) => (
-                                <CardObra data={item} key={index} />
+                                <CardObra
+                                    data={item}
+                                    refresh={getSession}
+                                    key={index}
+                                />
                             ))}
                             <CardCriarObra refresh={getSession} />
                         </Grid>

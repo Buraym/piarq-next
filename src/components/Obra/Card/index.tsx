@@ -16,18 +16,15 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-interface Params {
-    data: any;
-}
-export default function CardObra({ data }: Params) {
+export default function CardObra({ data, refresh }) {
     const router = useRouter();
     const [session, setSession] = useState(null);
 
     async function HandleDeleteObra(id) {
         try {
             await axios.delete(
-                "https://piarq.herokuapp.com//projetos/delete",
-                // "http://localhost:5000/projetos/delete",
+                // "https://piarq.herokuapp.com//projetos/delete",
+                "http://localhost:5000/projetos/delete",
                 {
                     headers: {
                         token: `Bearer ${session?.token}`,
@@ -36,6 +33,8 @@ export default function CardObra({ data }: Params) {
                     },
                 }
             );
+            toast.success("Obra deletada com sucesso!");
+            refresh();
         } catch (err) {
             console.log(err);
             toast.error("Houve um erro ao tentar deletar a obra !!!");
@@ -159,13 +158,6 @@ export default function CardObra({ data }: Params) {
                     cor="#ffba08"
                 >
                     <DeleteForeverIcon />
-                </Button>
-                <Button
-                    variant="text"
-                    f={() => router.push("/obra/" + data._id)}
-                    cor="#ffba08"
-                >
-                    <EditIcon />
                 </Button>
             </CardActions>
         </Card>

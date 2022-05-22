@@ -7,29 +7,50 @@ import {
     Avatar,
     TextField,
     Chip,
+    IconButton,
+    Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
 import LinearLoading from "../../src/components/LinearLoading";
 import CustomStepper from "../../src/components/Stepper";
-import { BackupTable } from "@mui/icons-material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import CustomModal from "../../src/components/Modal";
 import CustomIconButton from "../../src/components/Button/IconButton";
-import { AddBox, Face } from "@mui/icons-material/";
+import {
+    AddBox,
+    Face,
+    Edit,
+    Close,
+    BackupTable,
+    Send,
+    PersonRemove,
+} from "@mui/icons-material/";
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 export default function Clientes() {
     const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingInfo, setLoadingInfo] = useState(false);
+    const [loadingProjects, setLoadingProjects] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [formEdit, setFormEdit] = useState({
+        name: "",
+        email: "",
+        identity: "",
+        contact: "",
+        address: "",
+    });
 
     const [cliente, setCliente] = useState(null);
     const [step, setStep] = useState(0);
     const router = useRouter();
+    const id = router.query.id;
     const [form, setForm] = useState({
         name: "",
         image: "",
@@ -49,6 +70,90 @@ export default function Clientes() {
         </CustomIconButton>,
     ];
 
+    async function HandleEdit() {
+        try {
+            setLoadingInfo(true);
+            const idClient = router.query.id;
+            const response = await axios.put(
+                // `https://piarq.herokuapp.com/clientes/update`,
+                `http://localhost:5000/clientes/update`,
+                formEdit,
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        client: String(idClient),
+                    },
+                }
+            );
+            setCliente(response.data);
+            setFormEdit({
+                name: response?.data?.name,
+                email: response?.data?.email,
+                identity: response?.data?.identity,
+                contact: response?.data?.contact,
+                address: response?.data?.address,
+            });
+            setEditMode(false);
+            setLoadingInfo(false);
+            toast.success("Cliente atualizado com sucesso !!!");
+        } catch (err) {
+            setLoadingInfo(false);
+            console.log(err);
+            toast.error("Erro ao atualizar cliente !!!");
+        }
+    }
+
+    async function HandleRemoveOwnership(projectId: any) {
+        try {
+            setLoadingProjects(true);
+
+            await axios.put(
+                // `https://piarq.herokuapp.com/clientes/removeownership`,
+                `http://localhost:5000/clientes/removeownership`,
+                {},
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        project: String(projectId),
+                        client: String(id),
+                    },
+                }
+            );
+            GetClient(session);
+            setLoadingProjects(false);
+        } catch (err) {
+            setLoadingProjects(false);
+            console.log(err);
+            toast.error("Erro ao retirar cliente de projeto !!!");
+        }
+    }
+
+    async function HandleDeleteProject(projectId: any) {
+        try {
+            setLoadingProjects(true);
+            await axios.delete(
+                // `https://piarq.herokuapp.com/projetos/delete`,
+                `http://localhost:5000/projetos/delete`,
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        project: String(projectId),
+                    },
+                }
+            );
+            toast.success("Projeto deletado com sucesso !!!");
+            GetClient(session);
+            setLoadingProjects(false);
+        } catch (err) {
+            setLoadingProjects(false);
+            console.log(err);
+            toast.error("Erro ao deletar projeto !!!");
+        }
+    }
+
     // mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
     // var map = new mapboxgl.Map({
     //     container: "mapbox-map",
@@ -59,71 +164,294 @@ export default function Clientes() {
         {
             label: "Informação",
             content: (
-                <Paper sx={{ padding: "10px" }} variant="outlined">
+                <>
                     <Grid
                         container
                         direction="row"
                         justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
+                        alignItems="center"
+                        alignContent="center"
                     >
-                        <Typography fontWeight="bolder">Nome:</Typography>
-                        <Typography sx={{ marginLeft: "5px" }}>
-                            {cliente?.name}
-                        </Typography>
+                        {loadingInfo ? (
+                            <LinearLoading />
+                        ) : (
+                            <Paper sx={{ padding: "10px" }} variant="outlined">
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Nome"
+                                            defaultValue={cliente?.name}
+                                            value={formEdit.name}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    name: ev.target.value,
+                                                });
+                                            }}
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Nome:
+                                            </Typography>
+                                            <Typography
+                                                sx={{ marginLeft: "5px" }}
+                                            >
+                                                {cliente?.name}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Email"
+                                            defaultValue={cliente?.email}
+                                            value={formEdit.email}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    email: ev.target.value,
+                                                });
+                                            }}
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Email:
+                                            </Typography>
+                                            <Typography
+                                                sx={{ marginLeft: "5px" }}
+                                            >
+                                                {cliente?.email}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Email"
+                                            defaultValue={cliente?.identity}
+                                            value={formEdit.identity}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    identity: ev.target.value,
+                                                });
+                                            }}
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Identidade:
+                                            </Typography>
+                                            <Typography
+                                                sx={{ marginLeft: "5px" }}
+                                            >
+                                                {cliente?.identity}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Contato"
+                                            defaultValue={cliente?.contact}
+                                            value={formEdit.contact}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    contact: ev.target.value,
+                                                });
+                                            }}
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Contato:
+                                            </Typography>
+                                            <Typography
+                                                sx={{ marginLeft: "5px" }}
+                                            >
+                                                {cliente?.contact
+                                                    ? cliente.contact
+                                                    : "nenhum contato disponível"}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Endereço"
+                                            defaultValue={cliente?.address}
+                                            value={formEdit.address}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    address: ev.target.value,
+                                                });
+                                            }}
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Endereço:
+                                            </Typography>
+                                            <Typography
+                                                sx={{ marginLeft: "5px" }}
+                                            >
+                                                {cliente?.address}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    wrap="wrap"
+                                    id="mapbox-map"
+                                ></Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{ marginTop: "10px" }}
+                                >
+                                    {!editMode ? (
+                                        <Button
+                                            onClick={() => setEditMode(true)}
+                                            style={{
+                                                backgroundColor: "#ffba08",
+                                            }}
+                                            fullWidth
+                                        >
+                                            <Edit style={{ color: "white" }} />
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <Button
+                                                onClick={() =>
+                                                    setEditMode(false)
+                                                }
+                                                style={{
+                                                    width: "47.5%",
+                                                    marginLeft: "1.25%",
+                                                    marginRight: "1.25%",
+                                                    backgroundColor: "#d00000",
+                                                }}
+                                            >
+                                                <Close
+                                                    style={{ color: "white" }}
+                                                />
+                                            </Button>
+                                            <Button
+                                                onClick={() => HandleEdit()}
+                                                style={{
+                                                    width: "47.5%",
+                                                    marginLeft: "1.25%",
+                                                    marginRight: "1.25%",
+                                                    backgroundColor: "#ffba08",
+                                                }}
+                                            >
+                                                <Send
+                                                    style={{ color: "white" }}
+                                                />
+                                            </Button>
+                                        </>
+                                    )}
+                                </Grid>
+                            </Paper>
+                        )}
                     </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                    >
-                        <Typography fontWeight="bolder">Email:</Typography>
-                        <Typography sx={{ marginLeft: "5px" }}>
-                            {cliente?.email}
-                        </Typography>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                    >
-                        <Typography fontWeight="bolder">Contato:</Typography>
-                        <Typography sx={{ marginLeft: "5px" }}>
-                            {cliente?.contact
-                                ? cliente.contact
-                                : "nenhum contato disponível"}
-                        </Typography>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                    >
-                        <Typography fontWeight="bolder">Endereço:</Typography>
-                        <Typography sx={{ marginLeft: "5px" }}>
-                            {cliente?.address}
-                        </Typography>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                        id="mapbox-map"
-                    ></Grid>
-                </Paper>
+                </>
             ),
         },
         {
@@ -144,86 +472,153 @@ export default function Clientes() {
                         overflowX: "scroll",
                     }}
                 >
-                    {cliente?.projects?.map((project, index) => (
+                    {loadingProjects ? (
                         <Grid
-                            key={index}
-                            item
+                            container
                             direction="column"
-                            justifyContent="flex-start"
-                            alignItems="flex-start"
+                            justifyContent="center"
+                            alignItems="center"
                             alignContent="center"
                             overflow="hidden"
                             sx={{
                                 width: "400px !important",
-                                height: "200px",
+                                height: "25px",
                                 padding: "15px",
                                 margin: "10px",
                                 borderRadius: "10px",
                                 border: "1px solid #ffb703",
                             }}
-                            onClick={() => {
-                                router.push("/projetos/" + project?._id);
-                            }}
                         >
+                            <LinearLoading />
+                        </Grid>
+                    ) : (
+                        cliente?.projects?.map((project, index) => (
                             <Grid
+                                key={index}
                                 item
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                                alignContent="center"
-                            >
-                                <Typography fontWeight="bolder">
-                                    {project?.name}
-                                </Typography>
-                                <Typography>
-                                    {project?.dateStart} - {project?.dateFinish}
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                item
-                                direction="row"
+                                direction="column"
                                 justifyContent="flex-start"
                                 alignItems="flex-start"
-                                alignContent="flex-start"
-                                overflow="scroll"
-                                wrap="nowrap"
+                                alignContent="center"
+                                overflow="hidden"
                                 sx={{
-                                    width: "100%",
-                                    height: "110px",
-                                    marginTop: "10px",
-                                    scrollbarWidth: "",
-                                    "-ms-overflow-style": "none",
-                                    "-webkit-scrollbar": {
-                                        display: "none" /* Safari and Chrome */,
-                                    },
-                                    WebkitOverflowScrolling: "touch",
+                                    width: "400px !important",
+                                    height: "200px",
+                                    padding: "15px",
+                                    margin: "10px",
+                                    borderRadius: "10px",
+                                    border: "1px solid #ffb703",
                                 }}
                             >
-                                <Typography variant="body2" align="justify">
-                                    {project?.description}
-                                </Typography>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    alignContent="center"
+                                >
+                                    <Grid item xs={9}>
+                                        <Typography
+                                            fontWeight="bolder"
+                                            onClick={() => {
+                                                router.push(
+                                                    `/projetos/${project?._id}`
+                                                );
+                                            }}
+                                        >
+                                            {project?.name}
+                                        </Typography>
+                                        <Typography
+                                            onClick={() => {
+                                                router.push(
+                                                    `/projetos/${project?._id}`
+                                                );
+                                            }}
+                                        >
+                                            {project?.dateStart} -{" "}
+                                            {project?.dateFinish}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <IconButton
+                                            onClick={() =>
+                                                HandleRemoveOwnership(
+                                                    project?._id
+                                                )
+                                            }
+                                        >
+                                            <PersonRemove
+                                                style={{ color: "#ffb703" }}
+                                            />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={() =>
+                                                HandleDeleteProject(
+                                                    project?._id
+                                                )
+                                            }
+                                        >
+                                            <DeleteForeverIcon
+                                                style={{ color: "#d00000" }}
+                                            />
+                                        </IconButton>
+                                    </Grid>
+                                </Grid>
+                                <Grid
+                                    item
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    overflow="scroll"
+                                    wrap="nowrap"
+                                    sx={{
+                                        width: "100%",
+                                        height: "110px",
+                                        marginTop: "10px",
+                                        scrollbarWidth: "",
+                                        "-ms-overflow-style": "none",
+                                        "-webkit-scrollbar": {
+                                            display:
+                                                "none" /* Safari and Chrome */,
+                                        },
+                                        WebkitOverflowScrolling: "touch",
+                                    }}
+                                    onClick={() => {
+                                        router.push(
+                                            "/projetos/" + project?._id
+                                        );
+                                    }}
+                                >
+                                    <Typography variant="body2" align="justify">
+                                        {project?.description}
+                                    </Typography>
+                                </Grid>
                             </Grid>
+                        ))
+                    )}
+                    {!loadingProjects && (
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            sx={{
+                                width: "250px",
+                                height: "200px",
+                                padding: "15px",
+                                margin: "30px",
+                                borderRadius: "10px",
+                                border: "1px solid #ffb703",
+                            }}
+                        >
+                            <CustomIconButton f={() => setOpenModal(true)}>
+                                <AddBox />
+                            </CustomIconButton>
                         </Grid>
-                    ))}
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        alignContent="center"
-                        sx={{
-                            width: "250px",
-                            height: "200px",
-                            padding: "15px",
-                            margin: "30px",
-                            borderRadius: "10px",
-                            border: "1px solid #ffb703",
-                        }}
-                    >
-                        <CustomIconButton f={() => setOpenModal(true)}>
-                            <AddBox />
-                        </CustomIconButton>
-                    </Grid>
+                    )}
+
                     <CustomModal
                         title={
                             <Typography fontWeight="bold">
@@ -481,6 +876,7 @@ export default function Clientes() {
                 description: "",
                 subprojects: [],
             });
+            GetClient(session);
             setLoading(false);
         } catch (err) {
             setLoading(false);
@@ -488,7 +884,7 @@ export default function Clientes() {
         }
     }
 
-    async function GetClient(session, idClient) {
+    async function GetClient(session) {
         try {
             setLoading(true);
             console.log(router.query.id);
@@ -499,12 +895,19 @@ export default function Clientes() {
                     headers: {
                         token: `Bearer ${session.token}`,
                         id: session._id,
-                        client: idClient,
+                        client: String(id),
                     },
                 }
             );
             console.log(response.data);
             setCliente(response.data);
+            setFormEdit({
+                name: response?.data?.name,
+                email: response?.data?.email,
+                identity: response?.data?.identity,
+                contact: response?.data?.contact,
+                address: response?.data?.address,
+            });
             setLoading(false);
         } catch (err) {
             console.log(err);
@@ -522,12 +925,14 @@ export default function Clientes() {
             router.push("/");
         }
         const idClient = router.query.id;
-        await GetClient(sessionJSON, idClient);
+        await GetClient(sessionJSON);
     }
 
     useEffect(() => {
         getSession();
     }, []);
+
+    console.log(cliente);
 
     return (
         <>

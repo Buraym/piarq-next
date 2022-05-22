@@ -108,23 +108,16 @@ export default function CardCliente({ data, refresh }) {
                 <Grid
                     container
                     direction="row"
-                    justifyContent="center"
+                    justifyContent="flex-end"
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
-                    style={{ width: "47.5%", marginLeft: "2.5%" }}
+                    style={{ width: "50%" }}
                 >
                     <Button
                         variant="text"
-                        f={() => router.push("/clientes/" + data.id)}
-                        cor="#ffba08"
-                    >
-                        <EditIcon />
-                    </Button>
-                    <Button
-                        variant="text"
                         f={() => HandleDeleteCliente(data._id)}
-                        cor="#ffba08"
+                        cor="#d00000"
                     >
                         <DeleteForeverIcon />
                     </Button>

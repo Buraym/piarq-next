@@ -66,7 +66,7 @@ export default function CardCriarObra({ refresh }) {
                     description,
                 };
                 const response = await axios.post(
-                    "https://piarq.herokuapp.com/clientes/create",
+                    "https://piarq.herokuapp.com/projetos/create",
                     // "http://localhost:5000/projetos/create",
                     data,
                     {
@@ -86,7 +86,7 @@ export default function CardCriarObra({ refresh }) {
         }
     }
 
-    async function getClients(session, id) {
+    async function getClients(session) {
         try {
             setLoading(true);
             const response = await axios.get(
@@ -118,7 +118,7 @@ export default function CardCriarObra({ refresh }) {
             router.push("/");
         }
         const idClient = router.query.id;
-        await getClients(sessionJSON, idClient);
+        await getClients(sessionJSON);
     }
 
     useEffect(() => {

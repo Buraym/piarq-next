@@ -1,5 +1,18 @@
 import NextHead from "../../src/components/defaultPage/NextHead";
-import { Grid, Typography, Paper, Chip, Skeleton } from "@mui/material";
+import {
+    Grid,
+    Typography,
+    Paper,
+    Chip,
+    Button,
+    Skeleton,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    OutlinedInput,
+    MenuItem,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
@@ -12,23 +25,40 @@ import {
     DocumentScannerRounded,
     BackupTable,
     AddCircle,
+    Edit,
+    Close,
+    Send,
+    DeleteForever,
 } from "@mui/icons-material";
 import CustomModal from "../../src/components/Modal";
-import Button from "../../src/components/Button";
 
-export default function Projeto({ id }) {
+export default function Projeto() {
     const [session, setSession] = useState(null);
     const [projeto, setProjeto] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [loadingInfo, setLoadingInfo] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [formEdit, setFormEdit] = useState({
+        name: "",
+        email: "",
+        identity: "",
+        contact: "",
+        address: "",
+        clients: [],
+        cep: "",
+        dateFinish: "",
+        description: "",
+    });
+    const [clients, setClients] = useState([]);
+    const [allClients, setAllClients] = useState([]);
     const [step, setStep] = useState(0);
     const router = useRouter();
     const [openModal, setOpenModal] = useState(false);
     const modalActions = [
         <Button
-            key={"createbutton"}
             variant="contained"
             type="submit"
-            cor="#ffba08"
+            style={{ backgroundColor: "#ffba08" }}
         >
             Criar
         </Button>,
@@ -38,107 +68,437 @@ export default function Projeto({ id }) {
         {
             label: "Informação",
             content: (
-                <Paper sx={{ padding: "10px" }} variant="outlined">
+                <>
                     <Grid
                         container
                         direction="row"
                         justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
+                        alignItems="center"
+                        alignContent="center"
                     >
-                        <Typography fontWeight="bolder">Nome:</Typography>
-                        <Typography>{projeto?.name}</Typography>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                    >
-                        <Typography fontWeight="bolder">Endereço:</Typography>
-                        <Typography>
-                            {projeto?.address + " "}
-                            {projeto?.addresComplement
-                                ? projeto?.addresComplement
-                                : ""}
-                        </Typography>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                    >
-                        <Typography fontWeight="bolder">
-                            Cliente(s):{" "}
-                        </Typography>
-                        <Typography>
-                            {projeto?.clients?.map((cliente, index) => (
-                                <Chip
-                                    key={index}
-                                    label={
-                                        <Typography fontWeight="bold">
-                                            {cliente?.name}
-                                        </Typography>
-                                    }
-                                    sx={{
-                                        backgroundColor: "lightgray",
-                                        color: "white",
+                        {loadingInfo ? (
+                            <LinearLoading />
+                        ) : (
+                            <Paper sx={{ padding: "10px" }} variant="outlined">
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        width: "380px",
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
                                     }}
-                                    size="small"
-                                    onClick={() => {
-                                        router.push(
-                                            `/clientes/${cliente?._id}`
-                                        );
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Nome"
+                                            defaultValue={projeto?.name}
+                                            value={formEdit.name}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    name: ev.target.value,
+                                                });
+                                            }}
+                                            fullWidth
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Nome:
+                                            </Typography>
+                                            <Typography>
+                                                {projeto?.name}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
                                     }}
-                                ></Chip>
-                            ))}
-                        </Typography>
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Endereço"
+                                            defaultValue={projeto?.address}
+                                            value={formEdit.address}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    address: ev.target.value,
+                                                });
+                                            }}
+                                            fullWidth
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Endereço:
+                                            </Typography>
+                                            <Typography>
+                                                {projeto?.address + " "}
+                                                {projeto?.addresComplement
+                                                    ? projeto?.addresComplement
+                                                    : ""}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <FormControl fullWidth>
+                                            <InputLabel id="clientes">
+                                                {`Cliente(s)`}
+                                            </InputLabel>
+                                            <Select
+                                                multiple
+                                                value={formEdit.clients}
+                                                labelId="clientes"
+                                                label={`Cliente(s)`}
+                                                fullWidth
+                                                onChange={(ev) => {
+                                                    HandleChangeClient(
+                                                        ev?.target.value
+                                                    );
+                                                }}
+                                                input={
+                                                    <OutlinedInput label="Chip" />
+                                                }
+                                                renderValue={(selected) => (
+                                                    <Grid
+                                                        container
+                                                        spacing={1}
+                                                        direction="row"
+                                                        justifyContent="center"
+                                                        alignItems="center"
+                                                        alignContent="center"
+                                                        wrap="wrap"
+                                                    >
+                                                        {selected?.map(
+                                                            (value) => (
+                                                                <Chip
+                                                                    key={value}
+                                                                    label={
+                                                                        <Typography
+                                                                            fontWeight="bold"
+                                                                            fontSize={
+                                                                                12
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                value?.name
+                                                                            }
+                                                                        </Typography>
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </Grid>
+                                                )}
+                                            >
+                                                {allClients.map(
+                                                    (item, index) => (
+                                                        <MenuItem
+                                                            key={index}
+                                                            value={item}
+                                                        >
+                                                            {item?.name}
+                                                        </MenuItem>
+                                                    )
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Cliente(s):{" "}
+                                            </Typography>
+                                            <Typography>
+                                                {projeto?.clients?.map(
+                                                    (cliente, index) =>
+                                                        projeto.clients.length >
+                                                        1 ? (
+                                                            <Chip
+                                                                key={index}
+                                                                label={
+                                                                    <Typography fontWeight="bold">
+                                                                        {
+                                                                            cliente?.name
+                                                                        }
+                                                                    </Typography>
+                                                                }
+                                                                sx={{
+                                                                    backgroundColor:
+                                                                        "lightgray",
+                                                                    color: "white",
+                                                                }}
+                                                                size="medium"
+                                                                onClick={() => {
+                                                                    router.push(
+                                                                        `/clientes/${cliente?._id}`
+                                                                    );
+                                                                }}
+                                                                onDelete={() =>
+                                                                    HandleRemoveOwnership(
+                                                                        cliente?.id
+                                                                    )
+                                                                }
+                                                                deleteIcon={
+                                                                    <DeleteForever />
+                                                                }
+                                                                style={{
+                                                                    marginLeft:
+                                                                        "3px",
+                                                                    marginRight:
+                                                                        "3px",
+                                                                }}
+                                                            ></Chip>
+                                                        ) : (
+                                                            <Chip
+                                                                key={index}
+                                                                label={
+                                                                    <Typography fontWeight="bold">
+                                                                        {
+                                                                            cliente?.name
+                                                                        }
+                                                                    </Typography>
+                                                                }
+                                                                sx={{
+                                                                    backgroundColor:
+                                                                        "lightgray",
+                                                                    color: "white",
+                                                                }}
+                                                                size="medium"
+                                                                onClick={() => {
+                                                                    router.push(
+                                                                        `/clientes/${cliente?._id}`
+                                                                    );
+                                                                }}
+                                                            ></Chip>
+                                                        )
+                                                )}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Cep"
+                                            defaultValue={projeto?.cep}
+                                            value={formEdit.cep}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    cep: ev.target.value,
+                                                });
+                                            }}
+                                            fullWidth
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                CEP:
+                                            </Typography>
+                                            <Typography>
+                                                {projeto?.cep}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Data de Entrega"
+                                            defaultValue={projeto?.dateFinish}
+                                            value={formEdit.dateFinish}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    dateFinish: ev.target.value,
+                                                });
+                                            }}
+                                            fullWidth
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography fontWeight="bolder">
+                                                Data de Entrega:
+                                            </Typography>
+                                            <Typography>
+                                                {projeto?.dateFinish}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{
+                                        marginBottom: "10px",
+                                        marginTop: "10px",
+                                    }}
+                                >
+                                    {editMode ? (
+                                        <TextField
+                                            label="Data de Entrega"
+                                            defaultValue={projeto?.description}
+                                            value={formEdit.description}
+                                            onChange={(ev) => {
+                                                setFormEdit({
+                                                    ...formEdit,
+                                                    description:
+                                                        ev.target.value,
+                                                });
+                                            }}
+                                            fullWidth
+                                            multiline
+                                        />
+                                    ) : (
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                            alignContent="center"
+                                        >
+                                            <Typography align="justify">
+                                                <Typography fontWeight="bolder">
+                                                    Descrição:
+                                                </Typography>
+                                                {projeto?.description}
+                                            </Typography>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="flex-start"
+                                    alignContent="flex-start"
+                                    style={{ marginTop: "10px" }}
+                                >
+                                    {!editMode ? (
+                                        <Button
+                                            onClick={() => setEditMode(true)}
+                                            style={{
+                                                backgroundColor: "#ffba08",
+                                            }}
+                                            fullWidth
+                                        >
+                                            <Edit style={{ color: "white" }} />
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <Button
+                                                onClick={() =>
+                                                    setEditMode(false)
+                                                }
+                                                style={{
+                                                    width: "47.5%",
+                                                    marginLeft: "1.25%",
+                                                    marginRight: "1.25%",
+                                                    backgroundColor: "#d00000",
+                                                }}
+                                            >
+                                                <Close
+                                                    style={{ color: "white" }}
+                                                />
+                                            </Button>
+                                            <Button
+                                                onClick={() => HandleEdit()}
+                                                style={{
+                                                    width: "47.5%",
+                                                    marginLeft: "1.25%",
+                                                    marginRight: "1.25%",
+                                                    backgroundColor: "#ffba08",
+                                                }}
+                                            >
+                                                <Send
+                                                    style={{ color: "white" }}
+                                                />
+                                            </Button>
+                                        </>
+                                    )}
+                                </Grid>
+                            </Paper>
+                        )}
                     </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                    >
-                        <Typography fontWeight="bolder">CEP :</Typography>
-                        <Typography>{projeto?.cep}</Typography>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                    >
-                        <Typography fontWeight="bolder">
-                            Data de Entrega:
-                        </Typography>
-                        <Typography>{projeto?.dateFinish}</Typography>
-                    </Grid>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                    >
-                        <Typography align="justify">
-                            <Typography fontWeight="bolder">
-                                Descrição:
-                            </Typography>
-                            {projeto?.description}
-                        </Typography>
-                    </Grid>
-                </Paper>
+                </>
             ),
         },
         {
@@ -281,10 +641,11 @@ export default function Projeto({ id }) {
         },
     ];
 
-    async function GetProject(session, idProject) {
+    const id = router.query.id;
+
+    async function GetProject(session) {
         try {
             setLoading(true);
-            console.log(router.query.id);
             const response = await axios.get(
                 "https://piarq.herokuapp.com/projetos/find",
                 // "http://localhost:5000/projetos/find",
@@ -292,16 +653,39 @@ export default function Projeto({ id }) {
                     headers: {
                         token: `Bearer ${session.token}`,
                         id: session._id,
-                        project: idProject,
+                        project: String(id),
                     },
                 }
             );
-            console.log(response.data);
             setProjeto(response.data);
+            setFormEdit({
+                name: response.data.name,
+                email: response.data.email,
+                identity: response.data.identity,
+                contact: response.data.contact,
+                address: response.data.address,
+                clients: response.data.clients,
+                cep: response.data.cep,
+                dateFinish: response.data.dateFinish,
+                description: response.data.description,
+            });
+            const response2 = await axios.get(
+                "https://piarq.herokuapp.com/clientes/list",
+                // "http://localhost:5000/clientes/list",
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                    },
+                }
+            );
+            setAllClients(response2.data);
             setLoading(false);
         } catch (err) {
             console.log(err);
-            toast.error("Houve um erro ao tentar retornar os clientes !!!");
+            toast.error(
+                "Houve um erro ao tentar retornar os dados do projeto !!!"
+            );
             setLoading(false);
         }
     }
@@ -314,13 +698,98 @@ export default function Projeto({ id }) {
         } else {
             router.push("/");
         }
-        const idProject = router.query.id;
-        await GetProject(sessionJSON, idProject);
+
+        await GetProject(sessionJSON);
+    }
+
+    function HandleChangeClient(value) {
+        console.log(value);
+        if (formEdit.clients.indexOf(value) === -1) {
+            setFormEdit({
+                ...formEdit,
+                clients: value,
+            });
+        } else {
+            setFormEdit({
+                ...formEdit,
+                clients: formEdit.clients.filter((item) => item !== value),
+            });
+        }
+    }
+
+    async function HandleEdit() {
+        try {
+            setLoadingInfo(true);
+            setFormEdit({
+                ...formEdit,
+                clients: formEdit.clients.map((item) => item._id),
+            });
+            const response = await axios.put(
+                // `https://piarq.herokuapp.com/projetos/update`,
+                `http://localhost:5000/projetos/update`,
+                formEdit,
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        project: String(id),
+                    },
+                }
+            );
+            setProjeto(response.data);
+            setFormEdit({
+                name: response?.data?.name,
+                email: response?.data?.email,
+                identity: response?.data?.identity,
+                contact: response?.data?.contact,
+                address: response?.data?.address,
+                clients: response?.data?.clients,
+                cep: response?.data?.cep,
+                dateFinish: response?.data?.dateFinish,
+                description: response?.data?.description,
+            });
+            setEditMode(false);
+            setLoadingInfo(false);
+            toast.success("Projeto atualizado com sucesso !!!");
+        } catch (err) {
+            setLoadingInfo(false);
+            console.log(err);
+            toast.error("Erro ao atualizar projeto !!!");
+        }
+    }
+
+    async function HandleRemoveOwnership(clientId) {
+        try {
+            setLoading(true);
+
+            await axios.put(
+                // `https://piarq.herokuapp.com/clientes/removeownership`,
+                `http://localhost:5000/clientes/removeownership`,
+                {},
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        project: String(id),
+                        client: String(clientId),
+                    },
+                }
+            );
+            GetProject(session);
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+            console.log(err);
+            toast.error("Erro ao retirar cliente de projeto !!!");
+        }
     }
 
     useEffect(() => {
         getSession();
     }, []);
+
+    console.log(formEdit.clients);
+    console.log(formEdit);
 
     return (
         <>
