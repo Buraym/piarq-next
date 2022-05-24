@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable react-hooks/exhaustive-deps */
 import NextHead from "../../src/components/defaultPage/NextHead";
 import {
     Grid,
@@ -74,6 +76,7 @@ export default function Projeto() {
     const [openModal, setOpenModal] = useState(false);
     const modalActions = [
         <Button
+            key={0}
             variant="contained"
             type="submit"
             style={{ backgroundColor: "#ffba08" }}

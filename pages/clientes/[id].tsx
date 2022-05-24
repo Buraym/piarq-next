@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import NextHead from "../../src/components/defaultPage/NextHead";
 import {
     Grid,
