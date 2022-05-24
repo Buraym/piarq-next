@@ -23,8 +23,8 @@ export default function CardObra({ data, refresh }) {
     async function HandleDeleteObra(id) {
         try {
             await axios.delete(
-                // "https://piarq.herokuapp.com//projetos/delete",
-                "http://localhost:5000/projetos/delete",
+                "https://piarq.herokuapp.com//projetos/delete",
+                // "http://localhost:5000/projetos/delete",
                 {
                     headers: {
                         token: `Bearer ${session?.token}`,

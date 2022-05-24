@@ -75,8 +75,8 @@ export default function Clientes() {
             setLoadingInfo(true);
             const idClient = router.query.id;
             const response = await axios.put(
-                // `https://piarq.herokuapp.com/clientes/update`,
-                `http://localhost:5000/clientes/update`,
+                `https://piarq.herokuapp.com/clientes/update`,
+                // `http://localhost:5000/clientes/update`,
                 formEdit,
                 {
                     headers: {
@@ -109,8 +109,8 @@ export default function Clientes() {
             setLoadingProjects(true);
 
             await axios.put(
-                // `https://piarq.herokuapp.com/clientes/removeownership`,
-                `http://localhost:5000/clientes/removeownership`,
+                `https://piarq.herokuapp.com/clientes/removeownership`,
+                // `http://localhost:5000/clientes/removeownership`,
                 {},
                 {
                     headers: {
@@ -134,8 +134,8 @@ export default function Clientes() {
         try {
             setLoadingProjects(true);
             await axios.delete(
-                // `https://piarq.herokuapp.com/projetos/delete`,
-                `http://localhost:5000/projetos/delete`,
+                `https://piarq.herokuapp.com/projetos/delete`,
+                // `http://localhost:5000/projetos/delete`,
                 {
                     headers: {
                         token: `Bearer ${session.token}`,
