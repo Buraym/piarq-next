@@ -36,6 +36,7 @@ import {
     QuestionMark,
 } from "@mui/icons-material";
 import CustomModal from "../../src/components/Modal";
+import CardContentItem from "../../src/components/CardContent";
 
 export default function Projeto() {
     const [session, setSession] = useState(null);
@@ -601,9 +602,8 @@ export default function Projeto() {
                     sx={{
                         display: "flex",
                         width: "90vw",
-                        height: "280px",
-                        padding: "10px",
-                        overflowY: "scroll",
+                        height: "320px",
+                        padding: 10,
                     }}
                 >
                     {projeto?.subprojects?.map((item, index) => {
@@ -612,55 +612,25 @@ export default function Projeto() {
                         ).getDay()}/${new Date(
                             item?.date
                         ).getMonth()}/${new Date(item?.date).getFullYear()}`;
+                        const data = {
+                            name: item.name,
+                            date: date,
+                            type: item.type,
+                            price: projeto.ProjectionPriceValue,
+                            areaContructed: projeto.EstimatedConstructionArea,
+                            reductor: projeto.Reductor,
+                            marketCorrection: projeto.MarketCorrectionValue,
+                            baseFees: projeto.FeesBase,
+                        };
                         return (
-                            <Grid
-                                key={index}
-                                container
-                                direction="column"
-                                justifyContent="center"
-                                alignItems="center"
-                                alignContent="center"
-                                sx={{
-                                    width: "250px",
-                                    height: "160px",
-                                    padding: "5px",
-                                    margin: "20px",
-                                    borderRadius: "10px",
-                                    border: "1px solid #ffb703",
-                                }}
-                            >
-                                <BackupTable style={{ color: "#fb5607" }} />
-                                <Typography align="left">
-                                    Tipo:
-                                    {item?.type === "projectionCost"
-                                        ? "Custeio de Honorario"
-                                        : ""}
-                                </Typography>
-                                <Typography align="left">{`Nome: ${item?.name}`}</Typography>
-                                <Typography align="left">
-                                    Data: {date}
-                                </Typography>
-                            </Grid>
+                            <CardContentItem data={data} type={"subproject"} />
                         );
                     })}
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        alignContent="center"
-                        sx={{
-                            width: "200px",
-                            height: "160px",
-                            padding: "10px",
-                            margin: "30px",
-                            borderRadius: "10px",
-                            border: "1px solid #ffb703",
-                        }}
-                    >
-                        <AddCircle onClick={() => setOpenModal(!openModal)} />
-                        <Typography> Subprojeto</Typography>
-                    </Grid>
+
+                    <AddCircle
+                        style={{ marginLeft: 50 }}
+                        onClick={() => setOpenModal(!openModal)}
+                    />
                     {openModal && (
                         <CustomModal
                             title={`Criação de ${
@@ -1861,8 +1831,6 @@ export default function Projeto() {
     useEffect(() => {
         getSession();
     }, []);
-
-    console.log(projeto?.subprojects);
 
     return (
         <>
