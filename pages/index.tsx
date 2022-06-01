@@ -214,7 +214,7 @@ export default function Login({ session }) {
                             alignItems="center"
                             alignContent="center"
                             wrap="wrap"
-                            sx={{ width: 280 }}
+                            sx={{ width: 300 }}
                         >
                             <Grid
                                 container
@@ -222,8 +222,8 @@ export default function Login({ session }) {
                                 justifyContent="space-evenly"
                                 alignItems="center"
                                 alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: 125 }}
+                                wrap="nowrap"
+                                sx={{ width: 120 }}
                             >
                                 <Checkbox
                                     value={form.remember}
@@ -247,22 +247,22 @@ export default function Login({ session }) {
                             />
                             <Grid
                                 container
-                                direction="row"
-                                justifyContent="flex-start"
+                                direction="column"
+                                justifyContent="center"
                                 alignItems="center"
                                 alignContent="flex-start"
-                                wrap="wrap"
-                                sx={{ width: 135, paddingLeft: "15px" }}
+                                wrap="nowrap"
+                                sx={{ width: 155, paddingLeft: "15px" }}
                             >
                                 <Link
-                                    href="#"
+                                    href="/forgot"
                                     variant="body2"
                                     fontSize={12}
                                     fontWeight="bold"
                                     color={"#ffba08"}
                                     underline="hover"
                                 >
-                                    Redefinir senha ?
+                                    Esqueceu sua senha ?
                                 </Link>
                                 <Link
                                     href="/cadastro"

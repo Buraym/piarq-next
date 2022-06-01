@@ -32,6 +32,7 @@ import {
 } from "@mui/icons-material/";
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import CardContentItem from "../../src/components/CardContent";
 
 export default function Clientes() {
     const [session, setSession] = useState(null);
@@ -468,7 +469,7 @@ export default function Clientes() {
                     sx={{
                         display: "flex",
                         width: "90vw",
-                        height: "280px",
+                        height: "320px",
                         padding: "10px",
                         overflowX: "scroll",
                     }}
@@ -493,110 +494,24 @@ export default function Clientes() {
                             <LinearLoading />
                         </Grid>
                     ) : (
-                        cliente?.projects?.map((project, index) => (
-                            <Grid
-                                key={index}
-                                item
-                                direction="column"
-                                justifyContent="flex-start"
-                                alignItems="flex-start"
-                                alignContent="center"
-                                overflow="hidden"
-                                sx={{
-                                    width: "400px !important",
-                                    height: "200px",
-                                    padding: "15px",
-                                    margin: "10px",
-                                    borderRadius: "10px",
-                                    border: "1px solid #ffb703",
-                                }}
-                            >
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                    alignContent="center"
-                                >
-                                    <Grid item xs={9}>
-                                        <Typography
-                                            fontWeight="bolder"
-                                            onClick={() => {
-                                                router.push(
-                                                    `/projetos/${project?._id}`
-                                                );
-                                            }}
-                                        >
-                                            {project?.name}
-                                        </Typography>
-                                        <Typography
-                                            onClick={() => {
-                                                router.push(
-                                                    `/projetos/${project?._id}`
-                                                );
-                                            }}
-                                        >
-                                            {project?.dateStart} -{" "}
-                                            {project?.dateFinish}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <IconButton
-                                            onClick={() =>
-                                                HandleRemoveOwnership(
-                                                    project?._id
-                                                )
-                                            }
-                                        >
-                                            <PersonRemove
-                                                style={{ color: "#ffb703" }}
-                                            />
-                                        </IconButton>
-                                        <IconButton
-                                            onClick={() =>
-                                                HandleDeleteProject(
-                                                    project?._id
-                                                )
-                                            }
-                                        >
-                                            <DeleteForeverIcon
-                                                style={{ color: "#d00000" }}
-                                            />
-                                        </IconButton>
-                                    </Grid>
-                                </Grid>
-                                <Grid
-                                    item
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    overflow="scroll"
-                                    wrap="nowrap"
-                                    sx={{
-                                        width: "100%",
-                                        height: "110px",
-                                        marginTop: "10px",
-                                        scrollbarWidth: "",
-                                        "-ms-overflow-style": "none",
-                                        "-webkit-scrollbar": {
-                                            display:
-                                                "none" /* Safari and Chrome */,
-                                        },
-                                        WebkitOverflowScrolling: "touch",
-                                    }}
-                                    onClick={() => {
-                                        router.push(
-                                            "/projetos/" + project?._id
-                                        );
-                                    }}
-                                >
-                                    <Typography variant="body2" align="justify">
-                                        {project?.description}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        ))
+                        cliente?.projects?.map((project, index) => {
+                            const data = {
+                                _id: project._id,
+                                name: project?.name,
+                                dateStart: project?.dateStart,
+                                dateFinish: project?.dateFinish,
+                                description: project?.description,
+                                route: `/projetos/${project?._id}`,
+                            };
+                            return (
+                                <CardContentItem
+                                    type="project"
+                                    data={data}
+                                    onRemoveOwner={() => HandleRemoveOwnership}
+                                    onDelete={HandleDeleteProject}
+                                />
+                            );
+                        })
                     )}
                     {!loadingProjects && (
                         <Grid
