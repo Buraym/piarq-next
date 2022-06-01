@@ -505,6 +505,7 @@ export default function Clientes() {
                             };
                             return (
                                 <CardContentItem
+                                    key={index}
                                     type="project"
                                     data={data}
                                     onRemoveOwner={() => HandleRemoveOwnership}

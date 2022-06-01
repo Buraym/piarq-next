@@ -623,7 +623,19 @@ export default function Projeto() {
                             baseFees: projeto.FeesBase,
                         };
                         return (
-                            <CardContentItem data={data} type={"subproject"} />
+                            <CardContentItem
+                                key={index}
+                                data={data}
+                                type={"subproject"}
+                                onDelete={() =>
+                                    console.log("Ainda preciso fazer !!!")
+                                }
+                                onRemoveOwner={() =>
+                                    console.log(
+                                        "Ainda preciso fazer isso também !!!"
+                                    )
+                                }
+                            />
                         );
                     })}
 
