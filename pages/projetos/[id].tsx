@@ -99,427 +99,470 @@ export default function Projeto() {
                         alignItems="center"
                         alignContent="center"
                     >
-                        {loadingInfo ? (
-                            <LinearLoading />
-                        ) : (
-                            <Paper sx={{ padding: "10px" }} variant="outlined">
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        width: "380px",
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Nome"
-                                            defaultValue={projeto?.name}
-                                            value={formEdit.name}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    name: ev.target.value,
-                                                });
-                                            }}
+                        <Paper sx={{ padding: "10px" }} variant="outlined">
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    width: "100%",
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Nome"
+                                        defaultValue={projeto?.name}
+                                        value={formEdit.name}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                name: ev.target.value,
+                                            });
+                                        }}
+                                        fullWidth
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Nome:
+                                        </Typography>
+                                        <Typography>{projeto?.name}</Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Endereço"
+                                        defaultValue={projeto?.address}
+                                        value={formEdit.address}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                address: ev.target.value,
+                                            });
+                                        }}
+                                        fullWidth
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Endereço:
+                                        </Typography>
+                                        <Typography>
+                                            {projeto?.address + " "}
+                                            {projeto?.addresComplement
+                                                ? projeto?.addresComplement
+                                                : ""}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <FormControl fullWidth>
+                                        <InputLabel id="clientes">
+                                            {`Cliente(s)`}
+                                        </InputLabel>
+                                        <Select
+                                            multiple
+                                            value={formEdit.clients}
+                                            labelId="clientes"
+                                            label={`Cliente(s)`}
                                             fullWidth
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Nome:
-                                            </Typography>
-                                            <Typography>
-                                                {projeto?.name}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Endereço"
-                                            defaultValue={projeto?.address}
-                                            value={formEdit.address}
                                             onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    address: ev.target.value,
-                                                });
+                                                HandleChangeClient(
+                                                    ev?.target.value
+                                                );
                                             }}
-                                            fullWidth
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Endereço:
-                                            </Typography>
-                                            <Typography>
-                                                {projeto?.address + " "}
-                                                {projeto?.addresComplement
-                                                    ? projeto?.addresComplement
-                                                    : ""}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <FormControl fullWidth>
-                                            <InputLabel id="clientes">
-                                                {`Cliente(s)`}
-                                            </InputLabel>
-                                            <Select
-                                                multiple
-                                                value={formEdit.clients}
-                                                labelId="clientes"
-                                                label={`Cliente(s)`}
-                                                fullWidth
-                                                onChange={(ev) => {
-                                                    HandleChangeClient(
-                                                        ev?.target.value
-                                                    );
-                                                }}
-                                                input={
-                                                    <OutlinedInput label="Chip" />
-                                                }
-                                                renderValue={(selected) => (
-                                                    <Grid
-                                                        container
-                                                        spacing={1}
-                                                        direction="row"
-                                                        justifyContent="center"
-                                                        alignItems="center"
-                                                        alignContent="center"
-                                                        wrap="wrap"
-                                                    >
-                                                        {selected?.map(
-                                                            (value) => (
-                                                                <Chip
-                                                                    key={value}
-                                                                    label={
-                                                                        <Typography
-                                                                            fontWeight="bold"
-                                                                            fontSize={
-                                                                                12
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                value?.name
-                                                                            }
-                                                                        </Typography>
+                                            input={
+                                                <OutlinedInput label="Chip" />
+                                            }
+                                            renderValue={(selected) => (
+                                                <Grid
+                                                    container
+                                                    spacing={1}
+                                                    direction="row"
+                                                    justifyContent="center"
+                                                    alignItems="center"
+                                                    alignContent="center"
+                                                    wrap="wrap"
+                                                >
+                                                    {selected?.map((value) => (
+                                                        <Chip
+                                                            key={value}
+                                                            label={
+                                                                <Typography
+                                                                    fontWeight="bold"
+                                                                    fontSize={
+                                                                        12
                                                                     }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Grid>
-                                                )}
-                                            >
-                                                {allClients.map(
-                                                    (item, index) => (
-                                                        <MenuItem
+                                                                >
+                                                                    {
+                                                                        value?.name
+                                                                    }
+                                                                </Typography>
+                                                            }
+                                                        />
+                                                    ))}
+                                                </Grid>
+                                            )}
+                                        >
+                                            {allClients.map((item, index) => (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={item}
+                                                >
+                                                    {item?.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Cliente(s):{" "}
+                                        </Typography>
+                                        <Typography>
+                                            {projeto?.clients?.map(
+                                                (cliente, index) =>
+                                                    projeto.clients.length >
+                                                    1 ? (
+                                                        <Chip
                                                             key={index}
-                                                            value={item}
-                                                        >
-                                                            {item?.name}
-                                                        </MenuItem>
+                                                            label={
+                                                                <Typography fontWeight="bold">
+                                                                    {
+                                                                        cliente?.name
+                                                                    }
+                                                                </Typography>
+                                                            }
+                                                            sx={{
+                                                                backgroundColor:
+                                                                    "lightgray",
+                                                                color: "white",
+                                                            }}
+                                                            size="medium"
+                                                            onClick={() => {
+                                                                router.push(
+                                                                    `/clientes/${cliente?._id}`
+                                                                );
+                                                            }}
+                                                            onDelete={() =>
+                                                                HandleRemoveOwnership(
+                                                                    cliente?.id
+                                                                )
+                                                            }
+                                                            deleteIcon={
+                                                                <DeleteForever />
+                                                            }
+                                                            style={{
+                                                                marginLeft:
+                                                                    "3px",
+                                                                marginRight:
+                                                                    "3px",
+                                                            }}
+                                                        ></Chip>
+                                                    ) : (
+                                                        <Chip
+                                                            key={index}
+                                                            label={
+                                                                <Typography fontWeight="bold">
+                                                                    {
+                                                                        cliente?.name
+                                                                    }
+                                                                </Typography>
+                                                            }
+                                                            sx={{
+                                                                backgroundColor:
+                                                                    "lightgray",
+                                                                color: "white",
+                                                            }}
+                                                            size="medium"
+                                                            onClick={() => {
+                                                                router.push(
+                                                                    `/clientes/${cliente?._id}`
+                                                                );
+                                                            }}
+                                                        ></Chip>
                                                     )
-                                                )}
-                                            </Select>
-                                        </FormControl>
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
+                                            )}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Cep"
+                                        defaultValue={projeto?.cep}
+                                        value={formEdit.cep}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                cep: ev.target.value,
+                                            });
+                                        }}
+                                        fullWidth
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            CEP:
+                                        </Typography>
+                                        <Typography>{projeto?.cep}</Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Data de Entrega"
+                                        defaultValue={projeto?.dateFinish}
+                                        value={formEdit.dateFinish}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                dateFinish: ev.target.value,
+                                            });
+                                        }}
+                                        fullWidth
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Data de Entrega:
+                                        </Typography>
+                                        <Typography>
+                                            {projeto?.dateFinish}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Data de Entrega"
+                                        defaultValue={projeto?.description}
+                                        value={formEdit.description}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                description: ev.target.value,
+                                            });
+                                        }}
+                                        fullWidth
+                                        multiline
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography align="justify">
                                             <Typography fontWeight="bolder">
-                                                Cliente(s):{" "}
+                                                Descrição:
                                             </Typography>
-                                            <Typography>
-                                                {projeto?.clients?.map(
-                                                    (cliente, index) =>
-                                                        projeto.clients.length >
-                                                        1 ? (
-                                                            <Chip
-                                                                key={index}
-                                                                label={
-                                                                    <Typography fontWeight="bold">
-                                                                        {
-                                                                            cliente?.name
-                                                                        }
-                                                                    </Typography>
-                                                                }
-                                                                sx={{
-                                                                    backgroundColor:
-                                                                        "lightgray",
-                                                                    color: "white",
-                                                                }}
-                                                                size="medium"
-                                                                onClick={() => {
-                                                                    router.push(
-                                                                        `/clientes/${cliente?._id}`
-                                                                    );
-                                                                }}
-                                                                onDelete={() =>
-                                                                    HandleRemoveOwnership(
-                                                                        cliente?.id
-                                                                    )
-                                                                }
-                                                                deleteIcon={
-                                                                    <DeleteForever />
-                                                                }
-                                                                style={{
-                                                                    marginLeft:
-                                                                        "3px",
-                                                                    marginRight:
-                                                                        "3px",
-                                                                }}
-                                                            ></Chip>
-                                                        ) : (
-                                                            <Chip
-                                                                key={index}
-                                                                label={
-                                                                    <Typography fontWeight="bold">
-                                                                        {
-                                                                            cliente?.name
-                                                                        }
-                                                                    </Typography>
-                                                                }
-                                                                sx={{
-                                                                    backgroundColor:
-                                                                        "lightgray",
-                                                                    color: "white",
-                                                                }}
-                                                                size="medium"
-                                                                onClick={() => {
-                                                                    router.push(
-                                                                        `/clientes/${cliente?._id}`
-                                                                    );
-                                                                }}
-                                                            ></Chip>
-                                                        )
-                                                )}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Cep"
-                                            defaultValue={projeto?.cep}
-                                            value={formEdit.cep}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    cep: ev.target.value,
-                                                });
-                                            }}
-                                            fullWidth
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                CEP:
-                                            </Typography>
-                                            <Typography>
-                                                {projeto?.cep}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Data de Entrega"
-                                            defaultValue={projeto?.dateFinish}
-                                            value={formEdit.dateFinish}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    dateFinish: ev.target.value,
-                                                });
-                                            }}
-                                            fullWidth
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Data de Entrega:
-                                            </Typography>
-                                            <Typography>
-                                                {projeto?.dateFinish}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Data de Entrega"
-                                            defaultValue={projeto?.description}
-                                            value={formEdit.description}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    description:
-                                                        ev.target.value,
-                                                });
-                                            }}
-                                            fullWidth
-                                            multiline
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography align="justify">
-                                                <Typography fontWeight="bolder">
-                                                    Descrição:
-                                                </Typography>
-                                                {projeto?.description}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{ marginTop: "10px" }}
-                                >
-                                    {!editMode ? (
+                                            {projeto?.description}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{ marginTop: "10px" }}
+                            >
+                                {loadingInfo ? (
+                                    <>
+                                        <Skeleton
+                                            variant="rectangular"
+                                            width={117.5}
+                                            height={50}
+                                            style={{ marginRight: 10 }}
+                                        ></Skeleton>
+                                        <Skeleton
+                                            variant="rectangular"
+                                            width={117.5}
+                                            height={50}
+                                        ></Skeleton>
+                                    </>
+                                ) : !editMode ? (
+                                    <Button
+                                        onClick={() => setEditMode(true)}
+                                        style={{
+                                            backgroundColor: "#ffba08",
+                                        }}
+                                        fullWidth
+                                    >
+                                        <Edit style={{ color: "white" }} />
+                                    </Button>
+                                ) : (
+                                    <>
                                         <Button
-                                            onClick={() => setEditMode(true)}
+                                            onClick={() => setEditMode(false)}
                                             style={{
+                                                width: "47.5%",
+                                                marginLeft: "1.25%",
+                                                marginRight: "1.25%",
+                                                backgroundColor: "#d00000",
+                                            }}
+                                        >
+                                            <Close style={{ color: "white" }} />
+                                        </Button>
+                                        <Button
+                                            onClick={() => HandleEdit()}
+                                            style={{
+                                                width: "47.5%",
+                                                marginLeft: "1.25%",
+                                                marginRight: "1.25%",
                                                 backgroundColor: "#ffba08",
                                             }}
-                                            fullWidth
                                         >
-                                            <Edit style={{ color: "white" }} />
+                                            <Send style={{ color: "white" }} />
                                         </Button>
-                                    ) : (
-                                        <>
-                                            <Button
-                                                onClick={() =>
-                                                    setEditMode(false)
-                                                }
-                                                style={{
-                                                    width: "47.5%",
-                                                    marginLeft: "1.25%",
-                                                    marginRight: "1.25%",
-                                                    backgroundColor: "#d00000",
-                                                }}
-                                            >
-                                                <Close
-                                                    style={{ color: "white" }}
-                                                />
-                                            </Button>
-                                            <Button
-                                                onClick={() => HandleEdit()}
-                                                style={{
-                                                    width: "47.5%",
-                                                    marginLeft: "1.25%",
-                                                    marginRight: "1.25%",
-                                                    backgroundColor: "#ffba08",
-                                                }}
-                                            >
-                                                <Send
-                                                    style={{ color: "white" }}
-                                                />
-                                            </Button>
-                                        </>
-                                    )}
-                                </Grid>
-                            </Paper>
-                        )}
+                                    </>
+                                )}
+                            </Grid>
+                        </Paper>
                     </Grid>
                 </>
             ),
@@ -1210,6 +1253,7 @@ export default function Projeto() {
     async function GetProject(session) {
         try {
             setLoading(true);
+            setLoadingInfo(true);
             const response = await axios.get(
                 "https://piarq.herokuapp.com/projetos/find",
                 // "http://localhost:5000/projetos/find",
@@ -1244,6 +1288,7 @@ export default function Projeto() {
                 }
             );
             setAllClients(response2.data);
+            setLoadingInfo(false);
             setLoading(false);
         } catch (err) {
             console.log(err);
@@ -1847,62 +1892,53 @@ export default function Projeto() {
     return (
         <>
             <NextHead title="Piarq | Projetos" />
-            {loading ? (
-                <LinearLoading />
-            ) : (
+            <Menu image={session?.user?.image} />
+            <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+                alignContent="center"
+            >
                 <>
-                    <Menu image={session?.user?.image} />
                     <Grid
                         container
                         direction="column"
                         justifyContent="center"
                         alignItems="center"
                         alignContent="center"
+                        wrap="wrap"
+                        sx={{ width: "80vw", height: 200 }}
                     >
-                        <>
-                            <Grid
-                                container
-                                direction="column"
-                                justifyContent="center"
-                                alignItems="center"
-                                alignContent="center"
-                                wrap="wrap"
-                                sx={{ width: "80vw", height: 200 }}
-                            >
-                                <Typography
-                                    fontFamily={"Pacifico"}
-                                    fontSize={40}
-                                >
-                                    {projeto?.name + " "}
-                                    <ImageRounded
-                                        style={{
-                                            color: "#ffb703",
-                                            textShadow: "4px 4px #ffb703",
-                                        }}
-                                    />
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="flex-start"
-                                alignContent="flex-start"
-                                wrap="wrap"
-                                overflow="scroll"
-                                sx={{ width: "90vw", height: "100vh" }}
-                            >
-                                <CustomStepper
-                                    steps={steps}
-                                    step={step}
-                                    setStep={setStep}
-                                    orientation="vertical"
-                                />
-                            </Grid>
-                        </>
+                        <Typography fontFamily={"Pacifico"} fontSize={40}>
+                            {projeto?.name + " "}
+                            <ImageRounded
+                                style={{
+                                    color: "#ffb703",
+                                    textShadow: "4px 4px #ffb703",
+                                }}
+                            />
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="flex-start"
+                        alignContent="flex-start"
+                        wrap="wrap"
+                        overflow="scroll"
+                        sx={{ width: "90vw", height: "100vh" }}
+                    >
+                        <CustomStepper
+                            steps={steps}
+                            step={step}
+                            setStep={setStep}
+                            orientation="vertical"
+                        />
                     </Grid>
                 </>
-            )}
+            </Grid>
         </>
     );
 }

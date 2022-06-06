@@ -9,6 +9,7 @@ import {
     TextField,
     Chip,
     IconButton,
+    Skeleton,
     Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -174,284 +175,317 @@ export default function Clientes() {
                         alignItems="center"
                         alignContent="center"
                     >
-                        {loadingInfo ? (
-                            <LinearLoading />
-                        ) : (
-                            <Paper sx={{ padding: "10px" }} variant="outlined">
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Nome"
-                                            defaultValue={cliente?.name}
-                                            value={formEdit.name}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    name: ev.target.value,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Nome:
-                                            </Typography>
-                                            <Typography
-                                                sx={{ marginLeft: "5px" }}
-                                            >
-                                                {cliente?.name}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Email"
-                                            defaultValue={cliente?.email}
-                                            value={formEdit.email}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    email: ev.target.value,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Email:
-                                            </Typography>
-                                            <Typography
-                                                sx={{ marginLeft: "5px" }}
-                                            >
-                                                {cliente?.email}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Email"
-                                            defaultValue={cliente?.identity}
-                                            value={formEdit.identity}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    identity: ev.target.value,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Identidade:
-                                            </Typography>
-                                            <Typography
-                                                sx={{ marginLeft: "5px" }}
-                                            >
-                                                {cliente?.identity}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Contato"
-                                            defaultValue={cliente?.contact}
-                                            value={formEdit.contact}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    contact: ev.target.value,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Contato:
-                                            </Typography>
-                                            <Typography
-                                                sx={{ marginLeft: "5px" }}
-                                            >
-                                                {cliente?.contact
-                                                    ? cliente.contact
-                                                    : "nenhum contato disponível"}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{
-                                        marginBottom: "10px",
-                                        marginTop: "10px",
-                                    }}
-                                >
-                                    {editMode ? (
-                                        <TextField
-                                            label="Endereço"
-                                            defaultValue={cliente?.address}
-                                            value={formEdit.address}
-                                            onChange={(ev) => {
-                                                setFormEdit({
-                                                    ...formEdit,
-                                                    address: ev.target.value,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <Grid
-                                            container
-                                            direction="row"
-                                            justifyContent="flex-start"
-                                            alignItems="center"
-                                            alignContent="center"
-                                        >
-                                            <Typography fontWeight="bolder">
-                                                Endereço:
-                                            </Typography>
-                                            <Typography
-                                                sx={{ marginLeft: "5px" }}
-                                            >
-                                                {cliente?.address}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    wrap="wrap"
-                                    id="mapbox-map"
-                                ></Grid>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    alignContent="flex-start"
-                                    style={{ marginTop: "10px" }}
-                                >
-                                    {!editMode ? (
+                        <Paper sx={{ padding: "10px" }} variant="outlined">
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Nome"
+                                        defaultValue={cliente?.name}
+                                        value={formEdit.name}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                name: ev.target.value,
+                                            });
+                                        }}
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Nome:
+                                        </Typography>
+                                        <Typography sx={{ marginLeft: "5px" }}>
+                                            {cliente?.name}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Email"
+                                        defaultValue={cliente?.email}
+                                        value={formEdit.email}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                email: ev.target.value,
+                                            });
+                                        }}
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Email:
+                                        </Typography>
+                                        <Typography sx={{ marginLeft: "5px" }}>
+                                            {cliente?.email}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Email"
+                                        defaultValue={cliente?.identity}
+                                        value={formEdit.identity}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                identity: ev.target.value,
+                                            });
+                                        }}
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Identidade:
+                                        </Typography>
+                                        <Typography sx={{ marginLeft: "5px" }}>
+                                            {cliente?.identity}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Contato"
+                                        defaultValue={cliente?.contact}
+                                        value={formEdit.contact}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                contact: ev.target.value,
+                                            });
+                                        }}
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Contato:
+                                        </Typography>
+                                        <Typography sx={{ marginLeft: "5px" }}>
+                                            {cliente?.contact
+                                                ? cliente.contact
+                                                : "nenhum contato disponível"}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{
+                                    marginBottom: "10px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    >
+                                        <Typography variant="body1"></Typography>
+                                    </Skeleton>
+                                ) : editMode ? (
+                                    <TextField
+                                        label="Endereço"
+                                        defaultValue={cliente?.address}
+                                        value={formEdit.address}
+                                        onChange={(ev) => {
+                                            setFormEdit({
+                                                ...formEdit,
+                                                address: ev.target.value,
+                                            });
+                                        }}
+                                    />
+                                ) : (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                    >
+                                        <Typography fontWeight="bolder">
+                                            Endereço:
+                                        </Typography>
+                                        <Typography sx={{ marginLeft: "5px" }}>
+                                            {cliente?.address}
+                                        </Typography>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                wrap="wrap"
+                                id="mapbox-map"
+                            ></Grid>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                                alignContent="flex-start"
+                                style={{ marginTop: "10px" }}
+                            >
+                                {loadingInfo ? (
+                                    <>
+                                        <Skeleton
+                                            variant="text"
+                                            height={50}
+                                            width={117.5}
+                                        ></Skeleton>
+                                        <Skeleton
+                                            variant="rectangular"
+                                            height={117.5}
+                                            width={50}
+                                        ></Skeleton>
+                                    </>
+                                ) : !editMode ? (
+                                    <Button
+                                        onClick={() => setEditMode(true)}
+                                        style={{
+                                            backgroundColor: "#ffba08",
+                                        }}
+                                        fullWidth
+                                    >
+                                        <Edit style={{ color: "white" }} />
+                                    </Button>
+                                ) : (
+                                    <>
                                         <Button
-                                            onClick={() => setEditMode(true)}
+                                            onClick={() => setEditMode(false)}
                                             style={{
+                                                width: "47.5%",
+                                                marginLeft: "1.25%",
+                                                marginRight: "1.25%",
+                                                backgroundColor: "#d00000",
+                                            }}
+                                        >
+                                            <Close style={{ color: "white" }} />
+                                        </Button>
+                                        <Button
+                                            onClick={() => HandleEdit()}
+                                            style={{
+                                                width: "47.5%",
+                                                marginLeft: "1.25%",
+                                                marginRight: "1.25%",
                                                 backgroundColor: "#ffba08",
                                             }}
-                                            fullWidth
                                         >
-                                            <Edit style={{ color: "white" }} />
+                                            <Send style={{ color: "white" }} />
                                         </Button>
-                                    ) : (
-                                        <>
-                                            <Button
-                                                onClick={() =>
-                                                    setEditMode(false)
-                                                }
-                                                style={{
-                                                    width: "47.5%",
-                                                    marginLeft: "1.25%",
-                                                    marginRight: "1.25%",
-                                                    backgroundColor: "#d00000",
-                                                }}
-                                            >
-                                                <Close
-                                                    style={{ color: "white" }}
-                                                />
-                                            </Button>
-                                            <Button
-                                                onClick={() => HandleEdit()}
-                                                style={{
-                                                    width: "47.5%",
-                                                    marginLeft: "1.25%",
-                                                    marginRight: "1.25%",
-                                                    backgroundColor: "#ffba08",
-                                                }}
-                                            >
-                                                <Send
-                                                    style={{ color: "white" }}
-                                                />
-                                            </Button>
-                                        </>
-                                    )}
-                                </Grid>
-                            </Paper>
-                        )}
+                                    </>
+                                )}
+                            </Grid>
+                        </Paper>
                     </Grid>
                 </>
             ),
@@ -767,6 +801,7 @@ export default function Clientes() {
         try {
             console.log(router.query.id);
             setLoading(true);
+            setLoadingInfo(true);
             const response = await axios.post(
                 "https://piarq.herokuapp.com/projetos/create",
                 // "http://localhost:5000/projetos/create",
@@ -794,6 +829,7 @@ export default function Clientes() {
                 subprojects: [],
             });
             GetClient(session);
+            setLoadingInfo(false);
             setLoading(false);
         } catch (err) {
             setLoading(false);

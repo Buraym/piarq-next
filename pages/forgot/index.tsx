@@ -1,22 +1,15 @@
 import { useRouter } from "next/router";
-import {
-    Grid,
-    Typography,
-    Divider,
-    Link,
-    IconButton,
-    TextField,
-    Checkbox,
-} from "@mui/material";
+import { Grid, Typography, IconButton, TextField } from "@mui/material";
 import NextHead from "../../src/components/defaultPage/NextHead/index";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LinearLoading from "../../src/components/LinearLoading";
 import { useState } from "react";
 import { Send } from "@mui/icons-material";
 import axios from "axios";
+import Button from "@mui/material/Button";
 
 export default function ForgotPasswordPage() {
+    const router = useRouter();
     const [form, setForm] = useState({
         email: "",
         code: "",
@@ -31,7 +24,11 @@ export default function ForgotPasswordPage() {
         if (form.email !== "") {
             try {
                 setLoading(true);
-                await axios.post("http://localhost:5000/auth/forgot", form);
+                await axios.post(
+                    // "http://localhost:5000/auth/forgot"
+                    "https://piarq-next.herokuapp.com/auth/redefine",
+                    form
+                );
                 setStep(1);
                 setLoading(false);
             } catch (err) {
@@ -42,10 +39,45 @@ export default function ForgotPasswordPage() {
         }
     }
 
-    async function HandleSendCode() {}
+    async function HandleSendCode() {
+        try {
+            setLoading(true);
+            const response = await axios.post(
+                // "http://localhost:5000/auth/verify",
+                "https://piarq-next.herokuapp.com/auth/verify",
+                form
+            );
+            toast.success(response.data.message);
+            setStep(2);
+        } catch (err) {
+            console.log(err);
+            toast.error("Código Inválido");
+        }
+    }
 
-    async function HandleChangePassword() {}
+    async function HandleChangePassword() {
+        console.log(form);
+        if (form.newPassword !== form.confirmNewPassword) {
+            try {
+                setLoading(true);
+                const response = await axios.post(
+                    // "http://localhost:5000/auth/redefine",
+                    "https://piarq-next.herokuapp.com/auth/redefine",
+                    form
+                );
+                toast.success(response.data.message);
+                setStep(0);
+                router.push("/");
+            } catch (err) {
+                console.log(err);
+                toast.error("Código Inválido");
+            }
+        } else {
+            toast.error("As senhas não são iguais !!!");
+        }
+    }
 
+    console.log(form);
     return (
         <>
             <NextHead title={"Piarq | Esqueceu senha"} />
@@ -92,52 +124,11 @@ export default function ForgotPasswordPage() {
                         alignItems: "center",
                     }}
                 >
-                    <TextField
-                        variant="outlined"
-                        label="Coloque o E-mail da sua conta"
-                        value={form.email}
-                        fullWidth
-                        onChange={(ev) =>
-                            setForm({
-                                ...form,
-                                email: ev?.target?.value,
-                            })
-                        }
-                        sx={{
-                            "& label.Mui-focused": {
-                                color: "#ffba08",
-                            },
-                            "& .MuiInput-underline:after": {
-                                borderBottomColor: "#ffba08",
-                            },
-                            "& .MuiOutlinedInput-root": {
-                                "& fieldset": {
-                                    borderColor: "#ffba08",
-                                },
-                                "&:hover fieldset": {
-                                    borderColor: "#ffba08",
-                                },
-                                "&.Mui-focused fieldset": {
-                                    borderColor: "#ffba08",
-                                },
-                            },
-                        }}
-                        InputProps={{
-                            endAdornment: (
-                                <IconButton
-                                    onClick={() => HandleSendEmail()}
-                                    style={{ color: "#ffba08" }}
-                                >
-                                    <Send />
-                                </IconButton>
-                            ),
-                        }}
-                    />
-                    {step > 0 && (
+                    {step === 0 || step === 1 ? (
                         <TextField
                             variant="outlined"
-                            label="Digite o código que foi enviado para o seu"
-                            value={form.code}
+                            label="Coloque o E-mail da sua conta"
+                            value={form.email}
                             fullWidth
                             onChange={(ev) =>
                                 setForm({
@@ -167,7 +158,53 @@ export default function ForgotPasswordPage() {
                             InputProps={{
                                 endAdornment: (
                                     <IconButton
-                                        onClick={() => setStep(1)}
+                                        onClick={() => HandleSendEmail()}
+                                        style={{ color: "#ffba08" }}
+                                    >
+                                        <Send />
+                                    </IconButton>
+                                ),
+                            }}
+                        />
+                    ) : (
+                        <></>
+                    )}
+
+                    {step === 1 && (
+                        <TextField
+                            variant="outlined"
+                            label="Digite o código que foi enviado para o seu"
+                            value={form.code}
+                            fullWidth
+                            onChange={(ev) =>
+                                setForm({
+                                    ...form,
+                                    code: ev?.target?.value,
+                                })
+                            }
+                            sx={{
+                                "& label.Mui-focused": {
+                                    color: "#ffba08",
+                                },
+                                "& .MuiInput-underline:after": {
+                                    borderBottomColor: "#ffba08",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                    "& fieldset": {
+                                        borderColor: "#ffba08",
+                                    },
+                                    "&:hover fieldset": {
+                                        borderColor: "#ffba08",
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                        borderColor: "#ffba08",
+                                    },
+                                },
+                            }}
+                            InputProps={{
+                                endAdornment: (
+                                    <IconButton
+                                        onClick={() => HandleSendCode()}
                                         style={{ color: "#ffba08" }}
                                     >
                                         <Send />
@@ -176,6 +213,96 @@ export default function ForgotPasswordPage() {
                             }}
                         />
                     )}
+                    {step === 2 && (
+                        <Grid
+                            container
+                            spacing={1}
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            alignContent="center"
+                            wrap="wrap"
+                        >
+                            <TextField
+                                variant="outlined"
+                                label="Sua nova senha"
+                                value={form.newPassword}
+                                fullWidth
+                                onChange={(ev) =>
+                                    setForm({
+                                        ...form,
+                                        newPassword: ev.target.value,
+                                    })
+                                }
+                                sx={{
+                                    "& label.Mui-focused": {
+                                        color: "#ffba08",
+                                    },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: "#ffba08",
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "& fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                    },
+                                }}
+                            />
+                            <TextField
+                                variant="outlined"
+                                label="Confirme sua nova senha"
+                                value={form.confirmNewPassword}
+                                fullWidth
+                                onChange={(ev) =>
+                                    setForm({
+                                        ...form,
+                                        confirmNewPassword: ev.target.value,
+                                    })
+                                }
+                                sx={{
+                                    marginTop: 2,
+                                    "& label.Mui-focused": {
+                                        color: "#ffba08",
+                                    },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: "#ffba08",
+                                    },
+                                    "& .MuiOutlinedInput-root": {
+                                        "& fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                        "&.Mui-focused fieldset": {
+                                            borderColor: "#ffba08",
+                                        },
+                                    },
+                                }}
+                            />
+                            {loading && (
+                                <Button
+                                    onClick={() => HandleChangePassword()}
+                                    style={{
+                                        backgroundColor: "#ffba08",
+                                        color: "white",
+                                        fontWeight: "bold",
+                                        marginTop: 15,
+                                    }}
+                                >
+                                    Redefinir Senha
+                                </Button>
+                            )}
+                        </Grid>
+                    )}
+
+                    {/* <Button onClick={() => HandleConfig()}>TESTE CONFIG</Button> */}
                 </Grid>
             </Grid>
         </>
