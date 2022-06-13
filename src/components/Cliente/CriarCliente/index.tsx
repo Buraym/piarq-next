@@ -25,7 +25,7 @@ export default function CardCriarCliente({ refresh }) {
     const [loading, setLoading] = useState(true);
     const [name, setName] = useState("");
     const [identity, setIdentity] = useState("");
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState(null);
     const [address, setAddress] = useState("");
     const [documents, setDocuments] = useState("");
     const [email, setEmail] = useState("");
@@ -66,7 +66,6 @@ export default function CardCriarCliente({ refresh }) {
         } catch (err) {
             console.log(err);
             toast.error("Houve um erro ao tentar realizar o cadastro !!!");
-            refresh();
             setLoading(false);
         }
     }

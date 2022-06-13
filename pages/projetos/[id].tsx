@@ -37,6 +37,7 @@ import {
 } from "@mui/icons-material";
 import CustomModal from "../../src/components/Modal";
 import CardContentItem from "../../src/components/CardContent";
+import { IconButton } from "@mui/material";
 
 export default function Projeto() {
     const [session, setSession] = useState(null);
@@ -659,11 +660,11 @@ export default function Projeto() {
                             name: item.name,
                             date: date,
                             type: item.type,
-                            price: projeto.ProjectionPriceValue,
-                            areaContructed: projeto.EstimatedConstructionArea,
-                            reductor: projeto.Reductor,
-                            marketCorrection: projeto.MarketCorrectionValue,
-                            baseFees: projeto.FeesBase,
+                            price: item.ProjectionPriceValue,
+                            areaContructed: item.EstimatedConstructionArea,
+                            reductor: item.Reductor,
+                            marketCorrection: item.MarketCorrectionValue,
+                            baseFees: item.FeesBase,
                         };
                         return (
                             <CardContentItem
@@ -681,11 +682,13 @@ export default function Projeto() {
                             />
                         );
                     })}
-
-                    <AddCircle
+                    <IconButton
                         style={{ marginLeft: 50 }}
                         onClick={() => setOpenModal(!openModal)}
-                    />
+                    >
+                        <AddCircle />
+                    </IconButton>
+
                     {openModal && (
                         <CustomModal
                             title={`Criação de ${
@@ -1408,12 +1411,13 @@ export default function Projeto() {
                     Reductor: 0,
                     MarketCorrectionValue: 0,
                 });
+                setOpenModal(false);
                 setLoadingInfo(false);
                 toast.success("Custeio criado com sucesso !!!");
             }
         } catch (err) {
             console.log(err);
-            toast.error("Erro ao criar SubProjeto !!!");
+            toast.error("Erro ao criar conteúdo de projeto !!!");
         }
     }
 
@@ -1422,8 +1426,8 @@ export default function Projeto() {
             setLoading(true);
 
             await axios.put(
-                // `https://piarq.herokuapp.com/clientes/removeownership`,
-                `http://localhost:5000/clientes/removeownership`,
+                `https://piarq.herokuapp.com/clientes/removeownership`,
+                // `http://localhost:5000/clientes/removeownership`,
                 {},
                 {
                     headers: {
@@ -1910,15 +1914,24 @@ export default function Projeto() {
                         wrap="wrap"
                         sx={{ width: "80vw", height: 200 }}
                     >
-                        <Typography fontFamily={"Pacifico"} fontSize={40}>
-                            {projeto?.name + " "}
-                            <ImageRounded
-                                style={{
-                                    color: "#ffb703",
-                                    textShadow: "4px 4px #ffb703",
-                                }}
-                            />
-                        </Typography>
+                        {projeto?.name ? (
+                            <Typography fontFamily={"Pacifico"} fontSize={40}>
+                                {projeto?.name + " "}
+                                <ImageRounded
+                                    style={{
+                                        color: "#ffb703",
+                                        textShadow: "4px 4px #ffb703",
+                                    }}
+                                />
+                            </Typography>
+                        ) : (
+                            <Skeleton height={70} width={280}>
+                                <Typography
+                                    fontFamily={"Pacifico"}
+                                    fontSize={40}
+                                ></Typography>
+                            </Skeleton>
+                        )}
                     </Grid>
                     <Grid
                         container

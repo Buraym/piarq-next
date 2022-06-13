@@ -187,15 +187,7 @@ export default function Clientes() {
                                     marginTop: "10px",
                                 }}
                             >
-                                {loadingInfo ? (
-                                    <Skeleton
-                                        variant="text"
-                                        height={40}
-                                        width={245}
-                                    >
-                                        <Typography variant="body1"></Typography>
-                                    </Skeleton>
-                                ) : editMode ? (
+                                {editMode ? (
                                     <TextField
                                         label="Nome"
                                         defaultValue={cliente?.name}
@@ -207,6 +199,12 @@ export default function Clientes() {
                                             });
                                         }}
                                     />
+                                ) : loadingInfo ? (
+                                    <Skeleton
+                                        variant="text"
+                                        height={40}
+                                        width={245}
+                                    ></Skeleton>
                                 ) : (
                                     <Grid
                                         container
@@ -243,7 +241,7 @@ export default function Clientes() {
                                     >
                                         <Typography variant="body1"></Typography>
                                     </Skeleton>
-                                ) : editMode ? (
+                                ) : loadingInfo === false && editMode ? (
                                     <TextField
                                         label="Email"
                                         defaultValue={cliente?.email}
@@ -291,7 +289,7 @@ export default function Clientes() {
                                     >
                                         <Typography variant="body1"></Typography>
                                     </Skeleton>
-                                ) : editMode ? (
+                                ) : loadingInfo === false && editMode ? (
                                     <TextField
                                         label="Email"
                                         defaultValue={cliente?.identity}
@@ -339,7 +337,7 @@ export default function Clientes() {
                                     >
                                         <Typography variant="body1"></Typography>
                                     </Skeleton>
-                                ) : editMode ? (
+                                ) : loadingInfo === false && editMode ? (
                                     <TextField
                                         label="Contato"
                                         defaultValue={cliente?.contact}
@@ -389,7 +387,7 @@ export default function Clientes() {
                                     >
                                         <Typography variant="body1"></Typography>
                                     </Skeleton>
-                                ) : editMode ? (
+                                ) : loadingInfo === false && editMode ? (
                                     <TextField
                                         label="Endereço"
                                         defaultValue={cliente?.address}
@@ -438,15 +436,16 @@ export default function Clientes() {
                                 {loadingInfo ? (
                                     <>
                                         <Skeleton
-                                            variant="text"
-                                            height={50}
-                                            width={117.5}
-                                        ></Skeleton>
+                                            variant="rectangular"
+                                            height={40}
+                                            width={115}
+                                            style={{ marginRight: 12 }}
+                                        />
                                         <Skeleton
                                             variant="rectangular"
-                                            height={117.5}
-                                            width={50}
-                                        ></Skeleton>
+                                            height={40}
+                                            width={115}
+                                        />
                                     </>
                                 ) : !editMode ? (
                                     <Button
@@ -840,6 +839,7 @@ export default function Clientes() {
     async function GetClient(session) {
         try {
             setLoading(true);
+            setLoadingInfo(true);
             console.log(router.query.id);
             const response = await axios.get(
                 "https://piarq.herokuapp.com/clientes/find",
@@ -853,7 +853,9 @@ export default function Clientes() {
                 }
             );
             console.log(response.data);
+            setLoadingInfo(false);
             setCliente(response.data);
+
             setFormEdit({
                 name: response?.data?.name,
                 email: response?.data?.email,

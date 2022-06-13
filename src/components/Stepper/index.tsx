@@ -31,11 +31,24 @@ export default function CustomStepper({
             {steps.map((step, index) => (
                 <Step key={index}>
                     <StepLabel
-                        sx={{
-                            ".css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active":
-                                { color: "#ffb703" },
+                        style={{
+                            color: "#ffb703",
                         }}
                         onClick={handleStep(index)}
+                        StepIconComponent={() => (
+                            <Box
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: 12,
+                                    height: 12,
+                                    marginLeft: 6.5,
+                                    borderRadius: "50%",
+                                    backgroundColor: "#ffb703",
+                                }}
+                            />
+                        )}
                     >
                         <Typography>{step.label}</Typography>
                     </StepLabel>
