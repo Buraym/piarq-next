@@ -543,6 +543,9 @@ export default function Clientes() {
                                     data={data}
                                     onRemoveOwner={() => HandleRemoveOwnership}
                                     onDelete={HandleDeleteProject}
+                                    onEdit={() =>
+                                        router.push(`/projetos/${project._id}`)
+                                    }
                                 />
                             );
                         })

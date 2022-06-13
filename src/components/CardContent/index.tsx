@@ -25,6 +25,7 @@ export default function CardContentItem({
     data,
     type,
     onDelete,
+    onEdit,
     onRemoveOwner,
 }) {
     const router = useRouter();
@@ -96,6 +97,7 @@ export default function CardContentItem({
                             marginRight: "1.25%",
                             backgroundColor: "#d00000",
                         }}
+                        onClick={() => onDelete()}
                     >
                         <Close style={{ color: "white" }} />
                     </Button>
@@ -106,6 +108,7 @@ export default function CardContentItem({
                             marginRight: "1.25%",
                             backgroundColor: "#ffba08",
                         }}
+                        onClick={() => onEdit()}
                     >
                         <Refresh style={{ color: "white" }} />
                     </Button>

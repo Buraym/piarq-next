@@ -21,13 +21,12 @@ import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
 import axios from "axios";
-import LinearLoading from "../../src/components/LinearLoading";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CustomStepper from "../../src/components/Stepper";
 import {
     ImageRounded,
     DocumentScannerRounded,
-    BackupTable,
     AddCircle,
     Edit,
     Close,
@@ -672,16 +671,20 @@ export default function Projeto() {
                                 data={data}
                                 type={"subproject"}
                                 onDelete={() =>
-                                    console.log("Ainda preciso fazer !!!")
+                                    HandleDeleteSubProject(item._id)
                                 }
-                                onRemoveOwner={() =>
+                                onEdit={() =>
                                     console.log(
                                         "Ainda preciso fazer isso também !!!"
                                     )
                                 }
+                                onRemoveOwner={() =>
+                                    console.log("Ufff ! muita coisa pra fazer")
+                                }
                             />
                         );
                     })}
+
                     <IconButton
                         style={{ marginLeft: 50 }}
                         onClick={() => setOpenModal(!openModal)}
@@ -1414,6 +1417,7 @@ export default function Projeto() {
                 setOpenModal(false);
                 setLoadingInfo(false);
                 toast.success("Custeio criado com sucesso !!!");
+                getSession();
             }
         } catch (err) {
             console.log(err);
@@ -1444,6 +1448,28 @@ export default function Projeto() {
             setLoading(false);
             console.log(err);
             toast.error("Erro ao retirar cliente de projeto !!!");
+        }
+    }
+
+    async function HandleDeleteSubProject(subProjectId) {
+        try {
+            await axios.post(
+                // `https://piarq.herokuapp.com/projetos/projectioncost/delete`,
+                `http://localhost:5000/projetos/projectioncost/delete`,
+                {},
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        project: String(id),
+                        projectioncost: String(subProjectId),
+                        id: session._id,
+                    },
+                }
+            );
+            getSession();
+        } catch (err) {
+            console.log(err);
+            toast.error("Erro ao remover subprojeto !!!");
         }
     }
 
@@ -1896,6 +1922,7 @@ export default function Projeto() {
     return (
         <>
             <NextHead title="Piarq | Projetos" />
+            <ToastContainer autoClose={2000} position={"top-right"} />
             <Menu image={session?.user?.image} />
             <Grid
                 container
