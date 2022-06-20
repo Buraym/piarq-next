@@ -9,13 +9,16 @@ export default function Index() {
     const [session, setSession] = useState(null);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-    async function getSession() {
+
+    function getSession() {
+        setLoading(true);
         const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
-        setSession(sessionJSON);
-        if (sessionJSON) {
-            setLoading(false);
-        } else {
+        console.log(sessionJSON);
+        if (sessionJSON === null) {
             router.push("/");
+        } else {
+            setSession(sessionJSON);
+            setLoading(false);
         }
     }
 

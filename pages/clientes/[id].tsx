@@ -27,13 +27,11 @@ import {
     Face,
     Edit,
     Close,
-    BackupTable,
     Send,
-    PersonRemove,
+    DeleteForever,
 } from "@mui/icons-material/";
-import mapboxgl from "mapbox-gl/dist/mapbox-gl.js";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CardContentItem from "../../src/components/CardContent";
+import { format, parseISO } from "date-fns";
 
 export default function Clientes() {
     const [session, setSession] = useState(null);
@@ -72,96 +70,6 @@ export default function Clientes() {
             <AddBox sx={{ color: "#ffb703" }} />
         </CustomIconButton>,
     ];
-
-    async function HandleEdit() {
-        try {
-            setLoadingInfo(true);
-            const idClient = router.query.id;
-            const response = await axios.put(
-                `https://piarq.herokuapp.com/clientes/update`,
-                // `http://localhost:5000/clientes/update`,
-                formEdit,
-                {
-                    headers: {
-                        token: `Bearer ${session.token}`,
-                        id: session._id,
-                        client: String(idClient),
-                    },
-                }
-            );
-            setCliente(response.data);
-            setFormEdit({
-                name: response?.data?.name,
-                email: response?.data?.email,
-                identity: response?.data?.identity,
-                contact: response?.data?.contact,
-                address: response?.data?.address,
-            });
-            setEditMode(false);
-            setLoadingInfo(false);
-            toast.success("Cliente atualizado com sucesso !!!");
-        } catch (err) {
-            setLoadingInfo(false);
-            console.log(err);
-            toast.error("Erro ao atualizar cliente !!!");
-        }
-    }
-
-    async function HandleRemoveOwnership(projectId: any) {
-        try {
-            setLoadingProjects(true);
-
-            await axios.put(
-                `https://piarq.herokuapp.com/clientes/removeownership`,
-                // `http://localhost:5000/clientes/removeownership`,
-                {},
-                {
-                    headers: {
-                        token: `Bearer ${session.token}`,
-                        id: session._id,
-                        project: String(projectId),
-                        client: String(id),
-                    },
-                }
-            );
-            GetClient(session);
-            setLoadingProjects(false);
-        } catch (err) {
-            setLoadingProjects(false);
-            console.log(err);
-            toast.error("Erro ao retirar cliente de projeto !!!");
-        }
-    }
-
-    async function HandleDeleteProject(projectId: any) {
-        try {
-            setLoadingProjects(true);
-            await axios.delete(
-                `https://piarq.herokuapp.com/projetos/delete`,
-                // `http://localhost:5000/projetos/delete`,
-                {
-                    headers: {
-                        token: `Bearer ${session.token}`,
-                        id: session._id,
-                        project: String(projectId),
-                    },
-                }
-            );
-            toast.success("Projeto deletado com sucesso !!!");
-            GetClient(session);
-            setLoadingProjects(false);
-        } catch (err) {
-            setLoadingProjects(false);
-            console.log(err);
-            toast.error("Erro ao deletar projeto !!!");
-        }
-    }
-
-    // mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
-    // var map = new mapboxgl.Map({
-    //     container: "mapbox-map",
-    //     style: "mapbox://styles/mapbox/streets-v11",
-    // });
 
     const steps = [
         {
@@ -578,7 +486,6 @@ export default function Clientes() {
                                 Criar projeto para
                                 <Chip
                                     sx={{ marginLeft: "5px" }}
-                                    icon={<Face />}
                                     label={cliente?.name}
                                 />
                             </Typography>
@@ -644,7 +551,11 @@ export default function Clientes() {
                                 }}
                             >
                                 <TextField
+                                    type="date"
                                     label="Data de Inicio do Projeto"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
                                     value={form.dateStart}
                                     onChange={(event) =>
                                         setForm({
@@ -671,8 +582,12 @@ export default function Clientes() {
                                 }}
                             >
                                 <TextField
+                                    type="date"
                                     label="Data de Fim do Projeto"
                                     value={form.dateFinish}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
                                     onChange={(event) =>
                                         setForm({
                                             ...form,
@@ -799,43 +714,149 @@ export default function Clientes() {
         },
     ];
 
-    async function AddProject() {
+    async function HandleEdit() {
         try {
-            console.log(router.query.id);
-            setLoading(true);
             setLoadingInfo(true);
-            const response = await axios.post(
-                "https://piarq.herokuapp.com/projetos/create",
-                // "http://localhost:5000/projetos/create",
-                { ...form, user: session._id },
+            const idClient = router.query.id;
+            const response = await axios.put(
+                `https://piarq.herokuapp.com/clientes/update`,
+                // `http://localhost:5000/clientes/update`,
+                formEdit,
                 {
                     headers: {
                         token: `Bearer ${session.token}`,
                         id: session._id,
+                        client: String(idClient),
                     },
                 }
             );
-            toast.success("Projeto criado com sucesso!");
-            setOpenModal(false);
-            setForm({
-                name: "",
-                image: "",
-                clients: [router.query.id],
-                dateStart: "",
-                dateFinish: "",
-                addressComplement: "",
-                address: "",
-                cep: "",
-                localizationMap: "",
-                description: "",
-                subprojects: [],
+            setCliente(response.data);
+            setFormEdit({
+                name: response?.data?.name,
+                email: response?.data?.email,
+                identity: response?.data?.identity,
+                contact: response?.data?.contact,
+                address: response?.data?.address,
             });
-            GetClient(session);
+            setEditMode(false);
             setLoadingInfo(false);
-            setLoading(false);
+            toast.success("Cliente atualizado com sucesso !!!");
         } catch (err) {
-            setLoading(false);
+            setLoadingInfo(false);
             console.log(err);
+            toast.error("Erro ao atualizar cliente !!!");
+        }
+    }
+
+    async function HandleRemoveOwnership(projectId) {
+        try {
+            setLoadingProjects(true);
+
+            await axios.put(
+                `https://piarq.herokuapp.com/clientes/removeownership`,
+                // `http://localhost:5000/clientes/removeownership`,
+                {},
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        project: String(projectId),
+                        client: String(id),
+                    },
+                }
+            );
+            GetClient(session);
+            setLoadingProjects(false);
+        } catch (err) {
+            setLoadingProjects(false);
+            console.log(err);
+            toast.error("Erro ao retirar cliente de projeto !!!");
+        }
+    }
+
+    async function HandleDeleteProject(projectId) {
+        try {
+            setLoadingProjects(true);
+            await axios.delete(
+                `https://piarq.herokuapp.com/projetos/delete`,
+                // `http://localhost:5000/projetos/delete`,
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                        project: String(projectId),
+                    },
+                }
+            );
+            toast.success("Projeto deletado com sucesso !!!");
+            GetClient(session);
+            setLoadingProjects(false);
+        } catch (err) {
+            setLoadingProjects(false);
+            console.log(err);
+            toast.error("Erro ao deletar projeto !!!");
+        }
+    }
+
+    async function AddProject() {
+        if (
+            form.name !== "" &&
+            form.dateStart !== "" &&
+            form.dateFinish !== "" &&
+            form.address !== "" &&
+            form.cep !== "" &&
+            form.description !== ""
+        ) {
+            try {
+                format(parseISO(form.dateFinish), "dd/MM/yyyy");
+                format(parseISO(form.dateStart), "dd/MM/yyyy");
+            } catch (err) {
+                toast.error("Data de Início e/ou Fim inválida");
+                return;
+            }
+            try {
+                setLoading(true);
+                setLoadingInfo(true);
+                form.dateFinish = format(
+                    parseISO(form.dateFinish),
+                    "dd/MM/yyyy"
+                );
+                form.dateStart = format(parseISO(form.dateStart), "dd/MM/yyyy");
+                const response = await axios.post(
+                    // "https://piarq.herokuapp.com/projetos/create",
+                    "http://localhost:5000/projetos/create",
+                    { ...form, user: session._id },
+                    {
+                        headers: {
+                            token: `Bearer ${session.token}`,
+                            id: session._id,
+                        },
+                    }
+                );
+                toast.success("Projeto criado com sucesso!");
+                setOpenModal(false);
+                setForm({
+                    name: "",
+                    image: "",
+                    clients: [router.query.id],
+                    dateStart: "",
+                    dateFinish: "",
+                    addressComplement: "",
+                    address: "",
+                    cep: "",
+                    localizationMap: "",
+                    description: "",
+                    subprojects: [],
+                });
+                GetClient(session);
+                setLoadingInfo(false);
+                setLoading(false);
+            } catch (err) {
+                setLoading(false);
+                console.log(err);
+            }
+        } else {
+            toast.error("Preencha todos os campos !!!");
         }
     }
 
@@ -843,7 +864,6 @@ export default function Clientes() {
         try {
             setLoading(true);
             setLoadingInfo(true);
-            console.log(router.query.id);
             const response = await axios.get(
                 "https://piarq.herokuapp.com/clientes/find",
                 // "http://localhost:5000/clientes/find",
@@ -855,7 +875,6 @@ export default function Clientes() {
                     },
                 }
             );
-            console.log(response.data);
             setLoadingInfo(false);
             setCliente(response.data);
 
@@ -890,12 +909,11 @@ export default function Clientes() {
         getSession();
     }, []);
 
-    console.log(cliente);
-
     return (
         <>
             <NextHead title="Piarq | Cliente" />
             <Menu image={session?.user?.image} />
+            <ToastContainer autoClose={2000} position={"top-right"} />
             <Grid
                 container
                 direction="column"

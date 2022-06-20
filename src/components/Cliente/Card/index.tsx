@@ -10,10 +10,11 @@ import Button from "../../Button";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function CardCliente({ data, refresh }) {
     const [session, setSession] = useState(null);
@@ -96,12 +97,27 @@ export default function CardCliente({ data, refresh }) {
                     alignContent="flex-start"
                     wrap="wrap"
                     overflow="hidden"
-                    style={{ width: "47.5%", marginLeft: "2.5%" }}
+                    style={{
+                        width: "47.5%",
+                        marginLeft: "2.5%",
+                        fontSize: 12,
+                        fontWeight: "bold",
+                    }}
                 >
-                    <Typography fontSize={12} fontWeight="bold">
+                    <Typography
+                        fontSize={12}
+                        fontWeight="bold"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => router.push("/clientes/" + data._id)}
+                    >
                         {data.name}
                     </Typography>
-                    <Typography fontSize={12} fontWeight="bold">
+                    <Typography
+                        fontSize={12}
+                        fontWeight="bold"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => router.push("/clientes/" + data._id)}
+                    >
                         {data.identity}
                     </Typography>
                 </Grid>

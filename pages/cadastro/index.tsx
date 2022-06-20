@@ -75,7 +75,7 @@ export default function Cadastro({}) {
                     wrap="wrap"
                     sx={{ width: 280, height: 320 }}
                 >
-                    <ToastContainer autoClose={2000} />
+                    <ToastContainer autoClose={2000} position={"top-right"} />
                     <Form
                         ref={form}
                         onSubmit={HandleSubmit}

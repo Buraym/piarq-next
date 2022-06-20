@@ -8,10 +8,7 @@ import {
     TextField,
     Checkbox,
 } from "@mui/material";
-import { Form } from "@unform/web";
-import { useRef, useEffect, useState } from "react";
-import Input from "../src/components/Unform/Input";
-import CustomCheckbox from "../src/components/Checkbox/Controlled/";
+import { useEffect, useState } from "react";
 import Button from "../src/components/Button";
 import NextHead from "../src/components/defaultPage/NextHead/index";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -23,7 +20,7 @@ import { Visibility } from "@mui/icons-material";
 import CustomUncontrolledInput from "../src/components/Input/index";
 
 export default function Login({ session }) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [loadingRequest, setLoadingRequest] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [form, setForm] = useState({
@@ -58,6 +55,17 @@ export default function Login({ session }) {
             setLoadingRequest(false);
         }
     }
+
+    useEffect(() => {
+        setLoading(true);
+        const sessionJSON = JSON.parse(window.localStorage.getItem("session"));
+        console.log(sessionJSON);
+        if (sessionJSON !== null) {
+            router.push("/home");
+        } else {
+            setLoading(false);
+        }
+    }, []);
 
     return (
         <>

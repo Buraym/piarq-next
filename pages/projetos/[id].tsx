@@ -16,7 +16,9 @@ import {
     MenuItem,
     InputAdornment,
     Tooltip,
+    IconButton,
 } from "@mui/material";
+import InputMask from "react-input-mask";
 import { useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
@@ -24,6 +26,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomStepper from "../../src/components/Stepper";
+import dynamic from "next/dynamic";
 import {
     ImageRounded,
     DocumentScannerRounded,
@@ -36,7 +39,10 @@ import {
 } from "@mui/icons-material";
 import CustomModal from "../../src/components/Modal";
 import CardContentItem from "../../src/components/CardContent";
-import { IconButton } from "@mui/material";
+import { format, parseISO } from "date-fns";
+const Map = dynamic(() => import("../../src/components/Map"), {
+    ssr: false,
+});
 
 export default function Projeto() {
     const [session, setSession] = useState(null);
@@ -55,8 +61,6 @@ export default function Projeto() {
         dateFinish: "",
         description: "",
     });
-    const [clients, setClients] = useState([]);
-    const [addType, setAddType] = useState("projectionCost");
     const [formAdd, setFormAdd] = useState({
         type: "projectionCost",
         EstimatedConstructionArea: 0,
@@ -66,6 +70,10 @@ export default function Projeto() {
         RepeatedConstructionArea: 0,
         Reductor: 0,
         MarketCorrectionValue: 0,
+    });
+    const [localization, setLocalization] = useState({
+        lat: -25.4317,
+        long: -54.4559,
     });
     const [projectComplexity, setProjectComplexity] = useState("");
     const [repeatedAreaQuantity, setRepeatedAreaQuantity] = useState(0);
@@ -425,8 +433,15 @@ export default function Projeto() {
                                     </Skeleton>
                                 ) : editMode ? (
                                     <TextField
+                                        type="date"
                                         label="Data de Entrega"
-                                        defaultValue={projeto?.dateFinish}
+                                        defaultValue={format(
+                                            projeto?.dateFinish,
+                                            "yyyy-MM-dd"
+                                        )}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
                                         value={formEdit.dateFinish}
                                         onChange={(ev) => {
                                             setFormEdit({
@@ -474,7 +489,7 @@ export default function Projeto() {
                                     </Skeleton>
                                 ) : editMode ? (
                                     <TextField
-                                        label="Data de Entrega"
+                                        label="Descrição"
                                         defaultValue={projeto?.description}
                                         value={formEdit.description}
                                         onChange={(ev) => {
@@ -579,15 +594,28 @@ export default function Projeto() {
                     alignContent="center"
                     wrap="wrap"
                 >
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3839.1064155231543!2d-47.87772808514496!3d-15.798341889048794!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a3b224c1f9a91%3A0x55fbb231e9698d19!2sCatedral%20Metropolitana%20Nossa%20Senhora%20Aparecida!5e0!3m2!1spt-BR!2sbr!4v1649012590302!5m2!1spt-BR!2sbr"
-                        width="600"
-                        height="450"
-                        style={{ border: 0 }}
-                        allowFullScreen={true}
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Latitude"
+                            value={localization.lat}
+                            disabled
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Longitude"
+                            value={localization.long}
+                            disabled
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Map
+                            localization={{ ...localization, zoom: 13 }}
+                            setLocalization={setLocalization}
+                        />
+                    </Grid>
                 </Grid>
             ),
         },
@@ -1339,8 +1367,8 @@ export default function Projeto() {
                 clients: formEdit.clients.map((item) => item._id),
             });
             const response = await axios.put(
-                `https://piarq.herokuapp.com/projetos/update`,
-                // `http://localhost:5000/projetos/update`,
+                // `https://piarq.herokuapp.com/projetos/update`,
+                `http://localhost:5000/projetos/update`,
                 formEdit,
                 {
                     headers: {

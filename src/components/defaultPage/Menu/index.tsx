@@ -18,6 +18,7 @@ export default function Menu({ image }: Params) {
     const router = useRouter();
 
     function HandleLogOut() {
+        window.localStorage.removeItem("session");
         // signOut({ redirect: false });
         router.push("/");
     }
@@ -64,7 +65,7 @@ export default function Menu({ image }: Params) {
                     <Button
                         variant="text"
                         cor="#ffba08"
-                        f={() => router.push("/")}
+                        f={() => router.push("/home")}
                         style={{
                             padding: "20px",
                             borderTop: "5px",
