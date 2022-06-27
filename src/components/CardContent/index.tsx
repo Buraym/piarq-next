@@ -116,7 +116,7 @@ export default function CardContentItem({
             </CardActions>
         </Card>
     ) : type === "project" ? (
-        <Card variant="elevation" style={{ width: 320 }}>
+        <Card variant="elevation" style={{ width: 320, margin: 10 }}>
             <CardActionArea onClick={() => router.push(data.route)}>
                 <CardContent>
                     <Typography variant="h5" component="div" fontWeight="bold">
@@ -158,7 +158,7 @@ export default function CardContentItem({
                 >
                     <Button
                         style={{
-                            width: "47.5%",
+                            width: "97.5%",
                             marginLeft: "1.25%",
                             marginRight: "1.25%",
                             backgroundColor: "#d00000",
@@ -167,7 +167,7 @@ export default function CardContentItem({
                     >
                         <DeleteForever style={{ color: "white" }} />
                     </Button>
-                    <Button
+                    {/* <Button
                         style={{
                             width: "47.5%",
                             marginLeft: "1.25%",
@@ -177,7 +177,7 @@ export default function CardContentItem({
                         onClick={() => onRemoveOwner(data._id)}
                     >
                         <PersonRemove style={{ color: "white" }} />
-                    </Button>
+                    </Button> */}
                     {/* <IconButton>
                         <DeleteForever style={{ color: "red" }} />
                     </IconButton> */}

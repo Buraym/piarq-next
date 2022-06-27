@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import CardCliente from "../../src/components/Cliente/Card";
 import CardCriarCliente from "../../src/components/Cliente/CriarCliente";
 import LinearLoading from "../../src/components/LinearLoading";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
@@ -58,6 +58,7 @@ export default function Clientes({}) {
     return (
         <>
             <NextHead title="Piarq | Clientes" />
+            <ToastContainer autoClose={2000} position={"top-right"} />
 
             {loading ? (
                 <LinearLoading />

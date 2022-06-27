@@ -6,23 +6,17 @@ import {
     AccordionSummary,
     AccordionDetails,
     TextField,
-    MenuItem,
-    Select,
-    Chip,
     FormControl,
-    InputLabel,
+    MenuItem,
+    Chip,
     OutlinedInput,
+    Select,
+    InputLabel,
 } from "@mui/material";
 import Button from "../../Button";
 import { useRouter } from "next/router";
-import {
-    ExpandMoreOutlined,
-    PhotoCameraBackTwoTone,
-    MapsHomeWorkTwoTone,
-} from "@mui/icons-material";
-import CustomIconButton from "../../Button/IconButton";
+import { ExpandMoreOutlined, MapsHomeWorkTwoTone } from "@mui/icons-material";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -52,36 +46,47 @@ export default function CardCriarObra({ refresh }) {
     }
 
     async function Handlesubmit() {
-        if (client) {
-            try {
-                setLoading(true);
-                const data = {
-                    ...image,
-                    client: client.map((item) => item?._id),
-                    name,
-                    user: session?._id,
-                    dateStart,
-                    dateFinish,
-                    address,
-                    description,
-                };
-                const response = await axios.post(
-                    "https://piarq.herokuapp.com/projetos/create",
-                    // "http://localhost:5000/projetos/create",
-                    data,
-                    {
-                        headers: {
-                            id: session._id,
-                            token: `Bearer ${session?.token}`,
-                        },
-                    }
-                );
-                toast.success("Projeto criada com sucesso!");
-                refresh();
-                setLoading(false);
-            } catch (err) {
-                console.log(err);
-                setLoading(false);
+        if (
+            name === "" ||
+            dateStart === "" ||
+            dateFinish === "" ||
+            address === "" ||
+            description === "" ||
+            client.length === 0
+        ) {
+            toast.error("Preencha todos os campos !!!");
+        } else {
+            if (client) {
+                try {
+                    setLoading(true);
+                    const data = {
+                        ...image,
+                        clients: client.map((item) => item?._id),
+                        name,
+                        user: session?._id,
+                        dateStart,
+                        dateFinish,
+                        address,
+                        description,
+                    };
+                    const response = await axios.post(
+                        // "https://piarq.herokuapp.com/projetos/create",
+                        "http://localhost:5000/projetos/create",
+                        data,
+                        {
+                            headers: {
+                                id: session._id,
+                                token: `Bearer ${session?.token}`,
+                            },
+                        }
+                    );
+                    toast.success("Projeto criada com sucesso!");
+                    refresh();
+                    setLoading(false);
+                } catch (err) {
+                    console.log(err);
+                    setLoading(false);
+                }
             }
         }
     }
@@ -149,7 +154,7 @@ export default function CardCriarObra({ refresh }) {
                 wrap="wrap"
                 sx={{ width: 250, marginBottom: 5, marginTop: 2 }}
             >
-                <Accordion
+                {/* <Accordion
                     sx={{
                         width: 250,
                     }}
@@ -183,7 +188,8 @@ export default function CardCriarObra({ refresh }) {
                             )}
                         </Grid>
                     </AccordionDetails>
-                </Accordion>
+                </Accordion> */}
+
                 <Accordion sx={{ width: 250 }}>
                     <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
                         <Typography>Atributos do projeto</Typography>
@@ -284,6 +290,7 @@ export default function CardCriarObra({ refresh }) {
                         </Grid>
                     </AccordionDetails>
                 </Accordion>
+
                 <Accordion sx={{ width: 250, marginBottom: 6 }}>
                     <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
                         <Typography>Atributos do Cliente do projeto</Typography>

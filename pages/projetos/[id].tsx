@@ -19,7 +19,7 @@ import {
     IconButton,
 } from "@mui/material";
 import InputMask from "react-input-mask";
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import Menu from "../../src/components/defaultPage/Menu";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -433,12 +433,7 @@ export default function Projeto() {
                                     </Skeleton>
                                 ) : editMode ? (
                                     <TextField
-                                        type="date"
                                         label="Data de Entrega"
-                                        defaultValue={format(
-                                            projeto?.dateFinish,
-                                            "yyyy-MM-dd"
-                                        )}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
@@ -619,47 +614,47 @@ export default function Projeto() {
                 </Grid>
             ),
         },
-        {
-            label: "Documentos",
-            content: (
-                <Grid
-                    item
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    alignContent="center"
-                    wrap="wrap"
-                    sx={{
-                        display: "flex",
-                        width: "90vw",
-                        height: "150px",
-                        padding: "10px",
-                        overflowY: "scroll",
-                    }}
-                >
-                    {projeto?.docs?.map((doc, index) => (
-                        <Grid
-                            key={index}
-                            container
-                            direction="column"
-                            justifyContent="center"
-                            alignItems="center"
-                            alignContent="center"
-                            sx={{
-                                width: "250px",
-                                height: "150px",
-                                marginRight: "30px",
-                            }}
-                        >
-                            <DocumentScannerRounded />
-                            <Typography fontWeight="bolder">
-                                {doc?.label}
-                            </Typography>
-                        </Grid>
-                    ))}
-                </Grid>
-            ),
-        },
+        // {
+        //     label: "Documentos",
+        //     content: (
+        //         <Grid
+        //             item
+        //             direction="row"
+        //             justifyContent="flex-start"
+        //             alignItems="center"
+        //             alignContent="center"
+        //             wrap="wrap"
+        //             sx={{
+        //                 display: "flex",
+        //                 width: "90vw",
+        //                 height: "150px",
+        //                 padding: "10px",
+        //                 overflowY: "scroll",
+        //             }}
+        //         >
+        //             {projeto?.docs?.map((doc, index) => (
+        //                 <Grid
+        //                     key={index}
+        //                     container
+        //                     direction="column"
+        //                     justifyContent="center"
+        //                     alignItems="center"
+        //                     alignContent="center"
+        //                     sx={{
+        //                         width: "250px",
+        //                         height: "150px",
+        //                         marginRight: "30px",
+        //                     }}
+        //                 >
+        //                     <DocumentScannerRounded />
+        //                     <Typography fontWeight="bolder">
+        //                         {doc?.label}
+        //                     </Typography>
+        //                 </Grid>
+        //             ))}
+        //         </Grid>
+        //     ),
+        // },
         {
             label: "Conteúdo",
             content: (
@@ -673,45 +668,65 @@ export default function Projeto() {
                     sx={{
                         display: "flex",
                         width: "90vw",
-                        height: "320px",
+                        minWidth: 295,
+                        minHeight: 320,
                         padding: 10,
                     }}
                 >
-                    {projeto?.subprojects?.map((item, index) => {
-                        const date = `${new Date(
-                            item?.date
-                        ).getDay()}/${new Date(
-                            item?.date
-                        ).getMonth()}/${new Date(item?.date).getFullYear()}`;
-                        const data = {
-                            name: item.name,
-                            date: date,
-                            type: item.type,
-                            price: item.ProjectionPriceValue,
-                            areaContructed: item.EstimatedConstructionArea,
-                            reductor: item.Reductor,
-                            marketCorrection: item.MarketCorrectionValue,
-                            baseFees: item.FeesBase,
-                        };
-                        return (
-                            <CardContentItem
-                                key={index}
-                                data={data}
-                                type={"subproject"}
-                                onDelete={() =>
-                                    HandleDeleteSubProject(item._id)
-                                }
-                                onEdit={() =>
-                                    console.log(
-                                        "Ainda preciso fazer isso também !!!"
-                                    )
-                                }
-                                onRemoveOwner={() =>
-                                    console.log("Ufff ! muita coisa pra fazer")
-                                }
-                            />
-                        );
-                    })}
+                    {projeto?.subprojects?.map(
+                        (
+                            item: {
+                                date: string | number | Date;
+                                name: any;
+                                type: any;
+                                ProjectionPriceValue: any;
+                                EstimatedConstructionArea: any;
+                                Reductor: any;
+                                MarketCorrectionValue: any;
+                                FeesBase: any;
+                                _id: any;
+                            },
+                            index: Key
+                        ) => {
+                            const date = `${new Date(
+                                item?.date
+                            ).getDay()}/${new Date(
+                                item?.date
+                            ).getMonth()}/${new Date(
+                                item?.date
+                            ).getFullYear()}`;
+                            const data = {
+                                name: item.name,
+                                date: date,
+                                type: item.type,
+                                price: item.ProjectionPriceValue,
+                                areaContructed: item.EstimatedConstructionArea,
+                                reductor: item.Reductor,
+                                marketCorrection: item.MarketCorrectionValue,
+                                baseFees: item.FeesBase,
+                            };
+                            return (
+                                <CardContentItem
+                                    key={index}
+                                    data={data}
+                                    type={"subproject"}
+                                    onDelete={() =>
+                                        HandleDeleteSubProject(item._id)
+                                    }
+                                    onEdit={() =>
+                                        console.log(
+                                            "Ainda preciso fazer isso também !!!"
+                                        )
+                                    }
+                                    onRemoveOwner={() =>
+                                        console.log(
+                                            "Ufff ! muita coisa pra fazer"
+                                        )
+                                    }
+                                />
+                            );
+                        }
+                    )}
 
                     <IconButton
                         style={{ marginLeft: 50 }}

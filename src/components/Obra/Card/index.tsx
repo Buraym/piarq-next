@@ -7,6 +7,8 @@ import {
     Typography,
     Grid,
     CardActionArea,
+    Avatar,
+    Divider,
 } from "@mui/material";
 import Button from "../../Button";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -14,13 +16,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import {
+    useState,
+    useEffect,
+    ReactChild,
+    ReactFragment,
+    ReactPortal,
+} from "react";
+import { clientes } from "../../../../testdata";
 
 export default function CardObra({ data, refresh }) {
     const router = useRouter();
     const [session, setSession] = useState(null);
 
     async function HandleDeleteObra(id) {
+        console.log(id);
         try {
             await axios.delete(
                 "https://piarq.herokuapp.com//projetos/delete",
@@ -106,9 +116,6 @@ export default function CardObra({ data, refresh }) {
                     }}
                 >
                     <Chip label={data?.name} size="small" />
-                    {/* {data?.clients?.map((item, index) => (
-                        <Chip key={index} label={item.name} size="small" />
-                    ))} */}
                 </Grid>
 
                 <Grid
@@ -124,6 +131,7 @@ export default function CardObra({ data, refresh }) {
                         <Chip label={data.dateFinish} size="small" />
                     </Typography>
                 </Grid>
+
                 <Grid
                     container
                     direction="row"
@@ -133,10 +141,28 @@ export default function CardObra({ data, refresh }) {
                         height: "70px",
                         marginTop: "10px",
                         scrollbarWidth: "none",
-                        overflow: "hidden",
                     }}
-                    overflow="-moz-hidden-unscrollable"
+                    overflow="scroll"
                 >
+                    <Typography fontSize={12} fontWeight="bold">
+                        {`Demandantes: ${data?.clients.map(
+                            (client, clientIndex) =>
+                                ` ${client?.name}${
+                                    clientIndex >= 0 ? "" : ", "
+                                }`
+                        )}`}
+                    </Typography>
+                    <Divider
+                        flexItem
+                        orientation="horizontal"
+                        variant="fullWidth"
+                        style={{
+                            height: 2,
+                            width: 300,
+                            marginTop: 5,
+                            marginBottom: 5,
+                        }}
+                    />
                     <Typography fontSize={12} fontWeight="bold">
                         {data.description}
                     </Typography>
@@ -145,7 +171,7 @@ export default function CardObra({ data, refresh }) {
             <CardActions
                 style={{
                     width: "280px",
-                    height: "40px",
+                    height: "35px",
                     justifyContent: "flex-start",
                     flexDirection: "row",
                     alignContent: "center",

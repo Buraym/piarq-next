@@ -22,14 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import CustomModal from "../../src/components/Modal";
 import CustomIconButton from "../../src/components/Button/IconButton";
-import {
-    AddBox,
-    Face,
-    Edit,
-    Close,
-    Send,
-    DeleteForever,
-} from "@mui/icons-material/";
+import { AddBox, Edit, Close, Send } from "@mui/icons-material/";
 import CardContentItem from "../../src/components/CardContent";
 import { format, parseISO } from "date-fns";
 
@@ -66,9 +59,13 @@ export default function Clientes() {
         subprojects: [],
     });
     const actions = [
-        <CustomIconButton f={AddProject} key={0}>
+        <Button
+            onClick={() => AddProject()}
+            style={{ color: "#ffb703", fontWeight: "bold", fontSize: 14 }}
+        >
             <AddBox sx={{ color: "#ffb703" }} />
-        </CustomIconButton>,
+            Criar projeto
+        </Button>,
     ];
 
     const steps = [
@@ -404,9 +401,10 @@ export default function Clientes() {
                     item
                     direction="row"
                     justifyContent="flex-start"
+                    spacing={2}
                     alignItems="center"
                     alignContent="center"
-                    wrap="nowrap"
+                    wrap="wrap"
                     sx={{
                         display: "flex",
                         width: "90vw",
