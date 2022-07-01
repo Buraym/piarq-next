@@ -17,6 +17,7 @@ import {
     InputAdornment,
     Tooltip,
     IconButton,
+    Fade,
 } from "@mui/material";
 import InputMask from "react-input-mask";
 import { Key, useEffect, useState } from "react";
@@ -1361,17 +1362,22 @@ export default function Projeto() {
     }
 
     function HandleChangeClient(value) {
-        if (formEdit.clients.indexOf(value) === -1) {
-            setFormEdit({
-                ...formEdit,
-                clients: value,
-            });
-        } else {
-            setFormEdit({
-                ...formEdit,
-                clients: formEdit.clients.filter((item) => item !== value),
-            });
-        }
+        console.log(value);
+        const clients = value
+            .map((item) => {
+                if (formEdit.clients.includes(item)) {
+                    return item;
+                } else {
+                    return null;
+                }
+            })
+            .filter((item) => item !== null);
+
+        console.log(clients);
+        setFormEdit({
+            ...formEdit,
+            clients: clients,
+        });
     }
 
     async function HandleEdit() {
@@ -1973,54 +1979,1217 @@ export default function Projeto() {
                 justifyContent="center"
                 alignItems="center"
                 alignContent="center"
+                spacing={1}
             >
-                <>
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        alignContent="center"
-                        wrap="wrap"
-                        sx={{ width: "80vw", height: 200 }}
-                    >
-                        {projeto?.name ? (
-                            <Typography fontFamily={"Pacifico"} fontSize={40}>
-                                {projeto?.name + " "}
-                                <ImageRounded
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="flex-start"
+                    alignContent="flex-start"
+                    wrap="wrap"
+                    sx={{ width: "90vw", height: 200 }}
+                >
+                    {projeto?.name ? (
+                        <Typography fontFamily={"Pacifico"} fontSize={40}>
+                            {projeto?.name + " "}
+                            {/* <ImageRounded
                                     style={{
                                         color: "#ffb703",
                                         textShadow: "4px 4px #ffb703",
                                     }}
-                                />
-                            </Typography>
-                        ) : (
-                            <Skeleton height={70} width={280}>
-                                <Typography
-                                    fontFamily={"Pacifico"}
-                                    fontSize={40}
-                                ></Typography>
-                            </Skeleton>
-                        )}
-                    </Grid>
+                                /> */}
+                        </Typography>
+                    ) : (
+                        <Skeleton height={70} width={280}>
+                            <Typography
+                                fontFamily={"Pacifico"}
+                                fontSize={40}
+                            ></Typography>
+                        </Skeleton>
+                    )}
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    alignContent="flex-start"
+                    wrap="wrap"
+                    overflow="scroll"
+                    sx={{ width: "90vw" }}
+                >
                     <Grid
                         container
                         direction="row"
                         justifyContent="flex-start"
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        wrap="wrap"
-                        overflow="scroll"
-                        sx={{ width: "90vw", height: "100vh" }}
+                        alignItems="center"
+                        alignContent="center"
                     >
-                        <CustomStepper
+                        <Typography
+                            variant="button"
+                            fontWeight="bold"
+                            fontSize={20}
+                        >
+                            Informações
+                            {!editMode ? (
+                                <IconButton onClick={() => setEditMode(true)}>
+                                    <Edit style={{ color: "#ffba08" }} />
+                                </IconButton>
+                            ) : (
+                                <>
+                                    <IconButton
+                                        onClick={() => setEditMode(false)}
+                                    >
+                                        <Close style={{ color: "#d00000" }} />
+                                    </IconButton>
+                                    <IconButton onClick={() => HandleEdit()}>
+                                        <Send style={{ color: "#ffba08" }} />
+                                    </IconButton>
+                                </>
+                            )}
+                        </Typography>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            alignContent="flex-start"
+                            style={{
+                                width: "100%",
+                                marginBottom: "10px",
+                                marginTop: "10px",
+                            }}
+                        >
+                            {loadingInfo ? (
+                                <Skeleton
+                                    variant="text"
+                                    height={40}
+                                    width={245}
+                                >
+                                    <Typography variant="body1"></Typography>
+                                </Skeleton>
+                            ) : editMode ? (
+                                <TextField
+                                    label="Nome"
+                                    defaultValue={projeto?.name}
+                                    value={formEdit.name}
+                                    onChange={(ev) => {
+                                        setFormEdit({
+                                            ...formEdit,
+                                            name: ev.target.value,
+                                        });
+                                    }}
+                                    fullWidth
+                                />
+                            ) : (
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    alignContent="center"
+                                >
+                                    <Typography fontWeight="bolder">
+                                        Nome:
+                                    </Typography>
+                                    <Typography>{projeto?.name}</Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            alignContent="flex-start"
+                            style={{
+                                marginBottom: "10px",
+                                marginTop: "10px",
+                            }}
+                        >
+                            {loadingInfo ? (
+                                <Skeleton
+                                    variant="text"
+                                    height={40}
+                                    width={245}
+                                >
+                                    <Typography variant="body1"></Typography>
+                                </Skeleton>
+                            ) : editMode ? (
+                                <TextField
+                                    label="Endereço"
+                                    defaultValue={projeto?.address}
+                                    value={formEdit.address}
+                                    onChange={(ev) => {
+                                        setFormEdit({
+                                            ...formEdit,
+                                            address: ev.target.value,
+                                        });
+                                    }}
+                                    fullWidth
+                                />
+                            ) : (
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    alignContent="center"
+                                >
+                                    <Typography fontWeight="bolder">
+                                        Endereço:
+                                    </Typography>
+                                    <Typography>
+                                        {projeto?.address + " "}
+                                        {projeto?.addresComplement
+                                            ? projeto?.addresComplement
+                                            : ""}
+                                    </Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            alignContent="flex-start"
+                            style={{
+                                marginBottom: "10px",
+                                marginTop: "10px",
+                            }}
+                        >
+                            {loadingInfo ? (
+                                <Skeleton
+                                    variant="text"
+                                    height={40}
+                                    width={245}
+                                >
+                                    <Typography variant="body1"></Typography>
+                                </Skeleton>
+                            ) : editMode ? (
+                                <FormControl fullWidth>
+                                    <InputLabel id="clientes">
+                                        {`Cliente(s)`}
+                                    </InputLabel>
+                                    <Select
+                                        multiple
+                                        value={formEdit.clients}
+                                        labelId="clientes"
+                                        label={`Cliente(s)`}
+                                        fullWidth
+                                        onChange={(ev) => {
+                                            HandleChangeClient(
+                                                ev?.target.value
+                                            );
+                                        }}
+                                        input={<OutlinedInput label="Chip" />}
+                                        renderValue={(selected) => (
+                                            <Grid
+                                                container
+                                                spacing={1}
+                                                direction="row"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                alignContent="center"
+                                                wrap="wrap"
+                                            >
+                                                {selected?.map((value) => (
+                                                    <Chip
+                                                        key={value}
+                                                        label={
+                                                            <Typography
+                                                                fontWeight="bold"
+                                                                fontSize={12}
+                                                            >
+                                                                {value?.name}
+                                                            </Typography>
+                                                        }
+                                                    />
+                                                ))}
+                                            </Grid>
+                                        )}
+                                    >
+                                        {allClients.map((item, index) => (
+                                            <MenuItem key={index} value={item}>
+                                                {item?.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            ) : (
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    alignContent="center"
+                                >
+                                    <Typography fontWeight="bolder">
+                                        Cliente(s):{" "}
+                                    </Typography>
+                                    <Typography>
+                                        {projeto?.clients?.map(
+                                            (cliente, index) =>
+                                                projeto.clients.length > 1 ? (
+                                                    <Chip
+                                                        key={index}
+                                                        label={
+                                                            <Typography fontWeight="bold">
+                                                                {cliente?.name}
+                                                            </Typography>
+                                                        }
+                                                        sx={{
+                                                            backgroundColor:
+                                                                "lightgray",
+                                                            color: "white",
+                                                        }}
+                                                        size="medium"
+                                                        onClick={() => {
+                                                            router.push(
+                                                                `/clientes/${cliente?._id}`
+                                                            );
+                                                        }}
+                                                        onDelete={() =>
+                                                            HandleRemoveOwnership(
+                                                                cliente?.id
+                                                            )
+                                                        }
+                                                        deleteIcon={
+                                                            <DeleteForever />
+                                                        }
+                                                        style={{
+                                                            marginLeft: "3px",
+                                                            marginRight: "3px",
+                                                        }}
+                                                    ></Chip>
+                                                ) : (
+                                                    <Chip
+                                                        key={index}
+                                                        label={
+                                                            <Typography fontWeight="bold">
+                                                                {cliente?.name}
+                                                            </Typography>
+                                                        }
+                                                        sx={{
+                                                            backgroundColor:
+                                                                "lightgray",
+                                                            color: "white",
+                                                        }}
+                                                        size="medium"
+                                                        onClick={() => {
+                                                            router.push(
+                                                                `/clientes/${cliente?._id}`
+                                                            );
+                                                        }}
+                                                    ></Chip>
+                                                )
+                                        )}
+                                    </Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            alignContent="flex-start"
+                            style={{
+                                marginBottom: "10px",
+                                marginTop: "10px",
+                            }}
+                        >
+                            {loadingInfo ? (
+                                <Skeleton
+                                    variant="text"
+                                    height={40}
+                                    width={245}
+                                >
+                                    <Typography variant="body1"></Typography>
+                                </Skeleton>
+                            ) : editMode ? (
+                                <TextField
+                                    label="Cep"
+                                    defaultValue={projeto?.cep}
+                                    value={formEdit.cep}
+                                    onChange={(ev) => {
+                                        setFormEdit({
+                                            ...formEdit,
+                                            cep: ev.target.value,
+                                        });
+                                    }}
+                                    fullWidth
+                                />
+                            ) : (
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    alignContent="center"
+                                >
+                                    <Typography fontWeight="bolder">
+                                        CEP:
+                                    </Typography>
+                                    <Typography>{projeto?.cep}</Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            alignContent="flex-start"
+                            style={{
+                                marginBottom: "10px",
+                                marginTop: "10px",
+                            }}
+                        >
+                            {loadingInfo ? (
+                                <Skeleton
+                                    variant="text"
+                                    height={40}
+                                    width={245}
+                                >
+                                    <Typography variant="body1"></Typography>
+                                </Skeleton>
+                            ) : editMode ? (
+                                <TextField
+                                    label="Data de Entrega"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    value={formEdit.dateFinish}
+                                    onChange={(ev) => {
+                                        setFormEdit({
+                                            ...formEdit,
+                                            dateFinish: ev.target.value,
+                                        });
+                                    }}
+                                    fullWidth
+                                />
+                            ) : (
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    alignContent="center"
+                                >
+                                    <Typography fontWeight="bolder">
+                                        Data de Entrega:
+                                    </Typography>
+                                    <Typography>
+                                        {projeto?.dateFinish}
+                                    </Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start"
+                            alignContent="flex-start"
+                            style={{
+                                marginBottom: "10px",
+                                marginTop: "10px",
+                            }}
+                        >
+                            {loadingInfo ? (
+                                <Skeleton
+                                    variant="text"
+                                    height={40}
+                                    width={245}
+                                >
+                                    <Typography variant="body1"></Typography>
+                                </Skeleton>
+                            ) : editMode ? (
+                                <TextField
+                                    label="Descrição"
+                                    defaultValue={projeto?.description}
+                                    value={formEdit.description}
+                                    onChange={(ev) => {
+                                        setFormEdit({
+                                            ...formEdit,
+                                            description: ev.target.value,
+                                        });
+                                    }}
+                                    fullWidth
+                                    multiline
+                                />
+                            ) : (
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    alignContent="center"
+                                    wrap="nowrap"
+                                >
+                                    <Typography
+                                        align="justify"
+                                        style={{ wordBreak: "break-word" }}
+                                    >
+                                        {projeto?.description}
+                                    </Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    alignContent="flex-start"
+                    wrap="wrap"
+                    spacing={1}
+                    overflow="scroll"
+                    sx={{ width: "90vw" }}
+                >
+                    <Typography
+                        variant="button"
+                        fontWeight="bold"
+                        fontSize={20}
+                    >
+                        Localização
+                    </Typography>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Latitude"
+                            value={localization.lat}
+                            disabled
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Longitude"
+                            value={localization.long}
+                            disabled
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Map
+                            localization={{ ...localization, zoom: 13 }}
+                            setLocalization={setLocalization}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    direction="column"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    alignContent="flex-start"
+                    wrap="nowrap"
+                    sx={{
+                        width: "90vw",
+                    }}
+                >
+                    <Typography
+                        variant="button"
+                        fontWeight="bold"
+                        fontSize={20}
+                    >
+                        Projetos
+                        <IconButton onClick={() => setOpenModal(!openModal)}>
+                            <AddCircle />
+                        </IconButton>
+                    </Typography>
+                    <Grid
+                        container
+                        spacing={1}
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="center"
+                        alignContent="center"
+                        wrap="wrap"
+                        style={{ height: 400 }}
+                    >
+                        {projeto?.subprojects?.map(
+                            (
+                                item: {
+                                    date: string | number | Date;
+                                    name: any;
+                                    type: any;
+                                    ProjectionPriceValue: any;
+                                    EstimatedConstructionArea: any;
+                                    Reductor: any;
+                                    MarketCorrectionValue: any;
+                                    FeesBase: any;
+                                    _id: any;
+                                },
+                                index: Key
+                            ) => {
+                                const date = `${new Date(
+                                    item?.date
+                                ).getDay()}/${new Date(
+                                    item?.date
+                                ).getMonth()}/${new Date(
+                                    item?.date
+                                ).getFullYear()}`;
+                                const data = {
+                                    name: item.name,
+                                    date: date,
+                                    type: item.type,
+                                    price: item.ProjectionPriceValue,
+                                    areaContructed:
+                                        item.EstimatedConstructionArea,
+                                    reductor: item.Reductor,
+                                    marketCorrection:
+                                        item.MarketCorrectionValue,
+                                    baseFees: item.FeesBase,
+                                };
+                                return (
+                                    <CardContentItem
+                                        key={index}
+                                        data={data}
+                                        type={"subproject"}
+                                        onDelete={() =>
+                                            HandleDeleteSubProject(item._id)
+                                        }
+                                        onEdit={() =>
+                                            console.log(
+                                                "Ainda preciso fazer isso também !!!"
+                                            )
+                                        }
+                                        onRemoveOwner={() =>
+                                            console.log(
+                                                "Ufff ! muita coisa pra fazer"
+                                            )
+                                        }
+                                    />
+                                );
+                            }
+                        )}
+
+                        {openModal && (
+                            <CustomModal
+                                title={`Criação de ${
+                                    formAdd.type === "projectionCost"
+                                        ? "Custeio de Honorario de projeção"
+                                        : "Subprojeto"
+                                }`}
+                                open={openModal}
+                                handleClose={setOpenModal}
+                                actions={modalActions}
+                            >
+                                {formAdd.type === "projectionCost" && (
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        alignContent="center"
+                                        wrap="wrap"
+                                        sx={{
+                                            padding: "10px",
+                                        }}
+                                    >
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "47.5%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "1.5%",
+                                                marginRight: "1%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Area Estimada de construção do Projeto"
+                                                type="number"
+                                                value={
+                                                    formAdd.EstimatedConstructionArea
+                                                }
+                                                onChange={(event) =>
+                                                    Number(
+                                                        event?.target.value
+                                                    ) >= 0
+                                                        ? setFormAdd({
+                                                              ...formAdd,
+                                                              EstimatedConstructionArea:
+                                                                  Number(
+                                                                      event
+                                                                          ?.target
+                                                                          .value
+                                                                  ),
+                                                          })
+                                                        : setFormAdd({
+                                                              ...formAdd,
+                                                              EstimatedConstructionArea:
+                                                                  Number(0),
+                                                          })
+                                                }
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="start">
+                                                            m²
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "47.5%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "1.5%",
+                                                marginRight: "1%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Base de Honorarios"
+                                                type="number"
+                                                value={formAdd.FeesBase}
+                                                onChange={(ev) =>
+                                                    Number(ev?.target.value) >=
+                                                    0
+                                                        ? setFormAdd({
+                                                              ...formAdd,
+                                                              FeesBase: Number(
+                                                                  Number(
+                                                                      ev?.target
+                                                                          .value
+                                                                  )
+                                                              ),
+                                                          })
+                                                        : setFormAdd({
+                                                              ...formAdd,
+                                                              FeesBase: Number(
+                                                                  Number(0)
+                                                              ),
+                                                          })
+                                                }
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "23%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "1.5%",
+                                                marginRight: "0.5%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Índice de Complexidade"
+                                                type="number"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                value={projectComplexity}
+                                                onChange={(ev) =>
+                                                    setProjectComplexity(
+                                                        ev.target.value
+                                                    )
+                                                }
+                                                sx={{ width: "100%" }}
+                                                select
+                                            >
+                                                <MenuItem value="Baixo">
+                                                    Baixo
+                                                </MenuItem>
+                                                <MenuItem value="Médio">
+                                                    Médio
+                                                </MenuItem>
+                                                <MenuItem value="Alto">
+                                                    Alto
+                                                </MenuItem>
+                                                <MenuItem value="Especial">
+                                                    Especial
+                                                </MenuItem>
+                                            </TextField>
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "23%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "0.5%",
+                                                marginRight: "1.5%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Fator percentual"
+                                                type="text"
+                                                value={
+                                                    (
+                                                        formAdd.PercentualFactor *
+                                                        100
+                                                    ).toFixed(2) + "%"
+                                                }
+                                                InputProps={{
+                                                    readOnly: true,
+                                                }}
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "23%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "1.5%",
+                                                marginRight: "0.5%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Quantidade de Areas Repetidas em unidade"
+                                                type="number"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                value={repeatedAreaQuantity}
+                                                onChange={(ev) =>
+                                                    Number(ev?.target.value) >=
+                                                    0
+                                                        ? setRepeatedAreaQuantity(
+                                                              Number(
+                                                                  ev?.target
+                                                                      .value
+                                                              )
+                                                          )
+                                                        : setRepeatedAreaQuantity(
+                                                              Number(0)
+                                                          )
+                                                }
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "23%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "0.5%",
+                                                marginRight: "1.5%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Fator de Redução"
+                                                type="text"
+                                                value={
+                                                    (
+                                                        formAdd.Reductor * 100
+                                                    ).toFixed(2) + "%"
+                                                }
+                                                InputProps={{
+                                                    readOnly: true,
+                                                }}
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "47.5%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "1.5%",
+                                                marginRight: "1%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Area de construção repetida"
+                                                type="number"
+                                                value={
+                                                    formAdd.RepeatedConstructionArea
+                                                }
+                                                onChange={(event) =>
+                                                    setFormAdd({
+                                                        ...formAdd,
+                                                        RepeatedConstructionArea:
+                                                            Number(
+                                                                event?.target
+                                                                    .value
+                                                            ),
+                                                    })
+                                                }
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="start">
+                                                            m²
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "47.5%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "1.5%",
+                                                marginRight: "1%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Area de Construção única"
+                                                value={
+                                                    formAdd.UniqueContructionArea
+                                                }
+                                                onChange={(event) =>
+                                                    Number(
+                                                        event?.target.value
+                                                    ) >= 0
+                                                        ? setFormAdd({
+                                                              ...formAdd,
+                                                              UniqueContructionArea:
+                                                                  Number(
+                                                                      event
+                                                                          ?.target
+                                                                          .value
+                                                                  ),
+                                                          })
+                                                        : setFormAdd({
+                                                              ...formAdd,
+                                                              UniqueContructionArea:
+                                                                  Number(0),
+                                                          })
+                                                }
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="start">
+                                                            m²
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "47.5%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginLeft: "1.5%",
+                                                marginRight: "1%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Estado Regional do projeto"
+                                                type="number"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                value={
+                                                    projectRegionLocalization
+                                                }
+                                                onChange={(ev) =>
+                                                    setProjectRegionLocalization(
+                                                        ev.target.value
+                                                    )
+                                                }
+                                                sx={{ width: "100%" }}
+                                                select
+                                            >
+                                                <MenuItem value="Acre" disabled>
+                                                    Acre ( AC )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Alagoas"
+                                                    disabled
+                                                >
+                                                    Alagoas ( AL )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Amapá"
+                                                    disabled
+                                                >
+                                                    Amapá ( AP )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Amazonas"
+                                                    disabled
+                                                >
+                                                    Amazonas ( AM )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Bahia"
+                                                    disabled
+                                                >
+                                                    Bahia ( BA )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Ceará"
+                                                    disabled
+                                                >
+                                                    Ceará ( CE )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Espírito Santo"
+                                                    disabled
+                                                >
+                                                    Espírito Santo ( ES )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Goiás"
+                                                    disabled
+                                                >
+                                                    Goiás ( GO )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Maranhão"
+                                                    disabled
+                                                >
+                                                    Maranhão ( MA )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Mato Grosso"
+                                                    disabled
+                                                >
+                                                    Mato Grosso ( MT )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Mato Grosso do Sul"
+                                                    disabled
+                                                >
+                                                    Mato Grosso do Sul ( MS )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Minas Gerais"
+                                                    disabled
+                                                >
+                                                    Minas Gerais ( MG )
+                                                </MenuItem>
+                                                <MenuItem value="Pará" disabled>
+                                                    Pará ( PA )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Paraíba"
+                                                    disabled
+                                                >
+                                                    Paraíba ( PB )
+                                                </MenuItem>
+                                                <MenuItem value="Paraná">
+                                                    Paraná ( PR )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Pernambuco"
+                                                    disabled
+                                                >
+                                                    Pernambuco ( PE )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Piauí"
+                                                    disabled
+                                                >
+                                                    Piauí ( PI )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Rio Grande do Norte"
+                                                    disabled
+                                                >
+                                                    Rio Grande do Norte ( RN )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Rio Grande do Sul"
+                                                    disabled
+                                                >
+                                                    Rio Grande do Sul ( RS )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Rondônia"
+                                                    disabled
+                                                >
+                                                    Rondônia ( RO )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Roraima"
+                                                    disabled
+                                                >
+                                                    Roraima ( RR )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Santa Catarina"
+                                                    disabled
+                                                >
+                                                    Santa Catarina ( SC )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="São Paulo"
+                                                    disabled
+                                                >
+                                                    São Paulo ( SP )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Sergipe"
+                                                    disabled
+                                                >
+                                                    Sergipe ( SE )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Tocantins"
+                                                    disabled
+                                                >
+                                                    Tocantins ( TO )
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value="Distrito Federal"
+                                                    disabled
+                                                >
+                                                    Distrito Federal ( DF )
+                                                </MenuItem>
+                                            </TextField>
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            alignContent="center"
+                                            wrap="wrap"
+                                            overflow="hidden"
+                                            style={{
+                                                width: "47.5%",
+                                                marginBottom: 10,
+                                                marginTop: 15,
+                                                paddingTop: 5,
+                                                marginRight: "1%",
+                                                marginLeft: "1.5%",
+                                            }}
+                                        >
+                                            <TextField
+                                                label="Valor de Correção de Mercado"
+                                                value={
+                                                    (
+                                                        formAdd.MarketCorrectionValue *
+                                                        100
+                                                    ).toFixed(2) + "%"
+                                                }
+                                                onChange={(ev) =>
+                                                    Number(ev?.target.value) >=
+                                                    0
+                                                        ? setFormAdd({
+                                                              ...formAdd,
+                                                              MarketCorrectionValue:
+                                                                  Number(
+                                                                      ev.target
+                                                                          .value
+                                                                  ),
+                                                          })
+                                                        : setFormAdd({
+                                                              ...formAdd,
+                                                              MarketCorrectionValue:
+                                                                  Number(0),
+                                                          })
+                                                }
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <Tooltip
+                                                                title="Porcentagem do valor total a ser descontada"
+                                                                placement="left-start"
+                                                                arrow
+                                                                followCursor
+                                                            >
+                                                                <QuestionMark />
+                                                            </Tooltip>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                sx={{ width: "100%" }}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                )}
+                            </CustomModal>
+                        )}
+                    </Grid>
+                </Grid>
+                {/* <CustomStepper
                             steps={steps}
                             step={step}
                             setStep={setStep}
                             orientation="vertical"
-                        />
-                    </Grid>
-                </>
+                        /> */}
             </Grid>
         </>
     );

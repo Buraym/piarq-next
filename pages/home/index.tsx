@@ -4,11 +4,93 @@ import { useEffect, useState } from "react";
 import NextHead from "../../src/components/defaultPage/NextHead";
 import Menu from "../../src/components/defaultPage/Menu";
 import LinearLoading from "../../src/components/LinearLoading";
+import List from "../../src/components/List";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 
 export default function Index() {
     const [session, setSession] = useState(null);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
+    const [clientRows, setClientRows] = useState([]);
+    const [projectRows, setProjectRows] = useState([]);
+
+    const clientColumns = [
+        {
+            field: "identity",
+            headerName: "Identidade",
+            width: 150,
+        },
+        {
+            field: "name",
+            headerName: "Nome",
+            width: 400,
+        },
+
+        {
+            field: "contact",
+            headerName: "Contato",
+            width: 250,
+        },
+        {
+            field: "address",
+            headerName: "Endereço",
+            width: 400,
+        },
+        {
+            field: "projects",
+            headerName: "Projetos",
+            width: 400,
+        },
+    ];
+
+    const projectColumns = [
+        {
+            field: "name",
+            headerName: "Nome",
+        },
+        {
+            field: "address",
+            headerName: "Endereço",
+        },
+        {
+            field: "dateStart",
+            headerName: "Data de Início",
+        },
+
+        {
+            field: "dateFinish",
+            headerName: "Data de Entrega",
+        },
+        {
+            field: "cep",
+            headerName: "CEP",
+        },
+        {
+            field: "clients",
+            headerName: "Clientes",
+            width: 400,
+        },
+    ];
+
+    async function getDashboard() {
+        try {
+            const response = await axios.get(
+                // `https://piarq.herokuapp.com/usuarios/dashboard`,
+                `http://localhost:5000/usuarios/dashboard`,
+                {
+                    headers: {
+                        token: `Bearer ${session.token}`,
+                        id: session._id,
+                    },
+                }
+            );
+            setClientRows(response.data.clients);
+            setProjectRows(response.data.projects);
+        } catch (err) {
+            toast.error("Erro ao retornar Menu !!!");
+        }
+    }
 
     function getSession() {
         setLoading(true);
@@ -18,6 +100,7 @@ export default function Index() {
             router.push("/");
         } else {
             setSession(sessionJSON);
+            getDashboard();
             setLoading(false);
         }
     }
@@ -65,7 +148,7 @@ export default function Index() {
                                 <Fade in={true} timeout={1500}>
                                     <Typography
                                         variant="body2"
-                                        fontSize={60}
+                                        fontSize={40}
                                         fontFamily={"Pacifico"}
                                     >
                                         Olá, {session?.name}
@@ -75,11 +158,62 @@ export default function Index() {
                             <Grid
                                 container
                                 direction="column"
-                                justifyContent="center"
+                                justifyContent="flex-start"
                                 alignItems="center"
                                 alignContent="center"
                                 wrap="wrap"
-                            ></Grid>
+                                spacing={2}
+                                style={{ width: "90vw" }}
+                            >
+                                <Fade in={true} timeout={2500}>
+                                    <Grid
+                                        container
+                                        spacing={1}
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                        wrap="wrap"
+                                    >
+                                        <Typography
+                                            variant="button"
+                                            fontWeight="bold"
+                                            fontSize={16}
+                                            style={{ marginLeft: 25 }}
+                                        >
+                                            Clientes
+                                        </Typography>
+                                        <List
+                                            columns={clientColumns}
+                                            rows={clientRows}
+                                        />
+                                    </Grid>
+                                </Fade>
+                                <Fade in={true} timeout={3500}>
+                                    <Grid
+                                        container
+                                        spacing={1}
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        alignContent="center"
+                                        wrap="wrap"
+                                    >
+                                        <Typography
+                                            variant="button"
+                                            fontWeight="bold"
+                                            fontSize={16}
+                                            style={{ marginLeft: 25 }}
+                                        >
+                                            Projetos
+                                        </Typography>
+                                        <List
+                                            columns={projectColumns}
+                                            rows={projectRows}
+                                        />
+                                    </Grid>
+                                </Fade>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </>
