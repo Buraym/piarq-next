@@ -1388,8 +1388,8 @@ export default function Projeto() {
                 clients: formEdit.clients.map((item) => item._id),
             });
             const response = await axios.put(
-                // `https://piarq.herokuapp.com/projetos/update`,
-                `http://localhost:5000/projetos/update`,
+                `https://piarq.herokuapp.com/projetos/update`,
+                // `http://localhost:5000/projetos/update`,
                 formEdit,
                 {
                     headers: {
@@ -1503,8 +1503,8 @@ export default function Projeto() {
     async function HandleDeleteSubProject(subProjectId) {
         try {
             await axios.post(
-                // `https://piarq.herokuapp.com/projetos/projectioncost/delete`,
-                `http://localhost:5000/projetos/projectioncost/delete`,
+                `https://piarq.herokuapp.com/projetos/projectioncost/delete`,
+                // `http://localhost:5000/projetos/projectioncost/delete`,
                 {},
                 {
                     headers: {

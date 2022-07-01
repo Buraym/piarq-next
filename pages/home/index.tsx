@@ -76,8 +76,8 @@ export default function Index() {
     async function getDashboard() {
         try {
             const response = await axios.get(
-                // `https://piarq.herokuapp.com/usuarios/dashboard`,
-                `http://localhost:5000/usuarios/dashboard`,
+                `https://piarq.herokuapp.com/usuarios/dashboard`,
+                // `http://localhost:5000/usuarios/dashboard`,
                 {
                     headers: {
                         token: `Bearer ${session.token}`,
