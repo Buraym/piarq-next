@@ -60,6 +60,7 @@ export default function Clientes() {
     });
     const actions = [
         <Button
+            key={1}
             onClick={() => AddProject()}
             style={{ color: "#ffb703", fontWeight: "bold", fontSize: 14 }}
         >
